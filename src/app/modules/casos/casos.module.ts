@@ -4,11 +4,20 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CasosListComponent } from './casos-list/casos-list.component';
 import { CasoDetailComponent } from './caso-detail/caso-detail.component';
+import { CasoFormComponent } from './caso-form/caso-form.component';
 
 const routes: Routes = [
   {
     path: '',
     component: CasosListComponent
+  },
+  {
+    path: 'nuevo',
+    component: CasoFormComponent
+  },
+  {
+    path: 'editar/:id',
+    component: CasoFormComponent
   },
   {
     path: ':id',
@@ -19,7 +28,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     CasosListComponent,
-    CasoDetailComponent
+    CasoDetailComponent,
+    CasoFormComponent
   ],
   imports: [
     CommonModule,

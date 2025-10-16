@@ -1,11 +1,9 @@
 <div class="detail-container">
-  <!-- Loading -->
   <div *ngIf="loading" class="loading-container">
     <div class="spinner"></div>
     <p>Cargando caso...</p>
   </div>
 
-  <!-- Detalle del Caso -->
   <div *ngIf="!loading && caso" class="detail-content">
     <button class="btn-back" (click)="volver()">
       ← Volver a casos
@@ -27,7 +25,6 @@
     </div>
 
     <div class="detail-grid">
-      <!-- Información General -->
       <div class="detail-card">
         <h2>📋 Información General</h2>
         <div class="detail-item">
@@ -52,7 +49,6 @@
         </div>
       </div>
 
-      <!-- Cliente -->
       <div class="detail-card">
         <h2>👤 Cliente</h2>
         <div class="detail-item">
@@ -69,7 +65,6 @@
         </div>
       </div>
 
-      <!-- Abogado Asignado -->
       <div class="detail-card" *ngIf="caso.abogado_asignado">
         <h2>⚖️ Abogado Asignado</h2>
         <div class="detail-item">
@@ -87,13 +82,11 @@
       </div>
     </div>
 
-    <!-- Descripción -->
     <div class="detail-card full-width">
       <h2>📝 Descripción del Caso</h2>
       <p class="description-text">{{ caso.descripcion }}</p>
     </div>
 
-    <!-- Notas Internas -->
     <div class="detail-card full-width" *ngIf="caso.notas_internas">
       <h2>📌 Notas Internas</h2>
       <p class="notes-text">{{ caso.notas_internas }}</p>
