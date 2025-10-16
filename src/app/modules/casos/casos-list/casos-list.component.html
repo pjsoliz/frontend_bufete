@@ -1,0 +1,79 @@
+<div class="casos-container">
+  <div class="page-header">
+    <div>
+      <h1>📁 Gestión de Casos</h1>
+      <p>Administra todos los casos legales</p>
+    </div>
+    <button class="btn-primary">
+      ➕ Nuevo Caso
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-section">
+    <select [(ngModel)]="filtroEstado" class="filter-select">
+      <option value="">Todos los estados</option>
+      <option value="ABIERTO">Abierto</option>
+      <option value="EN_PROCESO">En Proceso</option>
+      <option value="CERRADO">Cerrado</option>
+      <option value="ARCHIVADO">Archivado</option>
+    </select>
+
+    <select [(ngModel)]="filtroEstado" class="filter-select">
+      <option value="">Todos los estados</option>
+      <option value="ABIERTO">Abierto</option>
+      <option value="EN_PROCESO">En Proceso</option>
+      <option value="CERRADO">Cerrado</option>
+      <option value="ARCHIVADO">Archivado</option>
+    </select>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando casos...</p>
+  </div>
+
+  <!-- Lista de Casos -->
+  <div *ngIf="!loading" class="casos-grid">
+    <div *ngFor="let caso of casosFiltrados" class="caso-card" (click)="verDetalle(caso.id)">
+      <div class="caso-header">
+        <div class="caso-numero">{{ caso.numero_caso }}</div>
+        <span [class]="'badge ' + getPrioridadBadgeClass(caso.prioridad)">
+          {{ caso.prioridad }}
+        </span>
+      </div>
+
+      <h3 class="caso-titulo">{{ caso.titulo }}</h3>
+      <p class="caso-descripcion">{{ caso.descripcion }}</p>
+
+      <div class="caso-info">
+        <div class="info-item">
+          <span class="info-label">Tipo:</span>
+          <span class="info-value">{{ caso.tipo_caso }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Cliente:</span>
+          <span class="info-value">{{ caso.cliente.nombre }} {{ caso.cliente.apellido }}</span>
+        </div>
+        <div class="info-item" *ngIf="caso.abogado_asignado">
+          <span class="info-label">Abogado:</span>
+          <span class="info-value">{{ caso.abogado_asignado.nombre }} {{ caso.abogado_asignado.apellido }}</span>
+        </div>
+      </div>
+
+      <div class="caso-footer">
+        <span class="caso-fecha">📅 {{ caso.fecha_apertura | date:'dd/MM/yyyy' }}</span>
+        <span [class]="'badge ' + getEstadoBadgeClass(caso.estado)">
+          {{ caso.estado }}
+        </span>
+      </div>
+    </div>
+
+    <div *ngIf="casosFiltrados.length === 0" class="empty-state">
+      <div class="empty-icon">📁</div>
+      <h3>No hay casos</h3>
+      <p>No se encontraron casos con los filtros seleccionados</p>
+    </div>
+  </div>
+</div>

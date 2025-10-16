@@ -1,0 +1,181 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>{{ isEditMode ? '✏️ Editar Cita' : '➕ Nueva Cita' }}</h1>
+    <p>{{ isEditMode ? 'Actualiza los datos de la cita' : 'Completa el formulario para agendar una nueva cita' }}</p>
+  </div>
+
+  <div class="alert alert-success" *ngIf="successMessage">
+    ✓ {{ successMessage }}
+  </div>
+
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    ✕ {{ errorMessage }}
+  </div>
+
+  <div *ngIf="loading && isEditMode" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando datos...</p>
+  </div>
+
+  <form [formGroup]="citaForm" (ngSubmit)="onSubmit()" class="cita-form">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fecha" class="form-label">Fecha *</label>
+        <input
+          type="date"
+          id="fecha"
+          formControlName="fecha"
+          class="form-control"
+          [class.error]="fecha?.invalid && fecha?.touched">
+        <div class="error-message" *ngIf="fecha?.invalid && fecha?.touched">
+          <span *ngIf="fecha?.errors?.['required']">La fecha es requerida</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="hora" class="form-label">Hora *</label>
+        <input
+          type="time"
+          id="hora"
+          formControlName="hora"
+          class="form-control"
+          [class.error]="hora?.invalid && hora?.touched">
+        <div class="error-message" *ngIf="hora?.invalid && hora?.touched">
+          <span *ngIf="hora?.errors?.['required']">La hora es requerida</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="duracion" class="form-label">Duración *</label>
+        <select
+          id="duracion"
+          formControlName="duracion_minutos"
+          class="form-control">
+          <option *ngFor="let dur of duraciones" [value]="dur.value">
+            {{ dur.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tipo_cita" class="form-label">Tipo de Cita *</label>
+        <select
+          id="tipo_cita"
+          formControlName="tipo_cita"
+          class="form-control">
+          <option *ngFor="let tipo of tiposCita" [value]="tipo.value">
+            {{ tipo.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="modalidad" class="form-label">Modalidad *</label>
+        <select
+          id="modalidad"
+          formControlName="modalidad"
+          class="form-control">
+          <option *ngFor="let mod of modalidades" [value]="mod.value">
+            {{ mod.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="cliente_id" class="form-label">ID Cliente *</label>
+        <input
+          type="number"
+          id="cliente_id"
+          formControlName="cliente_id"
+          class="form-control"
+          placeholder="Ej: 1"
+          [class.error]="cliente_id?.invalid && cliente_id?.touched">
+        <small class="form-text">Ingresa el ID del cliente (temporal)</small>
+        <div class="error-message" *ngIf="cliente_id?.invalid && cliente_id?.touched">
+          <span *ngIf="cliente_id?.errors?.['required']">El cliente es requerido</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="abogado_id" class="form-label">ID Abogado *</label>
+        <input
+          type="number"
+          id="abogado_id"
+          formControlName="abogado_id"
+          class="form-control"
+          placeholder="Ej: 2"
+          [class.error]="abogado_id?.invalid && abogado_id?.touched">
+        <small class="form-text">Ingresa el ID del abogado (temporal)</small>
+        <div class="error-message" *ngIf="abogado_id?.invalid && abogado_id?.touched">
+          <span *ngIf="abogado_id?.errors?.['required']">El abogado es requerido</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="caso_id" class="form-label">ID Caso (Opcional)</label>
+        <input
+          type="number"
+          id="caso_id"
+          formControlName="caso_id"
+          class="form-control"
+          placeholder="Ej: 1">
+        <small class="form-text">Si aplica, ingresa el ID del caso</small>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="citaForm.get('modalidad')?.value === 'PRESENCIAL'">
+      <label for="ubicacion" class="form-label">Ubicación *</label>
+      <input
+        type="text"
+        id="ubicacion"
+        formControlName="ubicacion"
+        class="form-control"
+        placeholder="Ej: Oficina Central - Sala 3"
+        [class.error]="ubicacion?.invalid && ubicacion?.touched">
+      <div class="error-message" *ngIf="ubicacion?.invalid && ubicacion?.touched">
+        <span *ngIf="ubicacion?.errors?.['required']">La ubicación es requerida para citas presenciales</span>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="citaForm.get('modalidad')?.value === 'VIRTUAL'">
+      <label for="link_virtual" class="form-label">Link de Reunión Virtual *</label>
+      <input
+        type="url"
+        id="link_virtual"
+        formControlName="link_virtual"
+        class="form-control"
+        placeholder="https://meet.google.com/abc-defg-hij"
+        [class.error]="link_virtual?.invalid && link_virtual?.touched">
+      <div class="error-message" *ngIf="link_virtual?.invalid && link_virtual?.touched">
+        <span *ngIf="link_virtual?.errors?.['required']">El link es requerido para citas virtuales</span>
+        <span *ngIf="link_virtual?.errors?.['pattern']">Ingresa una URL válida</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="notas" class="form-label">Notas Adicionales</label>
+      <textarea
+        id="notas"
+        formControlName="notas"
+        class="form-control"
+        rows="4"
+        placeholder="Información adicional sobre la cita..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="cancelar()" [disabled]="loading">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="citaForm.invalid || loading">
+        <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Cita' : 'Crear Cita' }}</span>
+        <span *ngIf="loading">Guardando...</span>
+      </button>
+    </div>
+
+  </form>
+</div>

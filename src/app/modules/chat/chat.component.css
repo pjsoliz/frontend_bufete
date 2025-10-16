@@ -1,0 +1,46 @@
+.chat-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.coming-soon {
+  text-align: center;
+  padding: 60px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+}
+
+.icon {
+  font-size: 100px;
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.coming-soon h1 {
+  font-size: 32px;
+  color: #2d3748;
+  margin: 0 0 15px 0;
+  font-weight: 700;
+}
+
+.coming-soon p {
+  font-size: 18px;
+  color: #667eea;
+  margin: 10px 0;
+  font-weight: 600;
+}
+
+.description {
+  font-size: 16px;
+  color: #718096;
+  font-weight: 400;
+}

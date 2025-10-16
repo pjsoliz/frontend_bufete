@@ -1,0 +1,138 @@
+<div class="dashboard-container">
+  <!-- Saludo -->
+  <div class="welcome-section">
+    <h1>{{ getGreeting() }}, {{ currentUser?.nombre }}! 👋</h1>
+    <p>Aquí está el resumen de tu día</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando información...</p>
+  </div>
+
+  <!-- Estadísticas -->
+  <div *ngIf="!loading" class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        📁
+      </div>
+      <div class="stat-info">
+        <h3>{{ stats.totalCasos }}</h3>
+        <p>Total Casos</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+        ⚡
+      </div>
+      <div class="stat-info">
+        <h3>{{ stats.casosActivos }}</h3>
+        <p>Casos Activos</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+        📅
+      </div>
+      <div class="stat-info">
+        <h3>{{ stats.citasPendientes }}</h3>
+        <p>Citas Pendientes</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+        🕒
+      </div>
+      <div class="stat-info">
+        <h3>{{ stats.citasHoy }}</h3>
+        <p>Citas Hoy</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div *ngIf="!loading" class="content-grid">
+    <!-- Casos Pendientes -->
+    <div class="card">
+      <div class="card-header">
+        <h2>📋 Casos Recientes</h2>
+        <a routerLink="/casos" class="link-btn">Ver todos →</a>
+      </div>
+      <div class="card-body">
+        <div *ngIf="casosPendientes.length === 0" class="empty-state">
+          <p>No hay casos pendientes</p>
+        </div>
+        <div *ngFor="let caso of casosPendientes" class="list-item">
+          <div class="item-header">
+            <h4>{{ caso.titulo }}</h4>
+            <span [class]="'badge ' + getEstadoBadgeClass(caso.estado)">
+              {{ caso.estado }}
+            </span>
+          </div>
+          <p class="item-description">{{ caso.descripcion }}</p>
+          <div class="item-footer">
+            <span class="item-meta">
+              <strong>Cliente:</strong> {{ caso.cliente.nombre }} {{ caso.cliente.apellido }}
+            </span>
+            <span [class]="'badge ' + getPrioridadBadgeClass(caso.prioridad)">
+              {{ caso.prioridad }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Próximas Citas -->
+    <div class="card">
+      <div class="card-header">
+        <h2>📅 Próximas Citas</h2>
+        <a routerLink="/citas" class="link-btn">Ver todas →</a>
+      </div>
+      <div class="card-body">
+        <div *ngIf="proximasCitas.length === 0" class="empty-state">
+          <p>No hay citas próximas</p>
+        </div>
+        <div *ngFor="let cita of proximasCitas" class="list-item">
+          <div class="item-header">
+            <h4>{{ cita.tipo_cita }}</h4>
+            <span [class]="'badge ' + getEstadoBadgeClass(cita.estado)">
+              {{ cita.estado }}
+            </span>
+          </div>
+          <div class="item-info">
+            <p><strong>📅</strong> {{ cita.fecha_hora | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p><strong>👤</strong> {{ cita.cliente.nombre }} {{ cita.cliente.apellido }}</p>
+            <p><strong>📍</strong> {{ cita.modalidad }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acciones Rápidas -->
+  <div *ngIf="!loading" class="quick-actions">
+    <h2>⚡ Acciones Rápidas</h2>
+    <div class="actions-grid">
+      <button class="action-btn" routerLink="/casos">
+        <span class="action-icon">📁</span>
+        <span>Nuevo Caso</span>
+      </button>
+      <button class="action-btn" routerLink="/citas">
+        <span class="action-icon">📅</span>
+        <span>Agendar Cita</span>
+      </button>
+      <!--<button class="action-btn" routerLink="/chat">
+        <span class="action-icon">💬</span>
+        <span>Chat con IA</span>
+      </button>-->
+      <button class="action-btn" routerLink="/reportes">
+        <span class="action-icon">📊</span>
+        <span>Ver Reportes</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,284 @@
+.citas-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  color: #2d3748;
+  margin: 0 0 5px 0;
+  font-weight: 700;
+}
+
+.page-header p {
+  color: #718096;
+  font-size: 14px;
+  margin: 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.filters-section {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.filter-select {
+  padding: 10px 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.citas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cita-card {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.cita-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.cita-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.cita-fecha {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 60px;
+}
+
+.fecha-dia {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.fecha-mes {
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.cita-info {
+  flex: 1;
+}
+
+.cita-info h3 {
+  font-size: 18px;
+  margin: 0 0 5px 0;
+  font-weight: 600;
+}
+
+.cita-horario {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.cita-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.info-icon {
+  font-size: 18px;
+  min-width: 25px;
+}
+
+.link-virtual {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link-virtual:hover {
+  text-decoration: underline;
+}
+
+.cita-footer {
+  padding: 15px 20px;
+  background: #f7fafc;
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btn-action {
+  padding: 8px 16px;
+  border: 2px solid #667eea;
+  background: transparent;
+  color: #667eea;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+  background: #667eea;
+  color: white;
+}
+
+.btn-action.danger {
+  border-color: #fc8181;
+  color: #fc8181;
+}
+
+.btn-action.danger:hover {
+  background: #fc8181;
+  color: white;
+}
+
+.badge {
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-success {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.badge-warning {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.badge-danger {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.badge-info {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.badge-default {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+}
+
+.empty-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 24px;
+  color: #2d3748;
+  margin: 0 0 10px 0;
+}
+
+.empty-state p {
+  color: #718096;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .filters-section {
+    flex-direction: column;
+  }
+
+  .cita-header {
+    flex-wrap: wrap;
+  }
+}
