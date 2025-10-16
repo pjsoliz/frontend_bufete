@@ -1,0 +1,181 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <div class="logo">⚖️</div>
+      <h1>Crear Cuenta</h1>
+      <p>Únete a Genesis Integrales</p>
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage">
+      ✓ {{ successMessage }}
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      ✕ {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre" class="form-label">Nombre *</label>
+          <input
+            type="text"
+            id="nombre"
+            formControlName="nombre"
+            class="form-control"
+            placeholder="Juan"
+            [class.error]="nombre?.invalid && nombre?.touched">
+          <div class="error-message" *ngIf="nombre?.invalid && nombre?.touched">
+            <span *ngIf="nombre?.errors?.['required']">El nombre es requerido</span>
+            <span *ngIf="nombre?.errors?.['minlength']">Mínimo 2 caracteres</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="apellido" class="form-label">Apellido *</label>
+          <input
+            type="text"
+            id="apellido"
+            formControlName="apellido"
+            class="form-control"
+            placeholder="Pérez"
+            [class.error]="apellido?.invalid && apellido?.touched">
+          <div class="error-message" *ngIf="apellido?.invalid && apellido?.touched">
+            <span *ngIf="apellido?.errors?.['required']">El apellido es requerido</span>
+            <span *ngIf="apellido?.errors?.['minlength']">Mínimo 2 caracteres</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Correo Electrónico *</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          placeholder="ejemplo@genesis.com"
+          [class.error]="email?.invalid && email?.touched">
+        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">El correo es requerido</span>
+          <span *ngIf="email?.errors?.['email']">Correo inválido</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input
+          type="tel"
+          id="telefono"
+          formControlName="telefono"
+          class="form-control"
+          placeholder="555-0100"
+          [class.error]="telefono?.invalid && telefono?.touched">
+        <div class="error-message" *ngIf="telefono?.invalid && telefono?.touched">
+          <span *ngIf="telefono?.errors?.['pattern']">Formato inválido (7-15 dígitos)</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="rol" class="form-label">Tipo de Usuario *</label>
+        <select
+          id="rol"
+          formControlName="rol"
+          class="form-control">
+          <option *ngFor="let rol of roles" [value]="rol.value">
+            {{ rol.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña *</label>
+        <div class="password-input-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            placeholder="••••••••"
+            [class.error]="password?.invalid && password?.touched">
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()">
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <div class="error-message" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="password?.errors?.['minlength']">Mínimo 8 caracteres</span>
+          <span *ngIf="password?.errors?.['weakPassword']">
+            Debe contener: mayúscula, minúscula y número
+          </span>
+        </div>
+        <div class="password-strength" *ngIf="password?.value">
+          <div class="strength-item" [class.valid]="password?.errors?.['weakPassword']?.hasUpper !== false">
+            {{ password?.errors?.['weakPassword']?.hasUpper !== false ? '✓' : '✗' }} Mayúscula
+          </div>
+          <div class="strength-item" [class.valid]="password?.errors?.['weakPassword']?.hasLower !== false">
+            {{ password?.errors?.['weakPassword']?.hasLower !== false ? '✓' : '✗' }} Minúscula
+          </div>
+          <div class="strength-item" [class.valid]="password?.errors?.['weakPassword']?.hasNumber !== false">
+            {{ password?.errors?.['weakPassword']?.hasNumber !== false ? '✓' : '✗' }} Número
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">Confirmar Contraseña *</label>
+        <div class="password-input-wrapper">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            class="form-control"
+            placeholder="••••••••"
+            [class.error]="(confirmPassword?.invalid && confirmPassword?.touched) || (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched)">
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="toggleConfirmPasswordVisibility()">
+            {{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <div class="error-message" *ngIf="confirmPassword?.invalid && confirmPassword?.touched">
+          <span *ngIf="confirmPassword?.errors?.['required']">Confirma tu contraseña</span>
+        </div>
+        <div class="error-message" *ngIf="registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched">
+          <span>Las contraseñas no coinciden</span>
+        </div>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            formControlName="aceptaTerminos"
+            class="checkbox-input">
+          <span>Acepto los <a href="#" class="link">términos y condiciones</a> *</span>
+        </label>
+        <div class="error-message" *ngIf="aceptaTerminos?.invalid && aceptaTerminos?.touched">
+          <span>Debes aceptar los términos y condiciones</span>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-register"
+        [disabled]="registerForm.invalid || loading">
+        <span *ngIf="!loading">Crear Cuenta</span>
+        <span *ngIf="loading">Registrando...</span>
+      </button>
+
+    </form>
+
+    <div class="register-footer">
+      <p>¿Ya tienes cuenta? <a (click)="goToLogin()" class="link">Inicia sesión aquí</a></p>
+    </div>
+  </div>
+</div>

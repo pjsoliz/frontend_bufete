@@ -48,14 +48,15 @@
         <span *ngIf="!loading">
           <a href="#">
             Iniciar Sesión
-          </a>Iniciar Sesión</span>
+          </a>Iniciar sesión</span>
         <span *ngIf="loading">Cargando...</span>
       </button>
     </form>
 
     <div class="login-footer">
-      <p>¿Olvidaste tu contraseña? <a href="#">Recuperar</a></p>
-    </div>
+  <p>¿Olvidaste tu contraseña? <a href="#">Recuperar</a></p>
+  <p>¿No tienes cuenta? <a routerLink="/auth/register">Regístrate aquí</a></p>
+</div>
 
     <div class="demo-notice">
       <p><strong>🎨 Modo Demo</strong></p>
