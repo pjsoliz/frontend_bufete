@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CitasRoutingModule } from './citas-routing.module';
 import { CitasListComponent } from './citas-list/citas-list.component';
 import { CitaFormComponent } from './cita-form/cita-form.component';
 
@@ -19,6 +20,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    CitasRoutingModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes)
   ]

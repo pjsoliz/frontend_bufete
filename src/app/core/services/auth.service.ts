@@ -1,108 +1,169 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { User, AuthState, LoginRequest, LoginResponse, RegisterRequest } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly TOKEN_KEY = 'access_token';
-  private readonly REFRESH_TOKEN_KEY = 'refresh_token';
-  private readonly USER_KEY = 'user_data';
+  private apiUrl = environment.apiUrl;
 
-  private authStateSubject = new BehaviorSubject<AuthState>({
-    user: this.getUserFromStorage(),
-    token: this.getToken(),
-    isAuthenticated: !!this.getToken(),
-    isLoading: false
-  });
+  // USUARIOS MOCK PARA PRUEBAS
+  private mockUsers = [
+    {
+      username: 'admin',
+      password: 'admin123',
+      user: {
+        id: 1,
+        username: 'admin',
+        email: 'admin@genesis.com',
+        first_name: 'Administrador',
+        last_name: 'Sistema',
+        rol: 'administrador'
+      },
+      token: 'mock-token-admin'
+    },
+    {
+      username: 'abogado',
+      password: 'abogado123',
+      user: {
+        id: 2,
+        username: 'abogado',
+        email: 'abogado@genesis.com',
+        first_name: 'Juan',
+        last_name: 'Pérez',
+        rol: 'abogado'
+      },
+      token: 'mock-token-abogado'
+    },
+    {
+      username: 'asistente',
+      password: 'asistente123',
+      user: {
+        id: 3,
+        username: 'asistente',
+        email: 'asistente@genesis.com',
+        first_name: 'María',
+        last_name: 'González',
+        rol: 'asistente_legal'
+      },
+      token: 'mock-token-asistente'
+    }
+  ];
 
-  public authState$ = this.authStateSubject.asObservable();
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
-  constructor(private http: HttpClient) {}
+  login(credentials: any): Observable<any> {
+    console.log('Intentando login con:', credentials);
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
-    this.setLoading(true);
-    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/login/`, credentials)
-      .pipe(
-        tap(response => {
-          this.setToken(response.access);
-          this.setRefreshToken(response.refresh);
-          this.setUser(response.user);
-          this.updateAuthState(response.user, response.access);
-          this.setLoading(false);
-        })
-      );
+    // BUSCAR USUARIO MOCK
+    const mockUser = this.mockUsers.find(
+      u => u.username === credentials.username && u.password === credentials.password
+    );
+
+    if (mockUser) {
+      console.log('Usuario mock encontrado:', mockUser);
+
+      // Guardar en localStorage
+      localStorage.setItem('token', mockUser.token);
+      localStorage.setItem('user', JSON.stringify(mockUser.user));
+
+      return of({
+        token: mockUser.token,
+        user: mockUser.user
+      });
+    }
+
+    // Si no encuentra el usuario mock
+    console.log('Usuario no encontrado');
+    return throwError(() => new Error('Credenciales incorrectas'));
   }
 
-  register(data: RegisterRequest): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/auth/register/`, data);
+  register(userData: any): Observable<any> {
+    console.log('Registro mock - datos:', userData);
+
+    // Mock de registro exitoso
+    const newUser = {
+      id: Math.floor(Math.random() * 1000),
+      username: userData.username,
+      email: userData.email,
+      first_name: userData.first_name,
+      last_name: userData.last_name,
+      rol: userData.rol || 'cliente'
+    };
+
+    return of({
+      user: newUser,
+      message: 'Usuario registrado exitosamente'
+    });
+
+    // COMENTADO: Registro real con backend
+    /*
+    return this.http.post(`${this.apiUrl}/auth/register/`, userData).pipe(
+      catchError(error => {
+        console.error('Error en registro:', error);
+        throw error;
+      })
+    );
+    */
   }
 
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
-    this.authStateSubject.next({
-      user: null,
-      token: null,
-      isAuthenticated: false,
-      isLoading: false
-    });
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
-  }
-
-  getRefreshToken(): string | null {
-    return localStorage.getItem(this.REFRESH_TOKEN_KEY);
-  }
-
-  getCurrentUser(): User | null {
-    return this.authStateSubject.value.user;
+    console.log('Cerrando sesión');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 
   isAuthenticated(): boolean {
-    return this.authStateSubject.value.isAuthenticated;
+    const token = localStorage.getItem('token');
+    return !!token;
   }
 
-  hasRole(role: string): boolean {
-    const user = this.getCurrentUser();
-    return user ? user.rol === role : false;
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
-  private setToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
-  }
-
-  private setRefreshToken(token: string): void {
-    localStorage.setItem(this.REFRESH_TOKEN_KEY, token);
-  }
-
-  private setUser(user: User): void {
-    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-  }
-
-  private getUserFromStorage(): User | null {
-    const userData = localStorage.getItem(this.USER_KEY);
+  getUser(): any {
+    const userData = localStorage.getItem('user');
     return userData ? JSON.parse(userData) : null;
   }
 
-  private updateAuthState(user: User, token: string): void {
-    this.authStateSubject.next({
-      user,
-      token,
-      isAuthenticated: true,
-      isLoading: false
-    });
+  getCurrentUser(): any {
+    // Alias de getUser() para compatibilidad
+    return this.getUser();
   }
 
-  private setLoading(isLoading: boolean): void {
-    const currentState = this.authStateSubject.value;
-    this.authStateSubject.next({ ...currentState, isLoading });
+  getUserRole(): string | null {
+    const user = this.getUser();
+    return user ? user.rol : null;
+  }
+
+  getUserId(): number | null {
+    const user = this.getUser();
+    return user ? user.id : null;
+  }
+
+  updateUser(userData: any): Observable<any> {
+    console.log('Actualizar usuario mock:', userData);
+
+    // Actualizar en localStorage
+    const currentUser = this.getUser();
+    if (currentUser) {
+      const updatedUser = { ...currentUser, ...userData };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      return of({
+        user: updatedUser,
+        message: 'Usuario actualizado exitosamente'
+      });
+    }
+
+    return throwError(() => new Error('No hay usuario autenticado'));
   }
 }

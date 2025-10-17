@@ -27,7 +27,7 @@ export class CitaService {
         nombre: 'Juan',
         apellido: 'Pérez',
         telefono: '555-0101',
-        rol: 'CLIENTE',
+        rol: 'ASISTENTE_LEGAL',
         estado: true,
         fecha_registro: '2025-01-10'
       },
@@ -58,7 +58,7 @@ export class CitaService {
         nombre: 'Ana',
         apellido: 'Martínez',
         telefono: '555-0103',
-        rol: 'CLIENTE',
+        rol: 'ASISTENTE_LEGAL',
         estado: true,
         fecha_registro: '2025-01-28'
       },

@@ -9,7 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
+  loginForm: FormGroup;
   loading = false;
   errorMessage = '';
 
@@ -17,75 +17,61 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
-
-    // Para pruebas sin backend - auto login
-    this.loginWithMockData();
   }
 
-  // MÉTODO TEMPORAL PARA PRUEBAS SIN BACKEND
-  loginWithMockData(): void {
-    // Simular usuario logueado
-    const mockUser = {
-      id: 1,
-      email: 'admin@genesis.com',
-      nombre: 'Admin',
-      apellido: 'Genesis',
-      telefono: '555-0100',
-      rol: 'ADMIN' as 'ADMIN',
-      estado: true,
-      fecha_registro: new Date().toISOString()
-    };
-
-    // Guardar en localStorage
-    localStorage.setItem('access_token', 'mock_token_123');
-    localStorage.setItem('user_data', JSON.stringify(mockUser));
-
-    // Redirigir automáticamente
-    setTimeout(() => {
-      this.router.navigate(['/dashboard']);
-    }, 500);
+  ngOnInit(): void {
+    if (this.authService.isAuthenticated()) {
+      const userRole = this.authService.getUserRole();
+      this.redirectByRole(userRole);
+    }
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) {
-      return;
+    if (this.loginForm.valid) {
+      this.loading = true;
+      this.errorMessage = '';
+
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (response) => {
+          console.log('Login exitoso:', response);
+          const userRole = this.authService.getUserRole();
+          console.log('Rol del usuario:', userRole);
+
+          this.redirectByRole(userRole);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error en login:', error);
+          this.errorMessage = error.error?.message || 'Usuario o contraseña incorrectos';
+          this.loading = false;
+        }
+      });
+    } else {
+      this.errorMessage = 'Por favor complete todos los campos';
     }
-
-    this.loading = true;
-    this.errorMessage = '';
-
-    const credentials = this.loginForm.value;
-
-    // Con backend real, descomentar esto:
-    /*
-    this.authService.login(credentials).subscribe({
-      next: (response) => {
-        this.loading = false;
-        this.router.navigate(['/dashboard']);
-      },
-      error: (error) => {
-        this.loading = false;
-        this.errorMessage = 'Credenciales incorrectas';
-      }
-    });
-    */
-
-    // Para pruebas sin backend
-    this.loginWithMockData();
   }
 
-  get email() {
-    return this.loginForm.get('email');
-  }
+  redirectByRole(role: string | null): void {
+    console.log('Redirigiendo por rol:', role);
 
-  get password() {
-    return this.loginForm.get('password');
+    switch(role) {
+      case 'administrador':
+        this.router.navigate(['/dashboard/admin']);
+        break;
+      case 'abogado':
+        this.router.navigate(['/dashboard/abogado']);
+        break;
+      case 'asistente_legal':
+        this.router.navigate(['/dashboard/asistente']);
+        break;
+      default:
+        console.log('Rol no reconocido, usando admin');
+        this.router.navigate(['/dashboard/admin']);
+    }
   }
 }

@@ -1,38 +1,44 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleGuard implements CanActivate {
-  
+
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
+  canActivate(route: ActivatedRouteSnapshot): boolean {
     const allowedRoles = route.data['roles'] as string[];
-    
-    return this.authService.authState$.pipe(
-      take(1),
-      map(authState => {
-        if (!authState.isAuthenticated || !authState.user) {
-          this.router.navigate(['/auth/login']);
-          return false;
-        }
+    const userRole = this.authService.getUserRole();
 
-        const userRole = authState.user.rol;
-        if (allowedRoles.includes(userRole)) {
-          return true;
-        }
+    console.log('RoleGuard - Rol del usuario:', userRole);
+    console.log('RoleGuard - Roles permitidos:', allowedRoles);
 
-        this.router.navigate(['/dashboard']);
-        return false;
-      })
-    );
+    if (!userRole) {
+      console.log('RoleGuard - No hay rol, redirigiendo al login');
+      this.router.navigate(['/auth/login']);
+      return false;
+    }
+
+    if (!allowedRoles || allowedRoles.length === 0) {
+      console.log('RoleGuard - No hay roles especificados, permitiendo acceso');
+      return true;
+    }
+
+    const hasPermission = allowedRoles.includes(userRole);
+
+    if (hasPermission) {
+      console.log('RoleGuard - Usuario tiene permiso');
+      return true;
+    }
+
+    console.log('RoleGuard - Usuario NO tiene permiso');
+    alert('No tienes permisos para acceder a esta sección');
+    return false;
   }
 }

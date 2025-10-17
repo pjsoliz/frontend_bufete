@@ -4,7 +4,7 @@ export interface User {
   nombre: string;
   apellido: string;
   telefono?: string;
-  rol: 'ADMIN' | 'ABOGADO' | 'CLIENTE';
+  rol: 'ADMIN' | 'ABOGADO' |'ASISTENTE_LEGAL';
   estado: boolean;
   foto_perfil?: string;
   fecha_registro: string;

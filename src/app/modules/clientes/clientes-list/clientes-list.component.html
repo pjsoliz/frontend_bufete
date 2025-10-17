@@ -1,0 +1,88 @@
+<div class="clientes-container">
+  <div class="page-header">
+    <div>
+      <h1>👥 Gestión de Clientes</h1>
+      <p>Administra la información de todos los clientes</p>
+    </div>
+    <button class="btn-primary" routerLink="/clientes/nuevo">
+      ➕ Nuevo Cliente
+    </button>
+  </div>
+
+  <!-- Filtros y búsqueda -->
+  <div class="filters-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="busquedaTexto"
+        class="search-input"
+        placeholder="🔍 Buscar por nombre, apellido o email...">
+    </div>
+
+    <select [(ngModel)]="filtroEstado" class="filter-select">
+      <option value="">Todos los estados</option>
+      <option value="activo">Activos</option>
+      <option value="inactivo">Inactivos</option>
+    </select>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando clientes...</p>
+  </div>
+
+  <!-- Lista de Clientes -->
+  <div *ngIf="!loading" class="clientes-grid">
+    <div *ngFor="let cliente of clientesFiltrados" class="cliente-card" (click)="verDetalle(cliente.id)">
+      <div class="cliente-header">
+        <div class="cliente-avatar">
+          {{ cliente.nombre.charAt(0) }}{{ cliente.apellido.charAt(0) }}
+        </div>
+        <div class="cliente-info">
+          <h3>{{ cliente.nombre }} {{ cliente.apellido }}</h3>
+          <p class="cliente-email">{{ cliente.email }}</p>
+          <p class="cliente-telefono" *ngIf="cliente.telefono">📞 {{ cliente.telefono }}</p>
+        </div>
+        <span [class]="'badge ' + getEstadoBadgeClass(cliente.estado)">
+          {{ getEstadoLabel(cliente.estado) }}
+        </span>
+      </div>
+
+      <div class="cliente-footer">
+        <span class="cliente-fecha">
+          📅 Registrado: {{ cliente.fecha_registro | date:'dd/MM/yyyy' }}
+        </span>
+        <div class="cliente-actions">
+          <button 
+            class="btn-action edit" 
+            (click)="editarCliente(cliente.id, $event)"
+            title="Editar">
+            ✏️
+          </button>
+          <button 
+            class="btn-action toggle" 
+            (click)="toggleEstado(cliente, $event)"
+            [title]="cliente.estado ? 'Desactivar' : 'Activar'">
+            {{ cliente.estado ? '🔒' : '🔓' }}
+          </button>
+          <button 
+            class="btn-action delete" 
+            (click)="eliminarCliente(cliente.id, $event)"
+            title="Eliminar">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="clientesFiltrados.length === 0" class="empty-state">
+      <div class="empty-icon">👥</div>
+      <h3>No hay clientes</h3>
+      <p>No se encontraron clientes con los filtros seleccionados</p>
+      <button class="btn-primary" routerLink="/clientes/nuevo">
+        ➕ Crear Primer Cliente
+      </button>
+    </div>
+  </div>
+</div>

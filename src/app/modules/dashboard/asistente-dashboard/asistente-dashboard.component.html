@@ -1,0 +1,57 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Panel Asistente Legal</h1>
+    <p>Gestión de casos y clientes</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando...</p>
+  </div>
+
+  <div *ngIf="!loading && stats" class="dashboard-content">
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon">📁</div>
+        <div class="stat-info">
+          <h3>{{ stats.total_casos || 0 }}</h3>
+          <p>Casos Totales</p>
+        </div>
+      </div>
+
+      <div class="stat-card green">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+          <h3>{{ stats.citas_hoy || 0 }}</h3>
+          <p>Citas Hoy</p>
+        </div>
+      </div>
+
+      <div class="stat-card orange">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <h3>{{ stats.total_clientes || 0 }}</h3>
+          <p>Clientes</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>Acciones Rápidas</h2>
+      <div class="actions-grid">
+        <a routerLink="/casos" class="action-card">
+          <span class="action-icon">📁</span>
+          <span class="action-text">Ver Casos</span>
+        </a>
+        <a routerLink="/citas" class="action-card">
+          <span class="action-icon">📅</span>
+          <span class="action-text">Gestionar Citas</span>
+        </a>
+        <a routerLink="/clientes" class="action-card">
+          <span class="action-icon">👥</span>
+          <span class="action-text">Ver Clientes</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

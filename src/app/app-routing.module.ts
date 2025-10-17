@@ -1,15 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
-import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: '/dashboard',
-    pathMatch: 'full'
-  },
   {
     path: 'auth',
     loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
@@ -22,6 +17,10 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
+      },
+      {
+        path: 'clientes',
+        loadChildren: () => import('./modules/clientes/clientes.module').then(m => m.ClientesModule)
       },
       {
         path: 'casos',
@@ -37,15 +36,20 @@ const routes: Routes = [
       },
       {
         path: 'reportes',
-        loadChildren: () => import('./modules/reportes/reportes.module').then(m => m.ReportesModule),
         canActivate: [RoleGuard],
-        data: { roles: ['ADMIN', 'ABOGADO'] }
+        data: { roles: ['administrador', 'abogado', 'asistente_legal'] },
+        loadChildren: () => import('./modules/reportes/reportes.module').then(m => m.ReportesModule)
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
       }
     ]
   },
   {
     path: '**',
-    redirectTo: '/dashboard'
+    redirectTo: 'auth/login'
   }
 ];
 

@@ -1,28 +1,25 @@
-<div class="layout-container">
+<div class="main-layout">
   <!-- Sidebar -->
-  <aside class="sidebar" [class.closed]="!sidebarOpen">
+  <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
     <div class="sidebar-header">
-      <h2 class="logo">⚖️ Genesis</h2>
-      <button class="toggle-btn" (click)="toggleSidebar()">☰</button>
+      <h2 *ngIf="!isSidebarCollapsed">Genesis</h2>
+      <h2 *ngIf="isSidebarCollapsed">G</h2>
     </div>
 
     <nav class="sidebar-nav">
-      <ng-container *ngFor="let item of menuItems">
-        <a
-          *ngIf="hasAccess(item.roles)"
-          [routerLink]="item.route"
-          routerLinkActive="active"
-          class="nav-item">
-          <span class="icon">{{ item.icon }}</span>
-          <span class="label" *ngIf="sidebarOpen">{{ item.label }}</span>
-        </a>
-      </ng-container>
+      <a *ngFor="let item of menuItems"
+         class="nav-item"
+         [class.active]="item.route && router.url.includes(item.route)"
+         (click)="navigate(item)">
+        <span class="nav-icon">{{ item.icon }}</span>
+        <span class="nav-label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
+      </a>
     </nav>
 
     <div class="sidebar-footer">
       <button class="logout-btn" (click)="logout()">
-        <span class="icon">🚪</span>
-        <span *ngIf="sidebarOpen">Cerrar Sesión</span>
+        <span class="nav-icon">🚪</span>
+        <span *ngIf="!isSidebarCollapsed">Cerrar Sesión</span>
       </button>
     </div>
   </aside>
@@ -31,26 +28,21 @@
   <div class="main-content">
     <!-- Header -->
     <header class="header">
-      <div class="header-left">
-        <!--<button class="menu-toggle" (click)="toggleSidebar()">☰</button>-->
-        <h1 class="page-title">Genesis Integrales</h1>
-      </div>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <span *ngIf="!isSidebarCollapsed">☰</span>
+        <span *ngIf="isSidebarCollapsed">☰</span>
+      </button>
 
       <div class="header-right">
-        <div class="user-info" *ngIf="currentUser">
-          <div class="user-avatar">
-            {{ currentUser.nombre.charAt(0) }}{{ currentUser.apellido.charAt(0) }}
-          </div>
-          <div class="user-details">
-            <p class="user-name">{{ currentUser.nombre }} {{ currentUser.apellido }}</p>
-            <p class="user-role">{{ currentUser.rol }}</p>
-          </div>
+        <div class="user-info" *ngIf="usuario">
+          <span class="user-name">{{ usuario.first_name }} {{ usuario.last_name }}</span>
+          <span class="user-role">{{ usuario.rol }}</span>
         </div>
       </div>
     </header>
 
-    <!-- Page Content -->
-    <main class="page-content">
+    <!-- Content Area -->
+    <main class="content">
       <router-outlet></router-outlet>
     </main>
   </div>
