@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ClientesRoutingModule } from './clientes-routing.module';
 import { ClientesListComponent } from './clientes-list/clientes-list.component';
 import { ClienteFormComponent } from './cliente-form/cliente-form.component';
-import { ClienteDetailComponent } from './cliente-detail/cliente-detail.component';
+import { ClienteDetalleComponent } from './cliente-detalle/cliente-detalle.component';
 
 const routes: Routes = [
   {
@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: ':id',
-    component: ClienteDetailComponent
+    component: ClienteDetalleComponent
   }
 ];
 
@@ -30,7 +30,7 @@ const routes: Routes = [
   declarations: [
     ClientesListComponent,
     ClienteFormComponent,
-    ClienteDetailComponent
+    ClienteDetalleComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,247 @@
+<div class="detalle-container">
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando caso...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!loading && errorMessage" class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h2>{{ errorMessage }}</h2>
+    <button class="btn-primary" (click)="volver()">Volver a Casos</button>
+  </div>
+
+  <!-- Detalle del Caso -->
+  <div *ngIf="!loading && caso" class="detalle-content">
+
+    <!-- Header -->
+    <div class="detalle-header">
+      <button class="btn-back" (click)="volver()">← Volver</button>
+
+      <div class="header-main">
+        <div class="header-left">
+          <div class="numero-caso">{{ caso.numero_caso }}</div>
+          <h1>{{ caso.titulo }}</h1>
+          <div class="badges-row">
+            <span class="badge-tipo" [ngClass]="getTipoClass(caso.tipo)">
+              {{ getTipoTexto(caso.tipo) }}
+            </span>
+            <span class="badge-estado" [ngClass]="getEstadoClass(caso.estado)">
+              {{ getEstadoTexto(caso.estado) }}
+            </span>
+            <span class="badge-prioridad" [ngClass]="getPrioridadClass(caso.prioridad)">
+              {{ getPrioridadTexto(caso.prioridad) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn-action" (click)="abrirModalEstado()" title="Cambiar Estado">
+            🔄 Estado
+          </button>
+          <button class="btn-action" (click)="abrirModalAbogado()" title="Asignar Abogado">
+            👤 Abogado
+          </button>
+          <button class="btn-action btn-edit" (click)="editarCaso()" title="Editar">
+            ✏️ Editar
+          </button>
+          <button class="btn-action btn-delete" (click)="eliminarCaso()" title="Eliminar">
+            🗑️ Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+
+      <!-- Columna Izquierda -->
+      <div class="left-column">
+
+        <!-- Información General -->
+        <div class="info-card">
+          <h2>📋 Información General</h2>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Cliente</div>
+              <div class="info-value">
+                <span class="icon">👤</span>
+                {{ caso.cliente }}
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Abogado Asignado</div>
+              <div class="info-value">
+                <span *ngIf="caso.abogado" class="icon">⚖️</span>
+                <span *ngIf="caso.abogado">{{ caso.abogado }}</span>
+                <span *ngIf="!caso.abogado" class="sin-asignar">Sin asignar</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Fecha de Inicio</div>
+              <div class="info-value">
+                <span class="icon">📅</span>
+                {{ formatearFecha(caso.fecha_inicio) }}
+              </div>
+            </div>
+
+            <div class="info-item" *ngIf="caso.fecha_cierre">
+              <div class="info-label">Fecha de Cierre</div>
+              <div class="info-value">
+                <span class="icon">✅</span>
+                {{ formatearFecha(caso.fecha_cierre) }}
+              </div>
+            </div>
+
+            <div class="info-item" *ngIf="caso.proxima_audiencia">
+              <div class="info-label">Próxima Audiencia</div>
+              <div class="info-value highlight">
+                <span class="icon">⚖️</span>
+                {{ formatearFecha(caso.proxima_audiencia) }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="info-card">
+          <h2>📝 Descripción del Caso</h2>
+          <p class="descripcion">{{ caso.descripcion }}</p>
+        </div>
+
+        <!-- Detalles Legales -->
+        <div class="info-card" *ngIf="caso.juzgado || caso.numero_expediente">
+          <h2>⚖️ Detalles Legales</h2>
+
+          <div class="info-grid">
+            <div class="info-item" *ngIf="caso.juzgado">
+              <div class="info-label">Juzgado</div>
+              <div class="info-value">{{ caso.juzgado }}</div>
+            </div>
+
+            <div class="info-item" *ngIf="caso.numero_expediente">
+              <div class="info-label">N° Expediente</div>
+              <div class="info-value">{{ caso.numero_expediente }}</div>
+            </div>
+
+            <div class="info-item" *ngIf="caso.documentos">
+              <div class="info-label">Documentos</div>
+              <div class="info-value">
+                <span class="icon">📄</span>
+                {{ caso.documentos }} archivos
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información Financiera -->
+        <div class="info-card" *ngIf="caso.monto_reclamado || caso.monto_ganado">
+          <h2>💰 Información Financiera</h2>
+
+          <div class="montos-grid">
+            <div class="monto-card reclamado" *ngIf="caso.monto_reclamado">
+              <div class="monto-label">Monto Reclamado</div>
+              <div class="monto-value">${{ caso.monto_reclamado.toLocaleString() }}</div>
+            </div>
+
+            <div class="monto-card ganado" *ngIf="caso.monto_ganado">
+              <div class="monto-label">Monto Ganado</div>
+              <div class="monto-value">${{ caso.monto_ganado.toLocaleString() }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notas -->
+        <div class="info-card" *ngIf="caso.notas">
+          <h2>📌 Notas</h2>
+          <p class="notas">{{ caso.notas }}</p>
+        </div>
+
+      </div>
+
+      <!-- Columna Derecha - Timeline -->
+      <div class="right-column">
+        <div class="timeline-card">
+          <h2>📅 Timeline de Actividades</h2>
+
+          <div class="timeline" *ngIf="caso.actividades && caso.actividades.length > 0">
+            <div class="timeline-item" *ngFor="let actividad of caso.actividades">
+              <div class="timeline-icon">{{ getActividadIcon(actividad.tipo) }}</div>
+              <div class="timeline-content">
+                <div class="timeline-fecha">{{ formatearFechaCorta(actividad.fecha) }}</div>
+                <div class="timeline-descripcion">{{ actividad.descripcion }}</div>
+                <div class="timeline-usuario">Por: {{ actividad.usuario }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sin-actividades" *ngIf="!caso.actividades || caso.actividades.length === 0">
+            <div class="sin-actividades-icon">📭</div>
+            <p>No hay actividades registradas</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Modal Cambiar Estado -->
+  <div class="modal-overlay" *ngIf="mostrarModalEstado" (click)="cerrarModalEstado()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>🔄 Cambiar Estado del Caso</h3>
+        <button class="modal-close" (click)="cerrarModalEstado()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Nuevo Estado</label>
+          <select [(ngModel)]="nuevoEstado" class="modal-select">
+            <option value="pendiente">Pendiente</option>
+            <option value="en_progreso">En Progreso</option>
+            <option value="suspendido">Suspendido</option>
+            <option value="cerrado">Cerrado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="cerrarModalEstado()">Cancelar</button>
+        <button class="btn-primary" (click)="cambiarEstado()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Asignar Abogado -->
+  <div class="modal-overlay" *ngIf="mostrarModalAbogado" (click)="cerrarModalAbogado()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>👤 Asignar Abogado</h3>
+        <button class="modal-close" (click)="cerrarModalAbogado()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Seleccionar Abogado</label>
+          <select [(ngModel)]="abogadoSeleccionado" class="modal-select">
+            <option value="">Sin asignar</option>
+            <option *ngFor="let abogado of abogadosDisponibles" [value]="abogado">
+              {{ abogado }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="cerrarModalAbogado()">Cancelar</button>
+        <button class="btn-primary" (click)="asignarAbogado()">Asignar</button>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,162 +1,210 @@
 <div class="form-container">
+  <!-- Header -->
   <div class="form-header">
+    <button class="btn-back" (click)="cancelar()">← Volver</button>
     <h1>{{ isEditMode ? '✏️ Editar Caso' : '➕ Nuevo Caso' }}</h1>
-    <p>{{ isEditMode ? 'Actualiza la información del caso' : 'Completa el formulario para crear un nuevo caso' }}</p>
+    <p>{{ isEditMode ? 'Modifica los datos del caso' : 'Completa el formulario para crear un nuevo caso' }}</p>
   </div>
 
-  <div class="alert alert-success" *ngIf="successMessage">
-    ✓ {{ successMessage }}
-  </div>
-
-  <div class="alert alert-danger" *ngIf="errorMessage">
-    ✕ {{ errorMessage }}
-  </div>
-
-  <div *ngIf="loading && isEditMode" class="loading-container">
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-overlay">
     <div class="spinner"></div>
-    <p>Cargando datos del caso...</p>
+    <p>{{ isEditMode ? 'Cargando caso...' : 'Guardando caso...' }}</p>
   </div>
 
+  <!-- Formulario -->
   <form [formGroup]="casoForm" (ngSubmit)="onSubmit()" class="caso-form">
 
-    <div class="form-group">
-      <label for="titulo" class="form-label">Título del Caso *</label>
-      <input
-        type="text"
-        id="titulo"
-        formControlName="titulo"
-        class="form-control"
-        placeholder="Ej: Demanda Laboral - Despido Injustificado"
-        [class.error]="titulo?.invalid && titulo?.touched">
-      <div class="error-message" *ngIf="titulo?.invalid && titulo?.touched">
-        <span *ngIf="titulo?.errors?.['required']">El título es requerido</span>
-        <span *ngIf="titulo?.errors?.['minlength']">Mínimo 5 caracteres</span>
-      </div>
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-alert">
+      ⚠️ {{ errorMessage }}
     </div>
 
-    <div class="form-group">
-      <label for="descripcion" class="form-label">Descripción del Caso *</label>
-      <textarea
-        id="descripcion"
-        formControlName="descripcion"
-        class="form-control"
-        rows="5"
-        placeholder="Describe detalladamente el caso, incluye antecedentes, hechos relevantes y pretensiones..."
-        [class.error]="descripcion?.invalid && descripcion?.touched"></textarea>
-      <div class="error-message" *ngIf="descripcion?.invalid && descripcion?.touched">
-        <span *ngIf="descripcion?.errors?.['required']">La descripción es requerida</span>
-        <span *ngIf="descripcion?.errors?.['minlength']">Mínimo 20 caracteres</span>
-      </div>
-    </div>
+    <!-- Sección: Información Básica -->
+    <div class="form-section">
+      <h2>📋 Información Básica</h2>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label for="tipo_caso" class="form-label">Tipo de Caso *</label>
-        <select
-          id="tipo_caso"
-          formControlName="tipo_caso"
-          class="form-control">
-          <option *ngFor="let tipo of tiposCaso" [value]="tipo.value">
-            {{ tipo.label }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="prioridad" class="form-label">Prioridad *</label>
-        <select
-          id="prioridad"
-          formControlName="prioridad"
-          class="form-control">
-          <option *ngFor="let prioridad of prioridades" [value]="prioridad.value">
-            {{ prioridad.label }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group" *ngIf="isEditMode">
-        <label for="estado" class="form-label">Estado *</label>
-        <select
-          id="estado"
-          formControlName="estado"
-          class="form-control">
-          <option *ngFor="let estado of estados" [value]="estado.value">
-            {{ estado.label }}
-          </option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="cliente_id" class="form-label">ID Cliente *</label>
+      <div class="form-group full-width">
+        <label for="titulo">Título del Caso *</label>
         <input
-          type="number"
-          id="cliente_id"
-          formControlName="cliente_id"
-          class="form-control"
-          placeholder="Ej: 1"
-          [class.error]="cliente_id?.invalid && cliente_id?.touched">
-        <small class="form-text">Ingresa el ID del cliente (temporal)</small>
-        <div class="error-message" *ngIf="cliente_id?.invalid && cliente_id?.touched">
-          <span *ngIf="cliente_id?.errors?.['required']">El cliente es requerido</span>
+          type="text"
+          id="titulo"
+          formControlName="titulo"
+          placeholder="Ej: Demanda Laboral - Despido Injustificado"
+          [class.error]="casoForm.get('titulo')?.invalid && casoForm.get('titulo')?.touched">
+        <div class="error-message" *ngIf="casoForm.get('titulo')?.invalid && casoForm.get('titulo')?.touched">
+          {{ getErrorMessage('titulo') }}
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="abogado_asignado_id" class="form-label">ID Abogado Asignado</label>
-        <input
-          type="number"
-          id="abogado_asignado_id"
-          formControlName="abogado_asignado_id"
-          class="form-control"
-          placeholder="Ej: 2">
-        <small class="form-text">Opcional - Deja vacío para asignar después</small>
+      <div class="form-group full-width">
+        <label for="descripcion">Descripción *</label>
+        <textarea
+          id="descripcion"
+          formControlName="descripcion"
+          rows="4"
+          placeholder="Describe los detalles del caso..."
+          [class.error]="casoForm.get('descripcion')?.invalid && casoForm.get('descripcion')?.touched"></textarea>
+        <div class="error-message" *ngIf="casoForm.get('descripcion')?.invalid && casoForm.get('descripcion')?.touched">
+          {{ getErrorMessage('descripcion') }}
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="tipo">Tipo de Caso *</label>
+          <select
+            id="tipo"
+            formControlName="tipo"
+            [class.error]="casoForm.get('tipo')?.invalid && casoForm.get('tipo')?.touched">
+            <option value="">Seleccione un tipo</option>
+            <option *ngFor="let tipo of tiposCaso" [value]="tipo.value">
+              {{ tipo.label }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="casoForm.get('tipo')?.invalid && casoForm.get('tipo')?.touched">
+            El tipo es requerido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="prioridad">Prioridad *</label>
+          <select id="prioridad" formControlName="prioridad">
+            <option *ngFor="let prioridad of prioridades" [value]="prioridad.value">
+              {{ prioridad.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group" *ngIf="isEditMode">
+          <label for="estado">Estado</label>
+          <select id="estado" formControlName="estado">
+            <option *ngFor="let estado of estados" [value]="estado.value">
+              {{ estado.label }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label for="monto_reclamado" class="form-label">Monto Reclamado</label>
-        <input
-          type="number"
-          id="monto_reclamado"
-          formControlName="monto_reclamado"
-          class="form-control"
-          placeholder="Ej: 50000"
-          step="0.01">
-        <small class="form-text">En la moneda local</small>
-      </div>
+    <!-- Sección: Participantes -->
+    <div class="form-section">
+      <h2>👥 Participantes</h2>
 
-      <div class="form-group" *ngIf="isEditMode">
-        <label for="monto_ganado" class="form-label">Monto Ganado</label>
-        <input
-          type="number"
-          id="monto_ganado"
-          formControlName="monto_ganado"
-          class="form-control"
-          placeholder="Ej: 45000"
-          step="0.01">
-        <small class="form-text">Monto finalmente obtenido</small>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="cliente">Cliente *</label>
+          <select
+            id="cliente"
+            formControlName="cliente"
+            [class.error]="casoForm.get('cliente')?.invalid && casoForm.get('cliente')?.touched">
+            <option value="">Seleccione un cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente">
+              {{ cliente }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="casoForm.get('cliente')?.invalid && casoForm.get('cliente')?.touched">
+            El cliente es requerido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="abogado">Abogado Asignado</label>
+          <select id="abogado" formControlName="abogado">
+            <option value="">Sin asignar</option>
+            <option *ngFor="let abogado of abogados" [value]="abogado">
+              {{ abogado }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="notas_internas" class="form-label">Notas Internas</label>
-      <textarea
-        id="notas_internas"
-        formControlName="notas_internas"
-        class="form-control"
-        rows="3"
-        placeholder="Notas privadas, estrategias, observaciones internas..."></textarea>
-      <small class="form-text">Solo visible para el equipo legal</small>
+    <!-- Sección: Fechas y Montos -->
+    <div class="form-section">
+      <h2>📅 Fechas y Montos</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="fecha_inicio">Fecha de Inicio *</label>
+          <input
+            type="date"
+            id="fecha_inicio"
+            formControlName="fecha_inicio"
+            [class.error]="casoForm.get('fecha_inicio')?.invalid && casoForm.get('fecha_inicio')?.touched">
+          <div class="error-message" *ngIf="casoForm.get('fecha_inicio')?.invalid && casoForm.get('fecha_inicio')?.touched">
+            La fecha de inicio es requerida
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="isEditMode">
+          <label for="fecha_cierre">Fecha de Cierre</label>
+          <input type="date" id="fecha_cierre" formControlName="fecha_cierre">
+        </div>
+
+        <div class="form-group">
+          <label for="monto_reclamado">Monto Reclamado ($)</label>
+          <input
+            type="number"
+            id="monto_reclamado"
+            formControlName="monto_reclamado"
+            placeholder="0.00"
+            step="0.01">
+        </div>
+
+        <div class="form-group" *ngIf="isEditMode">
+          <label for="monto_ganado">Monto Ganado ($)</label>
+          <input
+            type="number"
+            id="monto_ganado"
+            formControlName="monto_ganado"
+            placeholder="0.00"
+            step="0.01">
+        </div>
+      </div>
     </div>
 
+    <!-- Sección: Detalles Legales -->
+    <div class="form-section">
+      <h2>⚖️ Detalles Legales</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="juzgado">Juzgado</label>
+          <select id="juzgado" formControlName="juzgado">
+            <option value="">Seleccione un juzgado</option>
+            <option *ngFor="let juzgado of juzgados" [value]="juzgado">
+              {{ juzgado }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="numero_expediente">Número de Expediente</label>
+          <input
+            type="text"
+            id="numero_expediente"
+            formControlName="numero_expediente"
+            placeholder="Ej: EXP-LAB-2025-001">
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="notas">Notas / Observaciones</label>
+        <textarea
+          id="notas"
+          formControlName="notas"
+          rows="4"
+          placeholder="Agregue notas adicionales sobre el caso..."></textarea>
+      </div>
+    </div>
+
+    <!-- Botones -->
     <div class="form-actions">
-      <button type="button" class="btn btn-secondary" (click)="cancelar()" [disabled]="loading">
+      <button type="button" class="btn-secondary" (click)="cancelar()" [disabled]="loading">
         Cancelar
       </button>
-      <button type="submit" class="btn btn-primary" [disabled]="casoForm.invalid || loading">
+      <button type="submit" class="btn-primary" [disabled]="casoForm.invalid || loading">
         <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Caso' : 'Crear Caso' }}</span>
         <span *ngIf="loading">Guardando...</span>
       </button>

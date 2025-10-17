@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ClientesListComponent } from './clientes-list/clientes-list.component';
+import { ClienteFormComponent } from './cliente-form/cliente-form.component';
+import { ClienteDetalleComponent } from './cliente-detalle/cliente-detalle.component';
 import { RoleGuard } from '../../core/guards/role.guard';
 
 const routes: Routes = [
@@ -9,11 +11,25 @@ const routes: Routes = [
     component: ClientesListComponent,
     canActivate: [RoleGuard],
     data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
+  },
+  {
+    path: 'nuevo',
+    component: ClienteFormComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
+  },
+  {
+    path: 'editar/:id',
+    component: ClienteFormComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
+  },
+  {
+    path: ':id',
+    component: ClienteDetalleComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
   }
-  // Aquí podrás agregar después:
-  // { path: 'nuevo', component: ClienteFormComponent },
-  // { path: ':id', component: ClienteDetailComponent },
-  // { path: ':id/editar', component: ClienteFormComponent }
 ];
 
 @NgModule({

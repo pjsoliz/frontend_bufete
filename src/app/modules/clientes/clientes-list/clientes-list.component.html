@@ -1,29 +1,74 @@
 <div class="clientes-container">
-  <div class="page-header">
-    <div>
+  <!-- Header -->
+  <div class="clientes-header">
+    <div class="header-left">
       <h1>👥 Gestión de Clientes</h1>
-      <p>Administra la información de todos los clientes</p>
+      <p>Administra todos los clientes del sistema</p>
     </div>
-    <button class="btn-primary" routerLink="/clientes/nuevo">
-      ➕ Nuevo Cliente
-    </button>
+    <div class="header-right">
+      <button class="btn-primary" (click)="nuevoCliente()">
+        <span class="btn-icon">➕</span>
+        Nuevo Cliente
+      </button>
+    </div>
   </div>
 
-  <!-- Filtros y búsqueda -->
-  <div class="filters-section">
-    <div class="search-box">
-      <input 
-        type="text" 
-        [(ngModel)]="busquedaTexto"
-        class="search-input"
-        placeholder="🔍 Buscar por nombre, apellido o email...">
+  <!-- Estadísticas -->
+  <div class="stats-section">
+    <div class="stat-card blue">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Total Clientes</div>
+      </div>
     </div>
 
-    <select [(ngModel)]="filtroEstado" class="filter-select">
-      <option value="">Todos los estados</option>
-      <option value="activo">Activos</option>
-      <option value="inactivo">Inactivos</option>
-    </select>
+    <div class="stat-card green">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.activos }}</div>
+        <div class="stat-label">Activos</div>
+      </div>
+    </div>
+
+    <div class="stat-card orange">
+      <div class="stat-icon">⏸️</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.inactivos }}</div>
+        <div class="stat-label">Inactivos</div>
+      </div>
+    </div>
+
+    <div class="stat-card purple">
+      <div class="stat-icon">🆕</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.nuevos_mes }}</div>
+        <div class="stat-label">Nuevos (30 días)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros-section">
+    <div class="filtros-grid">
+      <div class="filtro-item">
+        <label>🔍 Buscar</label>
+        <input
+          type="text"
+          placeholder="Buscar por nombre, email o documento..."
+          [(ngModel)]="filtroBusqueda"
+          (input)="onFiltroChange()">
+      </div>
+
+      <div class="filtro-item">
+        <label>📊 Estado</label>
+        <select [(ngModel)]="filtroEstado" (change)="onFiltroChange()">
+          <option value="todos">Todos</option>
+          <option value="activo">Activos</option>
+          <option value="inactivo">Inactivos</option>
+        </select>
+      </div>
+    </div>
   </div>
 
   <!-- Loading -->
@@ -33,56 +78,140 @@
   </div>
 
   <!-- Lista de Clientes -->
-  <div *ngIf="!loading" class="clientes-grid">
-    <div *ngFor="let cliente of clientesFiltrados" class="cliente-card" (click)="verDetalle(cliente.id)">
-      <div class="cliente-header">
-        <div class="cliente-avatar">
-          {{ cliente.nombre.charAt(0) }}{{ cliente.apellido.charAt(0) }}
-        </div>
-        <div class="cliente-info">
-          <h3>{{ cliente.nombre }} {{ cliente.apellido }}</h3>
-          <p class="cliente-email">{{ cliente.email }}</p>
-          <p class="cliente-telefono" *ngIf="cliente.telefono">📞 {{ cliente.telefono }}</p>
-        </div>
-        <span [class]="'badge ' + getEstadoBadgeClass(cliente.estado)">
-          {{ getEstadoLabel(cliente.estado) }}
-        </span>
-      </div>
+  <div *ngIf="!loading" class="clientes-content">
 
-      <div class="cliente-footer">
-        <span class="cliente-fecha">
-          📅 Registrado: {{ cliente.fecha_registro | date:'dd/MM/yyyy' }}
-        </span>
-        <div class="cliente-actions">
-          <button 
-            class="btn-action edit" 
-            (click)="editarCliente(cliente.id, $event)"
-            title="Editar">
-            ✏️
-          </button>
-          <button 
-            class="btn-action toggle" 
-            (click)="toggleEstado(cliente, $event)"
-            [title]="cliente.estado ? 'Desactivar' : 'Activar'">
-            {{ cliente.estado ? '🔒' : '🔓' }}
-          </button>
-          <button 
-            class="btn-action delete" 
-            (click)="eliminarCliente(cliente.id, $event)"
-            title="Eliminar">
-            🗑️
-          </button>
-        </div>
-      </div>
+    <!-- Contador -->
+    <div class="contador">
+      Mostrando <strong>{{ clientesFiltrados.length }}</strong> de <strong>{{ clientes.length }}</strong> clientes
     </div>
 
-    <div *ngIf="clientesFiltrados.length === 0" class="empty-state">
-      <div class="empty-icon">👥</div>
-      <h3>No hay clientes</h3>
-      <p>No se encontraron clientes con los filtros seleccionados</p>
-      <button class="btn-primary" routerLink="/clientes/nuevo">
-        ➕ Crear Primer Cliente
+    <!-- Sin resultados -->
+    <div *ngIf="clientesFiltrados.length === 0" class="sin-resultados">
+      <div class="sin-resultados-icon">🔍</div>
+      <h3>No se encontraron clientes</h3>
+      <p>Intenta ajustar los filtros o crea un nuevo cliente</p>
+      <button class="btn-primary" (click)="nuevoCliente()">
+        Nuevo Cliente
       </button>
     </div>
+
+    <!-- Tabla de Clientes -->
+    <div *ngIf="clientesFiltrados.length > 0" class="clientes-table-container">
+      <table class="clientes-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Documento</th>
+            <th>Contacto</th>
+            <th>Ubicación</th>
+            <th>Casos</th>
+            <th>Estado</th>
+            <th>Fecha Registro</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cliente of clientesFiltrados"
+              class="cliente-row"
+              (click)="verDetalle(cliente.id)">
+
+            <td>
+              <div class="cliente-info">
+                <div class="cliente-avatar">{{ cliente.nombre.charAt(0) }}{{ cliente.apellido.charAt(0) }}</div>
+                <div class="cliente-datos">
+                  <div class="nombre">{{ getNombreCompleto(cliente) }}</div>
+                  <div class="email">{{ cliente.email }}</div>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="documento-info">
+                <div class="tipo-doc">{{ getTipoDocumentoTexto(cliente.tipo_documento) }}</div>
+                <div class="num-doc">{{ cliente.documento_identidad }}</div>
+              </div>
+            </td>
+
+            <td>
+              <div class="contacto-info">
+                <div class="telefono">📞 {{ cliente.telefono }}</div>
+              </div>
+            </td>
+
+            <td>
+              <div class="ubicacion-info" *ngIf="cliente.ciudad">
+                <div>📍 {{ cliente.ciudad }}</div>
+                <div class="provincia" *ngIf="cliente.provincia">{{ cliente.provincia }}</div>
+              </div>
+              <div *ngIf="!cliente.ciudad" class="sin-dato">-</div>
+            </td>
+
+            <td>
+              <div class="casos-info">
+                <div class="casos-activos">
+                  <span class="casos-numero">{{ cliente.casos_activos || 0 }}</span>
+                  <span class="casos-label">activos</span>
+                </div>
+                <div class="casos-total">
+                  Total: {{ cliente.casos_totales || 0 }}
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <span class="estado-badge" [ngClass]="getEstadoClass(cliente.estado)">
+                {{ getEstadoTexto(cliente.estado) }}
+              </span>
+            </td>
+
+            <td>
+              <div class="fecha">{{ formatearFecha(cliente.fecha_registro) }}</div>
+            </td>
+
+            <td class="acciones-cell" (click)="$event.stopPropagation()">
+              <div class="acciones-buttons">
+                <button
+                  class="btn-accion btn-ver"
+                  (click)="verDetalle(cliente.id)"
+                  title="Ver detalle">
+                  👁️
+                </button>
+
+                <button
+                  class="btn-accion btn-editar"
+                  (click)="editarCliente(cliente.id, $event)"
+                  title="Editar">
+                  ✏️
+                </button>
+
+                <button
+                  *ngIf="cliente.estado === 'activo'"
+                  class="btn-accion btn-desactivar"
+                  (click)="cambiarEstado(cliente.id, 'inactivo', $event)"
+                  title="Desactivar">
+                  ⏸️
+                </button>
+
+                <button
+                  *ngIf="cliente.estado === 'inactivo'"
+                  class="btn-accion btn-activar"
+                  (click)="cambiarEstado(cliente.id, 'activo', $event)"
+                  title="Activar">
+                  ▶️
+                </button>
+
+                <button
+                  class="btn-accion btn-eliminar"
+                  (click)="eliminarCliente(cliente.id, $event)"
+                  title="Eliminar">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </div>

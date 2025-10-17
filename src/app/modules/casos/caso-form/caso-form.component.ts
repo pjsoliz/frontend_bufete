@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CasoService } from '../../../core/services/caso.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { CasosService } from '../../../core/services/casos.service';
 
 @Component({
   selector: 'app-caso-form',
@@ -10,94 +9,132 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./caso-form.component.css']
 })
 export class CasoFormComponent implements OnInit {
-  casoForm!: FormGroup;
+  casoForm: FormGroup;
   loading = false;
   isEditMode = false;
   casoId: number | null = null;
   errorMessage = '';
-  successMessage = '';
 
+  // Opciones para los selects
   tiposCaso = [
-    { value: 'CIVIL', label: 'Civil' },
-    { value: 'PENAL', label: 'Penal' },
-    { value: 'LABORAL', label: 'Laboral' },
-    { value: 'FAMILIA', label: 'Familia' },
-    { value: 'COMERCIAL', label: 'Comercial' },
-    { value: 'ADMINISTRATIVO', label: 'Administrativo' },
-    { value: 'TRIBUTARIO', label: 'Tributario' },
-    { value: 'OTRO', label: 'Otro' }
-  ];
-
-  prioridades = [
-    { value: 'BAJA', label: 'Baja' },
-    { value: 'MEDIA', label: 'Media' },
-    { value: 'ALTA', label: 'Alta' },
-    { value: 'URGENTE', label: 'Urgente' }
+    { value: 'laboral', label: 'Laboral' },
+    { value: 'civil', label: 'Civil' },
+    { value: 'penal', label: 'Penal' },
+    { value: 'familia', label: 'Familia' },
+    { value: 'comercial', label: 'Comercial' },
+    { value: 'otro', label: 'Otro' }
   ];
 
   estados = [
-    { value: 'ABIERTO', label: 'Abierto' },
-    { value: 'EN_PROCESO', label: 'En Proceso' },
-    { value: 'CERRADO', label: 'Cerrado' },
-    { value: 'ARCHIVADO', label: 'Archivado' }
+    { value: 'pendiente', label: 'Pendiente' },
+    { value: 'en_progreso', label: 'En Progreso' },
+    { value: 'suspendido', label: 'Suspendido' },
+    { value: 'cerrado', label: 'Cerrado' }
+  ];
+
+  prioridades = [
+    { value: 'baja', label: 'Baja' },
+    { value: 'media', label: 'Media' },
+    { value: 'alta', label: 'Alta' }
+  ];
+
+  clientes = [
+    'Juan Pérez',
+    'María López',
+    'Pedro González',
+    'Laura Martínez',
+    'Roberto Silva',
+    'Carmen Ruiz',
+    'Jorge Castillo',
+    'Sandra Morales'
+  ];
+
+  abogados = [
+    'Dr. Carlos Méndez',
+    'Dra. Ana Torres',
+    'Dr. Luis Ramírez',
+    'Dra. María González',
+    'Dr. Pedro Sánchez'
+  ];
+
+  juzgados = [
+    'Juzgado Laboral N°1',
+    'Juzgado Laboral N°2',
+    'Juzgado Laboral N°3',
+    'Juzgado Civil N°1',
+    'Juzgado Civil N°3',
+    'Juzgado Civil N°7',
+    'Juzgado Penal N°2',
+    'Juzgado Penal N°4',
+    'Juzgado de Familia N°2',
+    'Juzgado de Familia N°5',
+    'Juzgado Comercial N°4'
   ];
 
   constructor(
     private fb: FormBuilder,
-    private casoService: CasoService,
-    private authService: AuthService,
+    private casosService: CasosService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
-
-  ngOnInit(): void {
-    this.initForm();
-
-    this.route.params.subscribe(params => {
-      if (params['id']) {
-        this.isEditMode = true;
-        this.casoId = +params['id'];
-        this.loadCaso(this.casoId);
-      }
-    });
-  }
-
-  initForm(): void {
-    const user = this.authService.getCurrentUser();
-
+  ) {
     this.casoForm = this.fb.group({
-      titulo: ['', [Validators.required, Validators.minLength(5)]],
+      titulo: ['', [Validators.required, Validators.minLength(10)]],
       descripcion: ['', [Validators.required, Validators.minLength(20)]],
-      tipo_caso: ['CIVIL', Validators.required],
-      prioridad: ['MEDIA', Validators.required],
-      estado: ['ABIERTO', Validators.required],
-      cliente_id: ['', Validators.required],
-      abogado_asignado_id: [user?.id || ''],
+      tipo: ['', Validators.required],
+      estado: ['pendiente', Validators.required],
+      prioridad: ['media', Validators.required],
+      cliente: ['', Validators.required],
+      abogado: [''],
+      fecha_inicio: ['', Validators.required],
+      fecha_cierre: [''],
       monto_reclamado: [''],
       monto_ganado: [''],
-      notas_internas: ['']
+      juzgado: [''],
+      numero_expediente: [''],
+      notas: ['']
     });
   }
 
-  loadCaso(id: number): void {
+  ngOnInit(): void {
+    // Verificar si estamos en modo edición
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.casoId = parseInt(id);
+      this.cargarCaso(this.casoId);
+    } else {
+      // Establecer fecha de inicio por defecto
+      const hoy = new Date().toISOString().split('T')[0];
+      this.casoForm.patchValue({ fecha_inicio: hoy });
+    }
+  }
+
+  cargarCaso(id: number): void {
     this.loading = true;
-    this.casoService.getCasoById(id).subscribe({
+    this.casosService.getCasoById(id).subscribe({
       next: (caso) => {
-        this.casoForm.patchValue({
-          titulo: caso.titulo,
-          descripcion: caso.descripcion,
-          tipo_caso: caso.tipo_caso,
-          prioridad: caso.prioridad,
-          estado: caso.estado,
-          cliente_id: caso.cliente.id,
-          abogado_asignado_id: caso.abogado_asignado?.id || '',
-          monto_reclamado: caso.monto_reclamado || '',
-          monto_ganado: caso.monto_ganado || '',
-          notas_internas: caso.notas_internas || ''
-        });
+        if (caso) {
+          this.casoForm.patchValue({
+            titulo: caso.titulo,
+            descripcion: caso.descripcion,
+            tipo: caso.tipo,
+            estado: caso.estado,
+            prioridad: caso.prioridad,
+            cliente: caso.cliente,
+            abogado: caso.abogado || '',
+            fecha_inicio: caso.fecha_inicio,
+            fecha_cierre: caso.fecha_cierre || '',
+            monto_reclamado: caso.monto_reclamado || '',
+            monto_ganado: caso.monto_ganado || '',
+            juzgado: caso.juzgado || '',
+            numero_expediente: caso.numero_expediente || '',
+            notas: caso.notas || ''
+          });
+        }
         this.loading = false;
       },
-      error: () => {
+      error: (error) => {
+        console.error('Error al cargar caso:', error);
         this.errorMessage = 'Error al cargar el caso';
         this.loading = false;
       }
@@ -105,70 +142,68 @@ export class CasoFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.casoForm.invalid) {
-      this.markFormGroupTouched(this.casoForm);
-      return;
-    }
+    if (this.casoForm.valid) {
+      this.loading = true;
+      this.errorMessage = '';
 
-    this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
+      const casoData = this.casoForm.value;
 
-    const formValue = this.casoForm.value;
-    const casoData = {
-      titulo: formValue.titulo,
-      descripcion: formValue.descripcion,
-      tipo_caso: formValue.tipo_caso,
-      prioridad: formValue.prioridad,
-      estado: formValue.estado,
-      cliente_id: +formValue.cliente_id,
-      abogado_asignado_id: formValue.abogado_asignado_id ? +formValue.abogado_asignado_id : undefined,
-      monto_reclamado: formValue.monto_reclamado ? +formValue.monto_reclamado : undefined,
-      monto_ganado: formValue.monto_ganado ? +formValue.monto_ganado : undefined,
-      notas_internas: formValue.notas_internas || undefined
-    };
-
-    if (this.isEditMode && this.casoId) {
-      this.casoService.updateCaso(this.casoId, casoData).subscribe({
-        next: () => {
-          this.successMessage = 'Caso actualizado exitosamente';
-          setTimeout(() => this.router.navigate(['/casos']), 1500);
-        },
-        error: () => {
-          this.errorMessage = 'Error al actualizar el caso';
-          this.loading = false;
-        }
-      });
+      if (this.isEditMode && this.casoId) {
+        // Actualizar caso existente
+        this.casosService.updateCaso(this.casoId, casoData).subscribe({
+          next: () => {
+            this.loading = false;
+            alert('Caso actualizado exitosamente');
+            this.router.navigate(['/casos']);
+          },
+          error: (error) => {
+            console.error('Error al actualizar caso:', error);
+            this.errorMessage = 'Error al actualizar el caso';
+            this.loading = false;
+          }
+        });
+      } else {
+        // Crear nuevo caso
+        this.casosService.createCaso(casoData).subscribe({
+          next: () => {
+            this.loading = false;
+            alert('Caso creado exitosamente');
+            this.router.navigate(['/casos']);
+          },
+          error: (error) => {
+            console.error('Error al crear caso:', error);
+            this.errorMessage = 'Error al crear el caso';
+            this.loading = false;
+          }
+        });
+      }
     } else {
-      this.casoService.createCaso(casoData).subscribe({
-        next: () => {
-          this.successMessage = 'Caso creado exitosamente';
-          setTimeout(() => this.router.navigate(['/casos']), 1500);
-        },
-        error: () => {
-          this.errorMessage = 'Error al crear el caso';
-          this.loading = false;
-        }
-      });
+      this.errorMessage = 'Por favor complete todos los campos requeridos';
+      this.marcarCamposComoTocados();
     }
   }
 
-  cancelar(): void {
-    this.router.navigate(['/casos']);
-  }
-
-  private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
-      const control = formGroup.get(key);
-      control?.markAsTouched();
+  marcarCamposComoTocados(): void {
+    Object.keys(this.casoForm.controls).forEach(key => {
+      this.casoForm.get(key)?.markAsTouched();
     });
   }
 
-  get titulo() { return this.casoForm.get('titulo'); }
-  get descripcion() { return this.casoForm.get('descripcion'); }
-  get tipo_caso() { return this.casoForm.get('tipo_caso'); }
-  get prioridad() { return this.casoForm.get('prioridad'); }
-  get estado() { return this.casoForm.get('estado'); }
-  get cliente_id() { return this.casoForm.get('cliente_id'); }
-  get abogado_asignado_id() { return this.casoForm.get('abogado_asignado_id'); }
+  cancelar(): void {
+    if (confirm('¿Está seguro de cancelar? Se perderán los cambios no guardados.')) {
+      this.router.navigate(['/casos']);
+    }
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const control = this.casoForm.get(fieldName);
+    if (control?.hasError('required')) {
+      return 'Este campo es requerido';
+    }
+    if (control?.hasError('minlength')) {
+      const minLength = control.errors?.['minlength'].requiredLength;
+      return `Mínimo ${minLength} caracteres`;
+    }
+    return '';
+  }
 }

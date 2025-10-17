@@ -5,18 +5,18 @@
   </div>
 
   <div class="reportes-grid">
-    <div *ngFor="let reporte of reportes" 
+    <div *ngFor="let reporte of reportes"
          class="reporte-card"
          [class]="'reporte-card-' + reporte.color"
          (click)="navegarReporte(reporte.ruta)">
-      
+
       <div class="reporte-icon">{{ reporte.icon }}</div>
-      
+
       <div class="reporte-content">
         <h3>{{ reporte.titulo }}</h3>
         <p>{{ reporte.descripcion }}</p>
       </div>
-      
+
       <div class="reporte-action">
         <button class="btn-ver-reporte">
           Ver Reporte →

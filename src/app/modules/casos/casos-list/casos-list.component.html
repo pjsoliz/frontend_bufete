@@ -1,31 +1,99 @@
 <div class="casos-container">
-  <div class="page-header">
-    <div>
+  <!-- Header -->
+  <div class="casos-header">
+    <div class="header-left">
       <h1>📁 Gestión de Casos</h1>
-      <p>Administra todos los casos legales</p>
+      <p>Administra todos los casos del sistema</p>
     </div>
-    <button class="btn-primary" routerLink="/casos/nuevo">
-      ➕ Nuevo Caso
-    </button>
+    <div class="header-right">
+      <button class="btn-primary" (click)="nuevoCaso()">
+        <span class="btn-icon">➕</span>
+        Nuevo Caso
+      </button>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="stats-section">
+    <div class="stat-card blue">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Total Casos</div>
+      </div>
+    </div>
+
+    <div class="stat-card orange">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.pendientes }}</div>
+        <div class="stat-label">Pendientes</div>
+      </div>
+    </div>
+
+    <div class="stat-card green">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.en_progreso }}</div>
+        <div class="stat-label">En Progreso</div>
+      </div>
+    </div>
+
+    <div class="stat-card purple">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.cerrados }}</div>
+        <div class="stat-label">Cerrados</div>
+      </div>
+    </div>
   </div>
 
   <!-- Filtros -->
-  <div class="filters-section">
-    <select [(ngModel)]="filtroEstado" class="filter-select">
-      <option value="">Todos los estados</option>
-      <option value="ABIERTO">Abierto</option>
-      <option value="EN_PROCESO">En Proceso</option>
-      <option value="CERRADO">Cerrado</option>
-      <option value="ARCHIVADO">Archivado</option>
-    </select>
+  <div class="filtros-section">
+    <div class="filtros-grid">
+      <div class="filtro-item">
+        <label>🔍 Buscar</label>
+        <input
+          type="text"
+          placeholder="Buscar por número, título, cliente..."
+          [(ngModel)]="filtroBusqueda"
+          (input)="onFiltroChange()">
+      </div>
 
-    <select [(ngModel)]="filtroEstado" class="filter-select">
-      <option value="">Todos los estados</option>
-      <option value="ABIERTO">Abierto</option>
-      <option value="EN_PROCESO">En Proceso</option>
-      <option value="CERRADO">Cerrado</option>
-      <option value="ARCHIVADO">Archivado</option>
-    </select>
+      <div class="filtro-item">
+        <label>📊 Estado</label>
+        <select [(ngModel)]="filtroEstado" (change)="onFiltroChange()">
+          <option value="todos">Todos</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="en_progreso">En Progreso</option>
+          <option value="suspendido">Suspendido</option>
+          <option value="cerrado">Cerrado</option>
+        </select>
+      </div>
+
+      <div class="filtro-item">
+        <label>⚖️ Tipo</label>
+        <select [(ngModel)]="filtroTipo" (change)="onFiltroChange()">
+          <option value="todos">Todos</option>
+          <option value="laboral">Laboral</option>
+          <option value="civil">Civil</option>
+          <option value="penal">Penal</option>
+          <option value="familia">Familia</option>
+          <option value="comercial">Comercial</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="filtro-item">
+        <label>🎯 Prioridad</label>
+        <select [(ngModel)]="filtroPrioridad" (change)="onFiltroChange()">
+          <option value="todos">Todas</option>
+          <option value="baja">Baja</option>
+          <option value="media">Media</option>
+          <option value="alta">Alta</option>
+        </select>
+      </div>
+    </div>
   </div>
 
   <!-- Loading -->
@@ -35,45 +103,124 @@
   </div>
 
   <!-- Lista de Casos -->
-  <div *ngIf="!loading" class="casos-grid">
-    <div *ngFor="let caso of casosFiltrados" class="caso-card" (click)="verDetalle(caso.id)">
-      <div class="caso-header">
-        <div class="caso-numero">{{ caso.numero_caso }}</div>
-        <span [class]="'badge ' + getPrioridadBadgeClass(caso.prioridad)">
-          {{ caso.prioridad }}
-        </span>
-      </div>
+  <div *ngIf="!loading" class="casos-content">
 
-      <h3 class="caso-titulo">{{ caso.titulo }}</h3>
-      <p class="caso-descripcion">{{ caso.descripcion }}</p>
-
-      <div class="caso-info">
-        <div class="info-item">
-          <span class="info-label">Tipo:</span>
-          <span class="info-value">{{ caso.tipo_caso }}</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">Cliente:</span>
-          <span class="info-value">{{ caso.cliente.nombre }} {{ caso.cliente.apellido }}</span>
-        </div>
-        <div class="info-item" *ngIf="caso.abogado_asignado">
-          <span class="info-label">Abogado:</span>
-          <span class="info-value">{{ caso.abogado_asignado.nombre }} {{ caso.abogado_asignado.apellido }}</span>
-        </div>
-      </div>
-
-      <div class="caso-footer">
-        <span class="caso-fecha">📅 {{ caso.fecha_apertura | date:'dd/MM/yyyy' }}</span>
-        <span [class]="'badge ' + getEstadoBadgeClass(caso.estado)">
-          {{ caso.estado }}
-        </span>
-      </div>
+    <!-- Contador -->
+    <div class="contador">
+      Mostrando <strong>{{ casosFiltrados.length }}</strong> de <strong>{{ casos.length }}</strong> casos
     </div>
 
-    <div *ngIf="casosFiltrados.length === 0" class="empty-state">
-      <div class="empty-icon">📁</div>
-      <h3>No hay casos</h3>
-      <p>No se encontraron casos con los filtros seleccionados</p>
+    <!-- Sin resultados -->
+    <div *ngIf="casosFiltrados.length === 0" class="sin-resultados">
+      <div class="sin-resultados-icon">🔍</div>
+      <h3>No se encontraron casos</h3>
+      <p>Intenta ajustar los filtros o crea un nuevo caso</p>
+      <button class="btn-primary" (click)="nuevoCaso()">
+        Nuevo Caso
+      </button>
     </div>
+
+    <!-- Tabla de Casos -->
+    <div *ngIf="casosFiltrados.length > 0" class="casos-table-container">
+      <table class="casos-table">
+        <thead>
+          <tr>
+            <th>N° Caso</th>
+            <th>Título</th>
+            <th>Cliente</th>
+            <th>Abogado</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Fecha Inicio</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let caso of casosFiltrados"
+              class="caso-row"
+              (click)="verDetalle(caso.id)">
+
+            <td>
+              <div class="numero-caso">
+                <span class="numero-badge">{{ caso.numero_caso }}</span>
+              </div>
+            </td>
+
+            <td>
+              <div class="titulo-caso">
+                <div class="titulo">{{ caso.titulo }}</div>
+                <div class="subtitulo" *ngIf="caso.juzgado">
+                  📍 {{ caso.juzgado }}
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="cliente-info">
+                <span class="icono">👤</span>
+                <span>{{ caso.cliente }}</span>
+              </div>
+            </td>
+
+            <td>
+              <div class="abogado-info">
+                <span *ngIf="caso.abogado" class="icono">⚖️</span>
+                <span *ngIf="caso.abogado">{{ caso.abogado }}</span>
+                <span *ngIf="!caso.abogado" class="sin-asignar">Sin asignar</span>
+              </div>
+            </td>
+
+            <td>
+              <span class="tipo-badge" [ngClass]="getTipoClass(caso.tipo)">
+                {{ getTipoTexto(caso.tipo) }}
+              </span>
+            </td>
+
+            <td>
+              <span class="estado-badge" [ngClass]="getEstadoClass(caso.estado)">
+                {{ getEstadoTexto(caso.estado) }}
+              </span>
+            </td>
+
+            <td>
+              <span class="prioridad-badge" [ngClass]="getPrioridadClass(caso.prioridad)">
+                {{ getPrioridadTexto(caso.prioridad) }}
+              </span>
+            </td>
+
+            <td>
+              <div class="fecha">{{ formatearFecha(caso.fecha_inicio) }}</div>
+            </td>
+
+            <td class="acciones-cell" (click)="$event.stopPropagation()">
+              <div class="acciones-buttons">
+                <button
+                  class="btn-accion btn-ver"
+                  (click)="verDetalle(caso.id)"
+                  title="Ver detalle">
+                  👁️
+                </button>
+
+                <button
+                  class="btn-accion btn-editar"
+                  (click)="editarCaso(caso.id, $event)"
+                  title="Editar">
+                  ✏️
+                </button>
+
+                <button
+                  class="btn-accion btn-eliminar"
+                  (click)="eliminarCaso(caso.id, $event)"
+                  title="Eliminar">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </div>
