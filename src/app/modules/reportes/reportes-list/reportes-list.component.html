@@ -1,26 +1,53 @@
 <div class="reportes-container">
   <div class="reportes-header">
-    <h1>Reportes</h1>
-    <p>Visualiza estadísticas y reportes del sistema</p>
+    <h1>📊 Centro de Reportes</h1>
+    <p>Visualiza estadísticas y análisis del sistema</p>
   </div>
 
-  <div class="reportes-content">
-    <div class="report-card">
-      <h3>📊 Reporte de Casos</h3>
-      <p>Estadísticas de casos por estado</p>
-      <button class="btn btn-primary">Ver Reporte</button>
+  <div class="reportes-grid">
+    <div *ngFor="let reporte of reportes" 
+         class="reporte-card"
+         [class]="'reporte-card-' + reporte.color"
+         (click)="navegarReporte(reporte.ruta)">
+      
+      <div class="reporte-icon">{{ reporte.icon }}</div>
+      
+      <div class="reporte-content">
+        <h3>{{ reporte.titulo }}</h3>
+        <p>{{ reporte.descripcion }}</p>
+      </div>
+      
+      <div class="reporte-action">
+        <button class="btn-ver-reporte">
+          Ver Reporte →
+        </button>
+      </div>
     </div>
+  </div>
 
-    <div class="report-card">
-      <h3>📅 Reporte de Citas</h3>
-      <p>Análisis de citas programadas</p>
-      <button class="btn btn-primary">Ver Reporte</button>
-    </div>
-
-    <div class="report-card">
-      <h3>👥 Reporte de Clientes</h3>
-      <p>Estadísticas de clientes activos</p>
-      <button class="btn btn-primary">Ver Reporte</button>
+  <div class="quick-stats">
+    <h2>Estadísticas Rápidas</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-icon">📁</span>
+        <span class="stat-value">128</span>
+        <span class="stat-label">Casos Activos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">📅</span>
+        <span class="stat-value">245</span>
+        <span class="stat-label">Citas Este Mes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">👥</span>
+        <span class="stat-value">95</span>
+        <span class="stat-label">Clientes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">⚖️</span>
+        <span class="stat-value">88.4%</span>
+        <span class="stat-label">Tasa de Éxito</span>
+      </div>
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ReportesListComponent } from './reportes-list/reportes-list.component';
+import { ReporteCasosComponent } from './reporte-casos/reporte-casos.component';
 import { RoleGuard } from '../../core/guards/role.guard';
 
 const routes: Routes = [
@@ -9,11 +10,13 @@ const routes: Routes = [
     component: ReportesListComponent,
     canActivate: [RoleGuard],
     data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
+  },
+  {
+    path: 'casos',
+    component: ReporteCasosComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
   }
-  // Aquí podrás agregar después:
-  // { path: 'casos', component: ReporteCasosComponent },
-  // { path: 'citas', component: ReporteCitasComponent },
-  // { path: 'financiero', component: ReporteFinancieroComponent }
 ];
 
 @NgModule({
