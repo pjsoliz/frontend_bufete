@@ -1,0 +1,162 @@
+<div class="reporte-container">
+  <!-- Header -->
+  <div class="reporte-header">
+    <button class="btn-back" routerLink="/reportes">← Volver</button>
+    <h1>👥 Reporte de Clientes</h1>
+    <p>Estadísticas de clientes activos, nuevos y por tipo de caso</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando datos...</p>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading && datos" class="reporte-content">
+    
+    <!-- Resumen Cards -->
+    <div class="summary-cards">
+      <div class="summary-card blue">
+        <div class="summary-icon">👥</div>
+        <div class="summary-info">
+          <h3>{{ datos.total }}</h3>
+          <p>Total de Clientes</p>
+        </div>
+      </div>
+
+      <div class="summary-card green">
+        <div class="summary-icon">✅</div>
+        <div class="summary-info">
+          <h3>{{ datos.activos }}</h3>
+          <p>Clientes Activos</p>
+        </div>
+      </div>
+
+      <div class="summary-card purple">
+        <div class="summary-icon">🆕</div>
+        <div class="summary-info">
+          <h3>{{ datos.nuevos_mes }}</h3>
+          <p>Nuevos Este Mes</p>
+        </div>
+      </div>
+
+      <div class="summary-card orange">
+        <div class="summary-icon">⭐</div>
+        <div class="summary-info">
+          <h3>{{ datos.satisfaccion }}/5</h3>
+          <p>Satisfacción</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráficas Grid -->
+    <div class="charts-grid">
+      
+      <!-- Gráfica de Crecimiento -->
+      <div class="chart-card chart-card-wide">
+        <div class="chart-wrapper-wide">
+          <canvas id="chartCrecimiento"></canvas>
+        </div>
+      </div>
+
+      <!-- Gráfica por Tipo de Caso -->
+      <div class="chart-card">
+        <div class="chart-wrapper">
+          <canvas id="chartTipoCaso"></canvas>
+        </div>
+      </div>
+
+      <!-- Gráfica por Estado -->
+      <div class="chart-card">
+        <div class="chart-wrapper">
+          <canvas id="chartEstadoClientes"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Estadísticas Adicionales -->
+    <div class="estadisticas-extra">
+      <h2>📊 Métricas Clave</h2>
+      
+      <div class="stats-extra-grid">
+        <div class="stat-extra-card blue-card">
+          <div class="stat-extra-icon">📈</div>
+          <div class="stat-extra-content">
+            <h4>Tasa de Crecimiento</h4>
+            <p class="stat-value">{{ ((datos.nuevos_mes / datos.total) * 100).toFixed(1) }}%</p>
+            <span class="stat-label">Crecimiento mensual</span>
+          </div>
+        </div>
+
+        <div class="stat-extra-card green-card">
+          <div class="stat-extra-icon">💼</div>
+          <div class="stat-extra-content">
+            <h4>Promedio de Casos</h4>
+            <p class="stat-value">1.3</p>
+            <span class="stat-label">Casos por cliente</span>
+          </div>
+        </div>
+
+        <div class="stat-extra-card purple-card">
+          <div class="stat-extra-icon">🎯</div>
+          <div class="stat-extra-content">
+            <h4>Retención</h4>
+            <p class="stat-value">{{ ((datos.activos / datos.total) * 100).toFixed(1) }}%</p>
+            <span class="stat-label">Clientes activos</span>
+          </div>
+        </div>
+
+        <div class="stat-extra-card orange-card">
+          <div class="stat-extra-icon">⭐</div>
+          <div class="stat-extra-content">
+            <h4>Satisfacción</h4>
+            <p class="stat-value">{{ datos.satisfaccion }}/5</p>
+            <span class="stat-label">Calificación promedio</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen Detallado -->
+    <div class="resumen-detallado">
+      <h2>📋 Resumen Detallado</h2>
+      
+      <div class="resumen-grid">
+        <div class="resumen-item">
+          <div class="resumen-label">Total de Clientes</div>
+          <div class="resumen-value">{{ datos.total }}</div>
+          <div class="resumen-progress">
+            <div class="progress-bar" [style.width.%]="100"></div>
+          </div>
+        </div>
+
+        <div class="resumen-item">
+          <div class="resumen-label">Clientes Activos</div>
+          <div class="resumen-value">{{ datos.activos }}</div>
+          <div class="resumen-progress">
+            <div class="progress-bar green-bar" [style.width.%]="(datos.activos / datos.total) * 100"></div>
+          </div>
+        </div>
+
+        <div class="resumen-item">
+          <div class="resumen-label">Clientes Inactivos</div>
+          <div class="resumen-value">{{ datos.inactivos }}</div>
+          <div class="resumen-progress">
+            <div class="progress-bar gray-bar" [style.width.%]="(datos.inactivos / datos.total) * 100"></div>
+          </div>
+        </div>
+
+        <div class="resumen-item">
+          <div class="resumen-label">Nuevos Este Mes</div>
+          <div class="resumen-value">{{ datos.nuevos_mes }}</div>
+          <div class="resumen-progress">
+            <div class="progress-bar purple-bar" [style.width.%]="(datos.nuevos_mes / datos.total) * 100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
