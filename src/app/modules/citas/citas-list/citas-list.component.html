@@ -18,8 +18,8 @@
     <div class="filtros-grid">
       <div class="filtro-item">
         <label>🔍 Buscar</label>
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder="Buscar por cliente, abogado o tipo..."
           [(ngModel)]="filtroBusqueda"
           (input)="onFiltroBusquedaChange($event)">
@@ -38,7 +38,7 @@
 
       <div class="filtro-item">
         <label>📅 Fecha</label>
-        <input 
+        <input
           type="date"
           [(ngModel)]="filtroFecha"
           (change)="onFiltroFechaChange($event)">
@@ -54,7 +54,7 @@
 
   <!-- Lista de Citas -->
   <div *ngIf="!loading" class="citas-content">
-    
+
     <!-- Contador -->
     <div class="contador">
       Mostrando <strong>{{ citasFiltradas.length }}</strong> de <strong>{{ citas.length }}</strong> citas
@@ -85,10 +85,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let cita of citasFiltradas" 
+          <tr *ngFor="let cita of citasFiltradas"
               class="cita-row"
               (click)="verDetalle(cita.id)">
-            
+
             <td>
               <div class="fecha-info">
                 <div class="fecha">{{ formatearFecha(cita.fecha) }}</div>
@@ -126,16 +126,16 @@
 
             <td class="acciones-cell">
               <div class="acciones-buttons">
-                
-                <button 
-                  *ngIf="cita.estado === 'programada'"
+
+                <button
+                  *ngIf="cita.estado === 'confirmada'"
                   class="btn-accion btn-confirmar"
                   (click)="confirmarCita(cita.id, $event)"
                   title="Confirmar">
                   ✅
                 </button>
 
-                <button 
+                <button
                   *ngIf="cita.estado === 'confirmada'"
                   class="btn-accion btn-completar"
                   (click)="completarCita(cita.id, $event)"
@@ -143,14 +143,14 @@
                   ✔️
                 </button>
 
-                <button 
+                <button
                   class="btn-accion btn-editar"
                   (click)="editarCita(cita.id); $event.stopPropagation()"
                   title="Editar">
                   ✏️
                 </button>
 
-                <button 
+                <button
                   *ngIf="cita.estado !== 'cancelada' && cita.estado !== 'completada'"
                   class="btn-accion btn-cancelar"
                   (click)="cancelarCita(cita.id, $event)"
@@ -158,7 +158,7 @@
                   ❌
                 </button>
 
-                <button 
+                <button
                   class="btn-accion btn-eliminar"
                   (click)="eliminarCita(cita.id, $event)"
                   title="Eliminar">

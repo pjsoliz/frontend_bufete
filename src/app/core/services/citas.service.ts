@@ -4,14 +4,17 @@ import { delay } from 'rxjs/operators';
 
 export interface Cita {
   id: number;
+  titulo: string;  // ← AGREGAR ESTA PROPIEDAD
   fecha: string;
   hora: string;
+  duracion: number;
+  tipo: 'consulta' | 'audiencia' | 'reunion' | 'firma' | 'otro';
   cliente: string;
-  abogado: string;
-  tipo: string;
-  estado: 'programada' | 'confirmada' | 'completada' | 'cancelada';
+  abogado?: string;
+  estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada';
+  ubicacion?: string;  // ← AGREGAR ESTA PROPIEDAD
+  descripcion?: string;
   notas?: string;
-  duracion: number; // en minutos
 }
 
 @Injectable({
@@ -23,91 +26,114 @@ export class CitasService {
   private citasMock: Cita[] = [
     {
       id: 1,
-      fecha: '2025-10-18',
+      titulo: 'Consulta Inicial - Caso Laboral',
+      fecha: '2025-10-20',
       hora: '09:00',
+      duracion: 60,
+      tipo: 'consulta',
       cliente: 'Juan Pérez',
       abogado: 'Dr. Carlos Méndez',
-      tipo: 'Consulta Inicial',
       estado: 'confirmada',
-      notas: 'Cliente nuevo, caso laboral',
-      duracion: 60
+      ubicacion: 'Oficina Principal - Sala 1',
+      descripcion: 'Primera consulta sobre caso de despido injustificado',
+      notas: 'Cliente muy puntual, traer documentación laboral'
     },
     {
       id: 2,
-      fecha: '2025-10-18',
+      titulo: 'Audiencia de Divorcio',
+      fecha: '2025-10-22',
       hora: '10:30',
+      duracion: 120,
+      tipo: 'audiencia',
       cliente: 'María López',
       abogado: 'Dra. Ana Torres',
-      tipo: 'Seguimiento',
-      estado: 'programada',
-      notas: 'Revisar documentación del caso',
-      duracion: 45
+      estado: 'confirmada',
+      ubicacion: 'Juzgado de Familia N°5',
+      descripcion: 'Audiencia de divorcio contencioso',
+      notas: 'Llevar todos los documentos de bienes'
     },
     {
       id: 3,
+      titulo: 'Reunión con Cliente - Caso Civil',
       fecha: '2025-10-18',
       hora: '14:00',
+      duracion: 45,
+      tipo: 'reunion',
       cliente: 'Pedro González',
-      abogado: 'Dr. Carlos Méndez',
-      tipo: 'Audiencia Preparatoria',
-      estado: 'confirmada',
-      notas: 'Preparar estrategia para audiencia',
-      duracion: 90
+      abogado: 'Dr. Luis Ramírez',
+      estado: 'completada',
+      ubicacion: 'Oficina Principal - Sala 2',
+      descripcion: 'Revisión de avances del caso de daños y perjuicios',
+      notas: 'Reunión completada exitosamente'
     },
     {
       id: 4,
-      fecha: '2025-10-19',
-      hora: '09:00',
+      titulo: 'Firma de Documentos',
+      fecha: '2025-10-25',
+      hora: '11:00',
+      duracion: 30,
+      tipo: 'firma',
       cliente: 'Laura Martínez',
-      abogado: 'Dra. Ana Torres',
-      tipo: 'Consulta Inicial',
-      estado: 'programada',
-      notas: 'Caso de familia, divorcio',
-      duracion: 60
+      abogado: 'Dra. María González',
+      estado: 'pendiente',
+      ubicacion: 'Oficina Principal - Sala 3',
+      descripcion: 'Firma de documentos de pensión alimenticia',
+      notas: 'Confirmar asistencia 24h antes'
     },
     {
       id: 5,
-      fecha: '2025-10-19',
-      hora: '11:00',
+      titulo: 'Consulta Legal - Defensa Penal',
+      fecha: '2025-10-17',
+      hora: '15:30',
+      duracion: 90,
+      tipo: 'consulta',
       cliente: 'Roberto Silva',
       abogado: 'Dr. Luis Ramírez',
-      tipo: 'Seguimiento',
-      estado: 'programada',
-      notas: 'Actualización de caso penal',
-      duracion: 45
+      estado: 'completada',
+      ubicacion: 'Oficina Principal - Sala 1',
+      descripcion: 'Consulta sobre estrategia de defensa',
+      notas: 'Cliente satisfecho con la estrategia propuesta'
     },
     {
       id: 6,
-      fecha: '2025-10-17',
-      hora: '10:00',
+      titulo: 'Audiencia Preliminar',
+      fecha: '2025-10-28',
+      hora: '09:30',
+      duracion: 60,
+      tipo: 'audiencia',
       cliente: 'Carmen Ruiz',
       abogado: 'Dr. Carlos Méndez',
-      tipo: 'Consulta',
-      estado: 'completada',
-      notas: 'Consulta completada exitosamente',
-      duracion: 60
+      estado: 'pendiente',
+      ubicacion: 'Juzgado Laboral N°3',
+      descripcion: 'Audiencia preliminar caso laboral',
+      notas: 'Preparar argumentos principales'
     },
     {
       id: 7,
-      fecha: '2025-10-17',
-      hora: '15:00',
+      titulo: 'Reunión de Seguimiento',
+      fecha: '2025-10-19',
+      hora: '16:00',
+      duracion: 45,
+      tipo: 'reunion',
       cliente: 'Jorge Castillo',
-      abogado: 'Dra. Ana Torres',
-      tipo: 'Seguimiento',
       estado: 'cancelada',
-      notas: 'Cliente canceló por motivos personales',
-      duracion: 45
+      ubicacion: 'Oficina Principal - Sala 2',
+      descripcion: 'Seguimiento del caso de herencia',
+      notas: 'Cliente canceló por motivos personales'
     },
     {
       id: 8,
-      fecha: '2025-10-20',
-      hora: '10:00',
+      titulo: 'Consulta Urgente',
+      fecha: '2025-10-17',
+      hora: '17:00',
+      duracion: 30,
+      tipo: 'consulta',
       cliente: 'Sandra Morales',
-      abogado: 'Dr. Luis Ramírez',
-      tipo: 'Consulta Inicial',
-      estado: 'programada',
-      notas: 'Caso comercial',
-      duracion: 60
+      abogado: 'Dra. Ana Torres',
+      estado: 'completada',
+      ubicacion: 'Oficina Principal - Sala 3',
+      descripcion: 'Consulta urgente sobre caso comercial',
+      notas: 'Atendida el mismo día'
     }
   ];
 

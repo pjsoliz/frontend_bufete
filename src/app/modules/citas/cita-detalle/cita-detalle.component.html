@@ -1,0 +1,237 @@
+<div class="detalle-container">
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando cita...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!loading && errorMessage" class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h2>{{ errorMessage }}</h2>
+    <button class="btn-primary" (click)="volver()">Volver a Citas</button>
+  </div>
+
+  <!-- Detalle de la Cita -->
+  <div *ngIf="!loading && cita" class="detalle-content">
+    
+    <!-- Header -->
+    <div class="detalle-header">
+      <button class="btn-back" (click)="volver()">← Volver</button>
+      
+      <div class="header-main">
+        <div class="header-left">
+          <div class="cita-icon-large">📅</div>
+          <div class="cita-info-header">
+            <h1>{{ cita.titulo }}</h1>
+            <div class="badges-row">
+              <span class="badge-tipo" [ngClass]="getTipoClass(cita.tipo)">
+                {{ getTipoTexto(cita.tipo) }}
+              </span>
+              <span class="badge-estado" [ngClass]="getEstadoClass(cita.estado)">
+                {{ getEstadoTexto(cita.estado) }}
+              </span>
+              <span class="badge-urgente" *ngIf="esHoy()">
+                🔴 HOY
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn-action btn-confirmar" 
+                  (click)="confirmarCita()"
+                  *ngIf="cita.estado === 'pendiente'"
+                  title="Confirmar">
+            ✅ Confirmar
+          </button>
+          <button class="btn-action btn-completar" 
+                  (click)="completarCita()"
+                  *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
+                  title="Completar">
+            ✔️ Completar
+          </button>
+          <button class="btn-action btn-edit" 
+                  (click)="editarCita()"
+                  *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'">
+            ✏️ Editar
+          </button>
+          <button class="btn-action btn-cancelar" 
+                  (click)="cancelarCita()"
+                  *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
+                  title="Cancelar">
+            ⏸️ Cancelar
+          </button>
+          <button class="btn-action btn-delete" (click)="eliminarCita()">
+            🗑️ Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      
+      <!-- Columna Izquierda -->
+      <div class="left-column">
+        
+        <!-- Información de Fecha y Hora -->
+        <div class="info-card fecha-card">
+          <h2>🕐 Fecha y Hora</h2>
+          
+          <div class="fecha-hora-grid">
+            <div class="fecha-hora-item">
+              <div class="fecha-hora-icon">📅</div>
+              <div class="fecha-hora-info">
+                <div class="fecha-hora-label">Fecha</div>
+                <div class="fecha-hora-value">{{ formatearFecha(cita.fecha) }}</div>
+              </div>
+            </div>
+
+            <div class="fecha-hora-item">
+              <div class="fecha-hora-icon">⏰</div>
+              <div class="fecha-hora-info">
+                <div class="fecha-hora-label">Hora</div>
+                <div class="fecha-hora-value">{{ formatearHora(cita.hora) }}</div>
+              </div>
+            </div>
+
+            <div class="fecha-hora-item">
+              <div class="fecha-hora-icon">⏱️</div>
+              <div class="fecha-hora-info">
+                <div class="fecha-hora-label">Duración</div>
+                <div class="fecha-hora-value">{{ cita.duracion }} minutos</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alerta-tiempo" *ngIf="esPasada() && cita.estado !== 'completada' && cita.estado !== 'cancelada'">
+            ⚠️ Esta cita ya pasó. Considera completarla o cancelarla.
+          </div>
+
+          <div class="alerta-hoy" *ngIf="esHoy() && cita.estado !== 'completada' && cita.estado !== 'cancelada'">
+            🔔 Esta cita es HOY. ¡No olvides confirmarla!
+          </div>
+        </div>
+
+        <!-- Participantes -->
+        <div class="info-card">
+          <h2>👥 Participantes</h2>
+          
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Cliente</div>
+              <div class="info-value">
+                <span class="icon">👤</span>
+                {{ cita.cliente }}
+              </div>
+            </div>
+
+            <div class="info-item" *ngIf="cita.abogado">
+              <div class="info-label">Abogado Asignado</div>
+              <div class="info-value">
+                <span class="icon">⚖️</span>
+                {{ cita.abogado }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ubicación -->
+        <div class="info-card" *ngIf="cita.ubicacion">
+          <h2>📍 Ubicación</h2>
+          <div class="ubicacion-content">
+            <div class="ubicacion-icon">🏢</div>
+            <div class="ubicacion-texto">{{ cita.ubicacion }}</div>
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="info-card" *ngIf="cita.descripcion">
+          <h2>📝 Descripción</h2>
+          <p class="descripcion">{{ cita.descripcion }}</p>
+        </div>
+
+        <!-- Notas -->
+        <div class="info-card" *ngIf="cita.notas">
+          <h2>📌 Notas Adicionales</h2>
+          <p class="notas">{{ cita.notas }}</p>
+        </div>
+
+      </div>
+
+      <!-- Columna Derecha -->
+      <div class="right-column">
+        
+        <!-- Estado de la Cita -->
+        <div class="estado-card">
+          <h2>📊 Estado de la Cita</h2>
+          
+          <div class="estado-visual">
+            <div class="estado-icon-grande" [ngClass]="getEstadoClass(cita.estado)">
+              <span *ngIf="cita.estado === 'pendiente'">⏳</span>
+              <span *ngIf="cita.estado === 'confirmada'">✅</span>
+              <span *ngIf="cita.estado === 'completada'">✔️</span>
+              <span *ngIf="cita.estado === 'cancelada'">❌</span>
+            </div>
+            <div class="estado-texto-grande">{{ getEstadoTexto(cita.estado) }}</div>
+          </div>
+
+          <!-- Acciones Rápidas -->
+          <div class="acciones-rapidas" *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'">
+            <h3>Acciones Rápidas</h3>
+            
+            <button class="accion-rapida confirmar" 
+                    (click)="confirmarCita()"
+                    *ngIf="cita.estado === 'pendiente'">
+              <span class="accion-icon">✅</span>
+              <span class="accion-texto">Confirmar Cita</span>
+            </button>
+
+            <button class="accion-rapida completar" (click)="completarCita()">
+              <span class="accion-icon">✔️</span>
+              <span class="accion-texto">Marcar como Completada</span>
+            </button>
+
+            <button class="accion-rapida cancelar" (click)="cancelarCita()">
+              <span class="accion-icon">❌</span>
+              <span class="accion-texto">Cancelar Cita</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Información Adicional -->
+        <div class="info-adicional-card">
+          <h2>ℹ️ Información Adicional</h2>
+          
+          <div class="info-item-simple">
+            <div class="info-simple-label">Tipo de Cita</div>
+            <div class="info-simple-value">
+              <span class="badge-tipo-small" [ngClass]="getTipoClass(cita.tipo)">
+                {{ getTipoTexto(cita.tipo) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="info-item-simple">
+            <div class="info-simple-label">Duración Estimada</div>
+            <div class="info-simple-value">{{ cita.duracion }} minutos</div>
+          </div>
+
+          <div class="info-item-simple" *ngIf="esPasada()">
+            <div class="info-simple-label">Estado</div>
+            <div class="info-simple-value texto-rojo">⚠️ Cita pasada</div>
+          </div>
+
+          <div class="info-item-simple" *ngIf="esHoy()">
+            <div class="info-simple-label">Importante</div>
+            <div class="info-simple-value texto-naranja">🔔 Cita programada para HOY</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

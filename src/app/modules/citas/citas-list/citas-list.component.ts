@@ -11,10 +11,11 @@ export class CitasListComponent implements OnInit {
   citas: Cita[] = [];
   citasFiltradas: Cita[] = [];
   loading = true;
-  
+
   // Filtros
-  filtroEstado: string = 'todas';
+  filtroEstado: string = 'todos';
   filtroFecha: string = '';
+  filtroTipo: string = 'todos';
   filtroBusqueda: string = '';
 
   constructor(
@@ -44,19 +45,16 @@ export class CitasListComponent implements OnInit {
 
   aplicarFiltros(): void {
     this.citasFiltradas = this.citas.filter(cita => {
-      // Filtro por estado
-      const cumpleEstado = this.filtroEstado === 'todas' || cita.estado === this.filtroEstado;
-      
-      // Filtro por fecha
-      const cumpleFecha = !this.filtroFecha || cita.fecha === this.filtroFecha;
-      
-      // Filtro por búsqueda
-      const cumpleBusqueda = !this.filtroBusqueda || 
+      const cumpleEstado = this.filtroEstado === 'todos' || cita.estado === this.filtroEstado;
+      const cumpleTipo = this.filtroTipo === 'todos' || cita.tipo === this.filtroTipo;
+
+      const cumpleBusqueda = !this.filtroBusqueda ||
+        cita.titulo.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
         cita.cliente.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        cita.abogado.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        cita.tipo.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
-      
-      return cumpleEstado && cumpleFecha && cumpleBusqueda;
+        (cita.abogado && cita.abogado.toLowerCase().includes(this.filtroBusqueda.toLowerCase())) ||
+        cita.fecha.includes(this.filtroBusqueda);
+
+      return cumpleEstado && cumpleTipo && cumpleBusqueda;
     });
   }
 

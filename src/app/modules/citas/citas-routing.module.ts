@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CitasListComponent } from './citas-list/citas-list.component';
 import { CitaFormComponent } from './cita-form/cita-form.component';
+import { CitaDetalleComponent } from './cita-detalle/cita-detalle.component';
 import { RoleGuard } from '../../core/guards/role.guard';
 
 const routes: Routes = [
@@ -20,6 +21,12 @@ const routes: Routes = [
   {
     path: 'editar/:id',
     component: CitaFormComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
+  },
+  {
+    path: ':id',
+    component: CitaDetalleComponent,
     canActivate: [RoleGuard],
     data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
   }
