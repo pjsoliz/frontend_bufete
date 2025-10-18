@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { DashboardAdminComponent } from './admin-dashboard/admin-dashboard.component';
 import { AbogadoDashboardComponent } from './abogado-dashboard/abogado-dashboard.component';
 import { AsistenteDashboardComponent } from './asistente-dashboard/asistente-dashboard.component';
 import { RoleGuard } from '../../core/guards/role.guard';
@@ -8,7 +8,7 @@ import { RoleGuard } from '../../core/guards/role.guard';
 const routes: Routes = [
   {
     path: 'admin',
-    component: AdminDashboardComponent,
+    component: DashboardAdminComponent,
     canActivate: [RoleGuard],
     data: { roles: ['administrador'] }
   },

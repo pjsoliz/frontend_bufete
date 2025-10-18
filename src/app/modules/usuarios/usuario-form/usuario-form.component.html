@@ -1,0 +1,193 @@
+<div class="form-container">
+  <!-- Header -->
+  <div class="form-header">
+    <button class="btn-back" (click)="cancelar()">← Volver</button>
+    <h1>{{ isEditMode ? '✏️ Editar Usuario' : '➕ Nuevo Usuario' }}</h1>
+    <p>{{ isEditMode ? 'Modifica los datos del usuario' : 'Completa el formulario para crear un nuevo usuario del sistema' }}</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>{{ isEditMode ? 'Cargando usuario...' : 'Guardando usuario...' }}</p>
+  </div>
+
+  <!-- Formulario -->
+  <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" class="usuario-form">
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-alert">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <!-- Sección: Información Personal -->
+    <div class="form-section">
+      <h2>👤 Información Personal</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nombre">Nombre *</label>
+          <input
+            type="text"
+            id="nombre"
+            formControlName="nombre"
+            placeholder="Ej: Juan"
+            [class.error]="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
+          <div class="error-message" *ngIf="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
+            {{ getErrorMessage('nombre') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="apellido">Apellido *</label>
+          <input
+            type="text"
+            id="apellido"
+            formControlName="apellido"
+            placeholder="Ej: Pérez"
+            [class.error]="usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched">
+          <div class="error-message" *ngIf="usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched">
+            {{ getErrorMessage('apellido') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input
+            type="tel"
+            id="telefono"
+            formControlName="telefono"
+            placeholder="+593-99-123-4567"
+            [class.error]="usuarioForm.get('telefono')?.invalid && usuarioForm.get('telefono')?.touched">
+          <div class="error-message" *ngIf="usuarioForm.get('telefono')?.invalid && usuarioForm.get('telefono')?.touched">
+            {{ getErrorMessage('telefono') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Cuenta de Usuario -->
+    <div class="form-section">
+      <h2>🔐 Cuenta de Usuario</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="username">Usuario *</label>
+          <input
+            type="text"
+            id="username"
+            formControlName="username"
+            placeholder="Ej: jperez"
+            [class.error]="usuarioForm.get('username')?.invalid && usuarioForm.get('username')?.touched">
+          <div class="error-message" *ngIf="usuarioForm.get('username')?.invalid && usuarioForm.get('username')?.touched">
+            {{ getErrorMessage('username') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="ejemplo@genesis.com"
+            [class.error]="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched">
+          <div class="error-message" *ngIf="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched">
+            {{ getErrorMessage('email') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">{{ isEditMode ? 'Nueva Contraseña (dejar vacío para no cambiar)' : 'Contraseña *' }}</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            [placeholder]="isEditMode ? 'Dejar vacío para mantener actual' : 'Mínimo 6 caracteres'"
+            [class.error]="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched">
+          <div class="error-message" *ngIf="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched">
+            {{ getErrorMessage('password') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Rol y Permisos -->
+    <div class="form-section">
+      <h2>🎭 Rol y Permisos</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="rol">Rol del Sistema *</label>
+          <select
+            id="rol"
+            formControlName="rol"
+            (change)="onRolChange()">
+            <option *ngFor="let rol of roles" [value]="rol.value">
+              {{ rol.icon }} {{ rol.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group" *ngIf="isEditMode">
+          <label for="estado">Estado</label>
+          <select id="estado" formControlName="estado">
+            <option value="activo">✅ Activo</option>
+            <option value="inactivo">⏸️ Inactivo</option>
+          </select>
+        </div>
+
+        <div class="form-group full-width" *ngIf="usuarioForm.get('rol')?.value === 'abogado'">
+          <label for="especialidad">Especialidad *</label>
+          <select
+            id="especialidad"
+            formControlName="especialidad"
+            [class.error]="usuarioForm.get('especialidad')?.invalid && usuarioForm.get('especialidad')?.touched">
+            <option value="">Seleccione una especialidad</option>
+            <option *ngFor="let esp of especialidades" [value]="esp">
+              {{ esp }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="usuarioForm.get('especialidad')?.invalid && usuarioForm.get('especialidad')?.touched">
+            La especialidad es requerida para abogados
+          </div>
+        </div>
+      </div>
+
+      <!-- Info de permisos -->
+      <div class="permisos-info">
+        <h4>ℹ️ Permisos por Rol:</h4>
+        <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'administrador'">
+          <span class="permiso-icon">👑</span>
+          <div class="permiso-texto">
+            <strong>Administrador:</strong> Acceso completo al sistema. Puede gestionar usuarios, ver todos los casos, generar reportes y configurar el sistema.
+          </div>
+        </div>
+        <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'abogado'">
+          <span class="permiso-icon">⚖️</span>
+          <div class="permiso-texto">
+            <strong>Abogado:</strong> Puede gestionar casos asignados, crear citas, ver clientes y generar reportes de sus casos.
+          </div>
+        </div>
+        <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'asistente_legal'">
+          <span class="permiso-icon">📋</span>
+          <div class="permiso-texto">
+            <strong>Asistente Legal:</strong> Puede ver casos, gestionar citas, administrar clientes y dar soporte general.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()" [disabled]="loading">
+        Cancelar
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="usuarioForm.invalid || loading">
+        <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Usuario' : 'Crear Usuario' }}</span>
+        <span *ngIf="loading">Guardando...</span>
+      </button>
+    </div>
+
+  </form>
+</div>

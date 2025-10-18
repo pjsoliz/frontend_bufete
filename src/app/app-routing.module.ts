@@ -28,7 +28,7 @@ const routes: Routes = [
       },
       {
         path: 'citas',
-        loadChildren: () => import('./modules/citas/citas.module').then(m => m.CitasModule)
+        loadChildren: () => import('./modules/citas/citas.module').then(m => m.CitasModule),canActivate: [AuthGuard]
       },
       {
         path: 'chat',
@@ -40,6 +40,11 @@ const routes: Routes = [
         data: { roles: ['administrador', 'abogado', 'asistente_legal'] },
         loadChildren: () => import('./modules/reportes/reportes.module').then(m => m.ReportesModule)
       },
+      {
+    path: 'usuarios',
+    loadChildren: () => import('./modules/usuarios/usuarios.module').then(m => m.UsuariosModule),
+    canActivate: [AuthGuard]
+  },
       {
         path: '',
         redirectTo: 'dashboard',

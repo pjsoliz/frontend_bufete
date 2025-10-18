@@ -1,56 +1,96 @@
 <div class="login-container">
   <div class="login-card">
+
+    <!-- Header -->
     <div class="login-header">
+      <div class="logo-container">
+        <div class="logo">⚖️</div>
+      </div>
       <h1>Genesis Integrales</h1>
       <p>Sistema de Gestión Legal</p>
     </div>
 
+    <!-- Form -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <!-- Campo Username -->
-      <div class="form-group">
-        <label for="username">Usuario</label>
-        <input
-          type="text"
-          id="username"
-          formControlName="username"
-          placeholder="Ingrese su usuario"
-          [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
-        <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
-          El usuario es requerido
-        </div>
-      </div>
 
-      <!-- Campo Password -->
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          placeholder="Ingrese su contraseña"
-          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-        <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-          La contraseña es requerida
-        </div>
-      </div>
-
-      <!-- Mensaje de error general -->
-      <div class="error-message" *ngIf="errorMessage">
+      <!-- Error Alert -->
+      <div class="error-alert" *ngIf="errorMessage">
+        <span>⚠️</span>
         {{ errorMessage }}
       </div>
 
-      <!-- Botón de login -->
-      <button
-        type="submit"
-        class="btn-login"
-        [disabled]="loading || loginForm.invalid">
-        <span *ngIf="!loading">Iniciar Sesión</span>
-        <span *ngIf="loading">Cargando...</span>
+      <!-- Usuario -->
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <div class="input-wrapper">
+          <span class="input-icon">👤</span>
+          <input
+            type="text"
+            id="username"
+            formControlName="username"
+            placeholder="Ingresa tu usuario"
+            [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+        </div>
+        <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+          <span>⚠️</span> El usuario es requerido
+        </div>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="Ingresa tu contraseña"
+            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        </div>
+        <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <span>⚠️</span> La contraseña es requerida
+        </div>
+      </div>
+
+      <!-- Opciones -->
+      <div class="form-options">
+        <div class="remember-me">
+          <input type="checkbox" id="remember">
+          <label for="remember">Recordarme</label>
+        </div>
+        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <!-- Botón -->
+      <button type="submit" class="btn-login" [disabled]="loading">
+        <span class="btn-text" *ngIf="!loading">
+          Iniciar Sesión
+          <span>→</span>
+        </span>
+        <div class="spinner" *ngIf="loading"></div>
       </button>
+
     </form>
 
+    <!-- Footer con usuarios demo -->
     <div class="login-footer">
-      <p>¿Olvidaste tu contraseña? <a href="#">Recuperar</a></p>
+      <div class="demo-users">
+        <h4>👥 Usuarios de Prueba:</h4>
+        <div class="demo-user" (click)="llenarCredenciales('admin', 'admin123')">
+          <div class="demo-user-role">👑 Administrador</div>
+          <div class="demo-user-credentials">Usuario: admin | Contraseña: admin123</div>
+        </div>
+        <div class="demo-user" (click)="llenarCredenciales('abogado', 'abogado123')">
+          <div class="demo-user-role">⚖️ Abogado</div>
+          <div class="demo-user-credentials">Usuario: abogado | Contraseña: abogado123</div>
+        </div>
+        <div class="demo-user" (click)="llenarCredenciales('asistente', 'asistente123')">
+          <div class="demo-user-role">📋 Asistente Legal</div>
+          <div class="demo-user-credentials">Usuario: asistente | Contraseña: asistente123</div>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>

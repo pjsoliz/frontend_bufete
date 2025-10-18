@@ -55,6 +55,12 @@ export class LoginComponent implements OnInit {
       this.errorMessage = 'Por favor complete todos los campos';
     }
   }
+  llenarCredenciales(usuario: string, password: string): void {
+    this.loginForm.patchValue({
+      username: usuario,
+      password: password
+    });
+  }
 
   redirectByRole(role: string | null): void {
     console.log('Redirigiendo por rol:', role);
