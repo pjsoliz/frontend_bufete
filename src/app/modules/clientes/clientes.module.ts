@@ -1,43 +1,54 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClientesRoutingModule } from './clientes-routing.module';
-import { ClientesListComponent } from './clientes-list/clientes-list.component';
-import { ClienteFormComponent } from './cliente-form/cliente-form.component';
-import { ClienteDetalleComponent } from './cliente-detalle/cliente-detalle.component';
 
-const routes: Routes = [
-  {
-    path: '',
-    component: ClientesListComponent
-  },
-  {
-    path: 'nuevo',
-    component: ClienteFormComponent
-  },
-  {
-    path: 'editar/:id',
-    component: ClienteFormComponent
-  },
-  {
-    path: ':id',
-    component: ClienteDetalleComponent
-  }
-];
+// Importar Lucide Icons
+import {
+  LucideAngularModule,
+  Users, UserPlus, UserCheck, UserX, Search, Filter, Users2,
+  Eye, Edit2, PauseCircle, PlayCircle, Trash2, Phone, MapPin,
+  Calendar, User, Mail, FileText, MapPinned
+} from 'lucide-angular';
+
+// Componentes
+import { ClientesListComponent } from './clientes-list/clientes-list.component';
+import { ClienteDetalleComponent } from './cliente-detalle/cliente-detalle.component';
+import { ClienteFormComponent } from './cliente-form/cliente-form.component';
 
 @NgModule({
   declarations: [
     ClientesListComponent,
-    ClienteFormComponent,
-    ClienteDetalleComponent
+    ClienteDetalleComponent,
+    ClienteFormComponent
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     FormsModule,
+    ReactiveFormsModule,
     ClientesRoutingModule,
-    RouterModule.forChild(routes)
-  ]
+    LucideAngularModule.pick({
+      Users,
+      UserPlus,
+      UserCheck,
+      UserX,
+      Search,
+      Filter,
+      Users2,
+      Eye,
+      Edit2,
+      PauseCircle,
+      PlayCircle,
+      Trash2,
+      Phone,
+      MapPin,
+      Calendar,
+      User,
+      Mail,
+      FileText,
+      MapPinned
+    })
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ClientesModule { }

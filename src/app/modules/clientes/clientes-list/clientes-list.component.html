@@ -2,13 +2,16 @@
   <!-- Header -->
   <div class="clientes-header">
     <div class="header-left">
-      <h1>👥 Gestión de Clientes</h1>
+      <h1>
+        <i-lucide name="users" [size]="32" style="display: inline; vertical-align: middle; margin-right: 12px;"></i-lucide>
+        Gestión de Clientes
+      </h1>
       <p>Administra todos los clientes del sistema</p>
     </div>
     <div class="header-right">
       <button class="btn-primary" (click)="nuevoCliente()">
-        <span class="btn-icon">➕</span>
-        Nuevo Cliente
+        <i-lucide name="user-plus" [size]="20"></i-lucide>
+        <span>Nuevo Cliente</span>
       </button>
     </div>
   </div>
@@ -16,7 +19,9 @@
   <!-- Estadísticas -->
   <div class="stats-section">
     <div class="stat-card blue">
-      <div class="stat-icon">📊</div>
+      <div class="stat-icon">
+        <i-lucide name="users" [size]="28"></i-lucide>
+      </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.total }}</div>
         <div class="stat-label">Total Clientes</div>
@@ -24,7 +29,9 @@
     </div>
 
     <div class="stat-card green">
-      <div class="stat-icon">✅</div>
+      <div class="stat-icon">
+        <i-lucide name="user-check" [size]="28"></i-lucide>
+      </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.activos }}</div>
         <div class="stat-label">Activos</div>
@@ -32,7 +39,9 @@
     </div>
 
     <div class="stat-card orange">
-      <div class="stat-icon">⏸️</div>
+      <div class="stat-icon">
+        <i-lucide name="user-x" [size]="28"></i-lucide>
+      </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.inactivos }}</div>
         <div class="stat-label">Inactivos</div>
@@ -40,7 +49,9 @@
     </div>
 
     <div class="stat-card purple">
-      <div class="stat-icon">🆕</div>
+      <div class="stat-icon">
+        <i-lucide name="user-plus" [size]="28"></i-lucide>
+      </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.nuevos_mes }}</div>
         <div class="stat-label">Nuevos (30 días)</div>
@@ -52,7 +63,10 @@
   <div class="filtros-section">
     <div class="filtros-grid">
       <div class="filtro-item">
-        <label>🔍 Buscar</label>
+        <label>
+          <i-lucide name="search" [size]="16"></i-lucide>
+          Buscar
+        </label>
         <input
           type="text"
           placeholder="Buscar por nombre, email o documento..."
@@ -61,7 +75,10 @@
       </div>
 
       <div class="filtro-item">
-        <label>📊 Estado</label>
+        <label>
+          <i-lucide name="filter" [size]="16"></i-lucide>
+          Estado
+        </label>
         <select [(ngModel)]="filtroEstado" (change)="onFiltroChange()">
           <option value="todos">Todos</option>
           <option value="activo">Activos</option>
@@ -87,11 +104,14 @@
 
     <!-- Sin resultados -->
     <div *ngIf="clientesFiltrados.length === 0" class="sin-resultados">
-      <div class="sin-resultados-icon">🔍</div>
+      <div class="sin-resultados-icon">
+        <i-lucide name="users-2" [size]="80"></i-lucide>
+      </div>
       <h3>No se encontraron clientes</h3>
       <p>Intenta ajustar los filtros o crea un nuevo cliente</p>
       <button class="btn-primary" (click)="nuevoCliente()">
-        Nuevo Cliente
+        <i-lucide name="user-plus" [size]="20"></i-lucide>
+        <span>Nuevo Cliente</span>
       </button>
     </div>
 
@@ -134,13 +154,19 @@
 
             <td>
               <div class="contacto-info">
-                <div class="telefono">📞 {{ cliente.telefono }}</div>
+                <div class="telefono">
+                  <i-lucide name="phone" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
+                  {{ cliente.telefono }}
+                </div>
               </div>
             </td>
 
             <td>
               <div class="ubicacion-info" *ngIf="cliente.ciudad">
-                <div>📍 {{ cliente.ciudad }}</div>
+                <div>
+                  <i-lucide name="map-pin" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
+                  {{ cliente.ciudad }}
+                </div>
                 <div class="provincia" *ngIf="cliente.provincia">{{ cliente.provincia }}</div>
               </div>
               <div *ngIf="!cliente.ciudad" class="sin-dato">-</div>
@@ -165,7 +191,10 @@
             </td>
 
             <td>
-              <div class="fecha">{{ formatearFecha(cliente.fecha_registro) }}</div>
+              <div class="fecha">
+                <i-lucide name="calendar" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
+                {{ formatearFecha(cliente.fecha_registro) }}
+              </div>
             </td>
 
             <td class="acciones-cell" (click)="$event.stopPropagation()">
@@ -174,14 +203,14 @@
                   class="btn-accion btn-ver"
                   (click)="verDetalle(cliente.id)"
                   title="Ver detalle">
-                  👁️
+                  <i-lucide name="eye" [size]="16"></i-lucide>
                 </button>
 
                 <button
                   class="btn-accion btn-editar"
                   (click)="editarCliente(cliente.id, $event)"
                   title="Editar">
-                  ✏️
+                  <i-lucide name="edit-2" [size]="16"></i-lucide>
                 </button>
 
                 <button
@@ -189,7 +218,7 @@
                   class="btn-accion btn-desactivar"
                   (click)="cambiarEstado(cliente.id, 'inactivo', $event)"
                   title="Desactivar">
-                  ⏸️
+                  <i-lucide name="pause-circle" [size]="16"></i-lucide>
                 </button>
 
                 <button
@@ -197,14 +226,14 @@
                   class="btn-accion btn-activar"
                   (click)="cambiarEstado(cliente.id, 'activo', $event)"
                   title="Activar">
-                  ▶️
+                  <i-lucide name="play-circle" [size]="16"></i-lucide>
                 </button>
 
                 <button
                   class="btn-accion btn-eliminar"
                   (click)="eliminarCliente(cliente.id, $event)"
                   title="Eliminar">
-                  🗑️
+                  <i-lucide name="trash-2" [size]="16"></i-lucide>
                 </button>
               </div>
             </td>

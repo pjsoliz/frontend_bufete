@@ -31,10 +31,6 @@ const routes: Routes = [
         loadChildren: () => import('./modules/citas/citas.module').then(m => m.CitasModule),canActivate: [AuthGuard]
       },
       {
-        path: 'chat',
-        loadChildren: () => import('./modules/chat/chat.module').then(m => m.ChatModule)
-      },
-      {
         path: 'reportes',
         canActivate: [RoleGuard],
         data: { roles: ['administrador', 'abogado', 'asistente_legal'] },

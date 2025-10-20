@@ -243,4 +243,38 @@ export class DashboardAdminComponent implements OnInit {
     const fechaCita = new Date(fecha + 'T00:00:00');
     return hoy.toDateString() === fechaCita.toDateString();
   }
+  getIconName(emoji: string): string {
+    const iconMap: { [key: string]: string } = {
+      '📁': 'briefcase',
+      '📅': 'calendar',
+      '👥': 'users',
+      '👤': 'user-check'
+    };
+    return iconMap[emoji] || 'briefcase';
+  }
+
+  /**
+   * Obtiene el icono según el tipo de alerta
+   */
+  getAlertIcon(tipo: string): string {
+    const iconMap: { [key: string]: string } = {
+      'urgente': 'alert-triangle',
+      'info': 'info',
+      'exito': 'check-circle'
+    };
+    return iconMap[tipo] || 'info';
+  }
+
+  /**
+   * Obtiene el icono según el tipo de actividad
+   */
+  getActivityIcon(tipo: string): string {
+    const iconMap: { [key: string]: string } = {
+      'caso': 'briefcase',
+      'cita': 'calendar',
+      'cliente': 'user-plus',
+      'usuario': 'edit-3'
+    };
+    return iconMap[tipo] || 'activity';
+  }
 }

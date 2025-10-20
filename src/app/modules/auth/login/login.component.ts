@@ -9,75 +9,137 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   loading = false;
+  showPassword = false;
   errorMessage = '';
+  successMessage = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {
-    this.loginForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
-    if (this.authService.isAuthenticated()) {
-      const userRole = this.authService.getUserRole();
-      this.redirectByRole(userRole);
-    }
+    this.initForm();
+    this.checkAutoLogin();
   }
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.loading = true;
-      this.errorMessage = '';
-
-      this.authService.login(this.loginForm.value).subscribe({
-        next: (response) => {
-          console.log('Login exitoso:', response);
-          const userRole = this.authService.getUserRole();
-          console.log('Rol del usuario:', userRole);
-
-          this.redirectByRole(userRole);
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error en login:', error);
-          this.errorMessage = error.error?.message || 'Usuario o contraseña incorrectos';
-          this.loading = false;
-        }
-      });
-    } else {
-      this.errorMessage = 'Por favor complete todos los campos';
-    }
-  }
-  llenarCredenciales(usuario: string, password: string): void {
-    this.loginForm.patchValue({
-      username: usuario,
-      password: password
+  /**
+   * Inicializa el formulario de login
+   */
+  private initForm(): void {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required]], // Removemos validación de email para aceptar username
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      remember: [false]
     });
   }
 
-  redirectByRole(role: string | null): void {
-    console.log('Redirigiendo por rol:', role);
-
-    switch(role) {
-      case 'administrador':
-        this.router.navigate(['/dashboard/admin']);
-        break;
-      case 'abogado':
-        this.router.navigate(['/dashboard/abogado']);
-        break;
-      case 'asistente_legal':
-        this.router.navigate(['/dashboard/asistente']);
-        break;
-      default:
-        console.log('Rol no reconocido, usando admin');
-        this.router.navigate(['/dashboard/admin']);
+  /**
+   * Verifica si hay una sesión guardada
+   */
+  private checkAutoLogin(): void {
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    if (savedEmail) {
+      this.loginForm.patchValue({
+        email: savedEmail,
+        remember: true
+      });
     }
+  }
+
+  /**
+   * Toggle para mostrar/ocultar contraseña
+   */
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  /**
+   * Maneja el envío del formulario
+   */
+  onSubmit(): void {
+    if (this.loginForm.invalid) {
+      this.markFormGroupTouched(this.loginForm);
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const { email, password, remember } = this.loginForm.value;
+
+    // Convertir email a username para el mock
+    // Si el usuario ingresa "admin@genesis.com", extraemos "admin"
+    const username = email.includes('@') ? email.split('@')[0] : email;
+
+    const credentials = {
+      username: username,
+      password: password
+    };
+
+    console.log('Intentando login con:', credentials);
+
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('Login exitoso:', response);
+        this.successMessage = '¡Inicio de sesión exitoso!';
+
+        // Guardar email si está marcado "Recordar"
+        if (remember) {
+          localStorage.setItem('rememberedEmail', email);
+        } else {
+          localStorage.removeItem('rememberedEmail');
+        }
+
+        // Redireccionar después de 500ms
+        setTimeout(() => {
+          this.loading = false;
+          this.router.navigate(['/dashboard']);
+        }, 500);
+      },
+      error: (error) => {
+        console.error('Error en login:', error);
+        this.loading = false;
+        this.errorMessage = this.getErrorMessage(error);
+
+        // Limpiar mensaje después de 5 segundos
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 5000);
+      }
+    });
+  }
+
+  /**
+   * Obtiene el mensaje de error apropiado
+   */
+  private getErrorMessage(error: any): string {
+    if (error.status === 401) {
+      return 'Credenciales incorrectas. Por favor, verifica tu email y contraseña.';
+    } else if (error.status === 0) {
+      return 'No se pudo conectar con el servidor. Verifica tu conexión a internet.';
+    } else if (error.error?.message) {
+      return error.error.message;
+    } else {
+      return 'Ocurrió un error inesperado. Por favor, intenta nuevamente.';
+    }
+  }
+
+  /**
+   * Marca todos los controles del formulario como touched
+   */
+  private markFormGroupTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      control?.markAsTouched();
+
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 }

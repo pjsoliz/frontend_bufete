@@ -1,0 +1,129 @@
+<nav class="navbar">
+  <!-- Logo y Título -->
+  <div class="navbar-brand">
+    <button class="menu-toggle" (click)="toggleSidebar()">
+      <i-lucide name="menu" [size]="24"></i-lucide>
+    </button>
+    <div class="brand-logo">
+      <i-lucide name="scale" [size]="28"></i-lucide>
+    </div>
+    <div class="brand-text">
+      <span class="brand-title">Genesis Integrales</span>
+      <span class="brand-subtitle">Sistema Legal</span>
+    </div>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="navbar-search">
+    <i-lucide name="search" class="search-icon" [size]="18"></i-lucide>
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Buscar casos, clientes, citas..."
+      [(ngModel)]="searchQuery"
+      (keyup.enter)="onSearch()"
+    />
+    <button class="search-btn" (click)="onSearch()" *ngIf="searchQuery">
+      <i-lucide name="arrow-right" [size]="18"></i-lucide>
+    </button>
+  </div>
+
+  <!-- Acciones del Navbar -->
+  <div class="navbar-actions">
+    <!-- Notificaciones -->
+    <div class="navbar-item" (click)="toggleNotifications()">
+      <button class="icon-btn" [class.has-notifications]="unreadNotifications > 0">
+        <i-lucide name="bell" [size]="20"></i-lucide>
+        <span class="notification-badge" *ngIf="unreadNotifications > 0">
+          {{ unreadNotifications }}
+        </span>
+      </button>
+
+      <!-- Dropdown de Notificaciones -->
+      <div class="dropdown-menu notifications-menu" *ngIf="showNotifications">
+        <div class="dropdown-header">
+          <h4>Notificaciones</h4>
+          <button class="text-link" (click)="markAllAsRead()">
+            <i-lucide name="check-check" [size]="16"></i-lucide>
+            Marcar todas como leídas
+          </button>
+        </div>
+        <div class="notifications-list">
+          <div
+            class="notification-item"
+            *ngFor="let notif of notifications"
+            [class.unread]="!notif.read"
+            (click)="markAsRead(notif)"
+          >
+            <div class="notification-icon" [ngClass]="'icon-' + notif.type">
+              <i-lucide [name]="getNotificationIcon(notif.type)" [size]="18"></i-lucide>
+            </div>
+            <div class="notification-content">
+              <p class="notification-text">{{ notif.message }}</p>
+              <span class="notification-time">{{ notif.time }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown-footer">
+          <a routerLink="/notificaciones" class="view-all-link">
+            Ver todas las notificaciones
+            <i-lucide name="arrow-right" [size]="16"></i-lucide>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ayuda -->
+    <div class="navbar-item">
+      <button class="icon-btn" title="Centro de ayuda">
+        <i-lucide name="help-circle" [size]="20"></i-lucide>
+      </button>
+    </div>
+
+    <!-- Perfil de Usuario -->
+    <div class="navbar-item user-menu" (click)="toggleUserMenu()">
+      <div class="user-avatar">
+        <img [src]="userAvatar || 'assets/images/default-avatar.png'" alt="Avatar" *ngIf="userAvatar">
+        <i-lucide name="user" [size]="20" *ngIf="!userAvatar"></i-lucide>
+      </div>
+      <div class="user-info">
+        <span class="user-name">{{ userName }}</span>
+        <span class="user-role" [class]="'role-' + userRole.toLowerCase()">
+          {{ getRoleLabel(userRole) }}
+        </span>
+      </div>
+      <i-lucide name="chevron-down" [size]="16" class="dropdown-icon"></i-lucide>
+
+      <!-- Dropdown de Usuario -->
+      <div class="dropdown-menu user-dropdown" *ngIf="showUserMenu">
+        <div class="dropdown-header user-header">
+          <div class="user-avatar-large">
+            <img [src]="userAvatar || 'assets/images/default-avatar.png'" alt="Avatar" *ngIf="userAvatar">
+            <i-lucide name="user" [size]="32" *ngIf="!userAvatar"></i-lucide>
+          </div>
+          <div class="user-details">
+            <h4>{{ userName }}</h4>
+            <p>{{ userEmail }}</p>
+            <span class="badge" [class]="'badge-' + userRole.toLowerCase()">
+              {{ getRoleLabel(userRole) }}
+            </span>
+          </div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <a routerLink="/perfil" class="dropdown-item">
+          <i-lucide name="user-circle" [size]="18"></i-lucide>
+          <span>Mi Perfil</span>
+        </a>
+        <a routerLink="/configuracion" class="dropdown-item">
+          <i-lucide name="settings" [size]="18"></i-lucide>
+          <span>Configuración</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item logout-item" (click)="logout()">
+          <i-lucide name="log-out" [size]="18"></i-lucide>
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

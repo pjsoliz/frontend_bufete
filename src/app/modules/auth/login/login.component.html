@@ -1,96 +1,151 @@
 <div class="login-container">
   <div class="login-card">
-
-    <!-- Header -->
+    <!-- Logo y Header -->
     <div class="login-header">
       <div class="logo-container">
-        <div class="logo">⚖️</div>
+        <i-lucide name="scale" class="logo-icon"></i-lucide>
       </div>
-      <h1>Genesis Integrales</h1>
-      <p>Sistema de Gestión Legal</p>
+      <h1 class="login-title">Genesis Integrales</h1>
+      <p class="login-subtitle">Sistema de Gestión Legal</p>
+      <div class="divider-dorado"></div>
     </div>
 
-    <!-- Form -->
+    <!-- Alertas -->
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      <i-lucide name="alert-circle" [size]="20"></i-lucide>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage">
+      <i-lucide name="check-circle" [size]="20"></i-lucide>
+      <span>{{ successMessage }}</span>
+    </div>
+
+    <!-- Formulario -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-
-      <!-- Error Alert -->
-      <div class="error-alert" *ngIf="errorMessage">
-        <span>⚠️</span>
-        {{ errorMessage }}
-      </div>
-
-      <!-- Usuario -->
+      <!-- Email o Usuario -->
       <div class="form-group">
-        <label for="username">Usuario</label>
-        <div class="input-wrapper">
-          <span class="input-icon">👤</span>
+        <label class="form-label">
+          <i-lucide name="mail" [size]="16"></i-lucide>
+          Usuario o Correo Electrónico
+        </label>
+        <div class="input-group">
+          <i-lucide name="at-sign" class="input-icon" [size]="18"></i-lucide>
           <input
             type="text"
-            id="username"
-            formControlName="username"
-            placeholder="Ingresa tu usuario"
-            [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+            formControlName="email"
+            class="form-control"
+            [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            placeholder="admin o admin@genesis.com"
+          />
         </div>
-        <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
-          <span>⚠️</span> El usuario es requerido
+        <div class="invalid-feedback" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          <i-lucide name="alert-triangle" [size]="14"></i-lucide>
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">El usuario o correo es obligatorio</span>
         </div>
       </div>
 
       <!-- Contraseña -->
       <div class="form-group">
-        <label for="password">Contraseña</label>
-        <div class="input-wrapper">
-          <span class="input-icon">🔒</span>
+        <label class="form-label">
+          <i-lucide name="lock" [size]="16"></i-lucide>
+          Contraseña
+        </label>
+        <div class="input-group">
+          <i-lucide name="key" class="input-icon" [size]="18"></i-lucide>
           <input
-            type="password"
-            id="password"
+            [type]="showPassword ? 'text' : 'password'"
             formControlName="password"
-            placeholder="Ingresa tu contraseña"
-            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            class="form-control"
+            [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            placeholder="••••••••"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePassword()"
+          >
+            <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" [size]="18"></i-lucide>
+          </button>
         </div>
-        <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-          <span>⚠️</span> La contraseña es requerida
+        <div class="invalid-feedback" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <i-lucide name="alert-triangle" [size]="14"></i-lucide>
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es obligatoria</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Mínimo 6 caracteres</span>
         </div>
       </div>
 
-      <!-- Opciones -->
-      <div class="form-options">
-        <div class="remember-me">
-          <input type="checkbox" id="remember">
-          <label for="remember">Recordarme</label>
-        </div>
-        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+      <!-- Recordar sesión -->
+      <div class="form-check">
+        <input
+          type="checkbox"
+          formControlName="remember"
+          id="remember"
+          class="form-check-input"
+        />
+        <label for="remember" class="form-check-label">
+          Recordar sesión
+        </label>
       </div>
 
-      <!-- Botón -->
-      <button type="submit" class="btn-login" [disabled]="loading">
-        <span class="btn-text" *ngIf="!loading">
-          Iniciar Sesión
-          <span>→</span>
-        </span>
-        <div class="spinner" *ngIf="loading"></div>
+      <!-- Botón de Login -->
+      <button
+        type="submit"
+        class="btn btn-primary btn-login"
+        [disabled]="loginForm.invalid || loading"
+      >
+        <div class="spinner-small" *ngIf="loading"></div>
+        <span>{{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}</span>
       </button>
 
+      <!-- Link de recuperación -->
+      <div class="forgot-password">
+        <a href="#" class="link-dorado">
+          <i-lucide name="help-circle" [size]="16"></i-lucide>
+          ¿Olvidaste tu contraseña?
+        </a>
+      </div>
     </form>
 
-    <!-- Footer con usuarios demo -->
+    <!-- Footer -->
     <div class="login-footer">
-      <div class="demo-users">
-        <h4>👥 Usuarios de Prueba:</h4>
-        <div class="demo-user" (click)="llenarCredenciales('admin', 'admin123')">
-          <div class="demo-user-role">👑 Administrador</div>
-          <div class="demo-user-credentials">Usuario: admin | Contraseña: admin123</div>
+      <div class="divider-dorado-thin"></div>
+      <p class="footer-text">
+        <i-lucide name="shield-check" [size]="16"></i-lucide>
+        Acceso seguro y protegido
+      </p>
+      <p class="copyright">
+        © 2024 Genesis Integrales. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+
+  <!-- Panel Informativo -->
+  <div class="info-panel">
+    <div class="info-content">
+      <i-lucide name="briefcase" class="info-icon" [size]="64"></i-lucide>
+      <h2 class="info-title">Gestión Legal Profesional</h2>
+      <p class="info-description">
+        Plataforma integral para la administración eficiente de casos, citas y clientes
+      </p>
+      <div class="features-list">
+        <div class="feature-item">
+          <i-lucide name="check-circle-2" [size]="20"></i-lucide>
+          <span>Gestión de casos y expedientes</span>
         </div>
-        <div class="demo-user" (click)="llenarCredenciales('abogado', 'abogado123')">
-          <div class="demo-user-role">⚖️ Abogado</div>
-          <div class="demo-user-credentials">Usuario: abogado | Contraseña: abogado123</div>
+        <div class="feature-item">
+          <i-lucide name="check-circle-2" [size]="20"></i-lucide>
+          <span>Calendario de citas inteligente</span>
         </div>
-        <div class="demo-user" (click)="llenarCredenciales('asistente', 'asistente123')">
-          <div class="demo-user-role">📋 Asistente Legal</div>
-          <div class="demo-user-credentials">Usuario: asistente | Contraseña: asistente123</div>
+        <div class="feature-item">
+          <i-lucide name="check-circle-2" [size]="20"></i-lucide>
+          <span>Reportes y análisis en tiempo real</span>
+        </div>
+        <div class="feature-item">
+          <i-lucide name="check-circle-2" [size]="20"></i-lucide>
+          <span>Asistente de IA integrado</span>
         </div>
       </div>
     </div>
-
   </div>
 </div>
