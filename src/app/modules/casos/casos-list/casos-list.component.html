@@ -2,12 +2,15 @@
   <!-- Header -->
   <div class="casos-header">
     <div class="header-left">
-      <h1>📁 Gestión de Casos</h1>
+      <h1>
+        <lucide-icon name="folder-open" [size]="32"></lucide-icon>
+        Gestión de Casos
+      </h1>
       <p>Administra todos los casos del sistema</p>
     </div>
     <div class="header-right">
       <button class="btn-primary" (click)="nuevoCaso()">
-        <span class="btn-icon">➕</span>
+        <lucide-icon name="plus" [size]="20"></lucide-icon>
         Nuevo Caso
       </button>
     </div>
@@ -16,7 +19,9 @@
   <!-- Estadísticas -->
   <div class="stats-section">
     <div class="stat-card blue">
-      <div class="stat-icon">📊</div>
+      <div class="stat-icon">
+        <lucide-icon name="briefcase" [size]="28"></lucide-icon>
+      </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.total }}</div>
         <div class="stat-label">Total Casos</div>
@@ -24,7 +29,9 @@
     </div>
 
     <div class="stat-card orange">
-      <div class="stat-icon">⏳</div>
+      <div class="stat-icon">
+        <lucide-icon name="clock" [size]="28"></lucide-icon>
+      </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.pendientes }}</div>
         <div class="stat-label">Pendientes</div>
@@ -32,7 +39,9 @@
     </div>
 
     <div class="stat-card green">
-      <div class="stat-icon">⚡</div>
+      <div class="stat-icon">
+        <lucide-icon name="zap" [size]="28"></lucide-icon>
+      </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.en_progreso }}</div>
         <div class="stat-label">En Progreso</div>
@@ -40,7 +49,9 @@
     </div>
 
     <div class="stat-card purple">
-      <div class="stat-icon">✅</div>
+      <div class="stat-icon">
+        <lucide-icon name="check-circle" [size]="28"></lucide-icon>
+      </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.cerrados }}</div>
         <div class="stat-label">Cerrados</div>
@@ -52,7 +63,10 @@
   <div class="filtros-section">
     <div class="filtros-grid">
       <div class="filtro-item">
-        <label>🔍 Buscar</label>
+        <label>
+          <lucide-icon name="search" [size]="16"></lucide-icon>
+          Buscar
+        </label>
         <input
           type="text"
           placeholder="Buscar por número, título, cliente..."
@@ -61,10 +75,12 @@
       </div>
 
       <div class="filtro-item">
-        <label>📊 Estado</label>
+        <label>
+          <lucide-icon name="activity" [size]="16"></lucide-icon>
+          Estado
+        </label>
         <select [(ngModel)]="filtroEstado" (change)="onFiltroChange()">
           <option value="todos">Todos</option>
-          <option value="pendiente">Pendiente</option>
           <option value="en_progreso">En Progreso</option>
           <option value="suspendido">Suspendido</option>
           <option value="cerrado">Cerrado</option>
@@ -72,20 +88,23 @@
       </div>
 
       <div class="filtro-item">
-        <label>⚖️ Tipo</label>
+        <label>
+          <lucide-icon name="scale" [size]="16"></lucide-icon>
+          Tipo
+        </label>
         <select [(ngModel)]="filtroTipo" (change)="onFiltroChange()">
           <option value="todos">Todos</option>
-          <option value="laboral">Laboral</option>
           <option value="civil">Civil</option>
           <option value="penal">Penal</option>
-          <option value="familia">Familia</option>
-          <option value="comercial">Comercial</option>
-          <option value="otro">Otro</option>
+          <option value="familia">Familiar</option>
         </select>
       </div>
 
       <div class="filtro-item">
-        <label>🎯 Prioridad</label>
+        <label>
+          <lucide-icon name="flag" [size]="16"></lucide-icon>
+          Prioridad
+        </label>
         <select [(ngModel)]="filtroPrioridad" (change)="onFiltroChange()">
           <option value="todos">Todas</option>
           <option value="baja">Baja</option>
@@ -112,10 +131,13 @@
 
     <!-- Sin resultados -->
     <div *ngIf="casosFiltrados.length === 0" class="sin-resultados">
-      <div class="sin-resultados-icon">🔍</div>
+      <div class="sin-resultados-icon">
+        <lucide-icon name="search-x" [size]="64"></lucide-icon>
+      </div>
       <h3>No se encontraron casos</h3>
       <p>Intenta ajustar los filtros o crea un nuevo caso</p>
       <button class="btn-primary" (click)="nuevoCaso()">
+        <lucide-icon name="plus" [size]="20"></lucide-icon>
         Nuevo Caso
       </button>
     </div>
@@ -151,23 +173,27 @@
               <div class="titulo-caso">
                 <div class="titulo">{{ caso.titulo }}</div>
                 <div class="subtitulo" *ngIf="caso.juzgado">
-                  📍 {{ caso.juzgado }}
+                  <lucide-icon name="map-pin" [size]="14"></lucide-icon>
+                  {{ caso.juzgado }}
                 </div>
               </div>
             </td>
 
             <td>
               <div class="cliente-info">
-                <span class="icono">👤</span>
+                <lucide-icon name="user" [size]="16" class="icono"></lucide-icon>
                 <span>{{ caso.cliente }}</span>
               </div>
             </td>
 
             <td>
               <div class="abogado-info">
-                <span *ngIf="caso.abogado" class="icono">⚖️</span>
+                <lucide-icon *ngIf="caso.abogado" name="briefcase" [size]="16" class="icono"></lucide-icon>
                 <span *ngIf="caso.abogado">{{ caso.abogado }}</span>
-                <span *ngIf="!caso.abogado" class="sin-asignar">Sin asignar</span>
+                <span *ngIf="!caso.abogado" class="sin-asignar">
+                  <lucide-icon name="user-x" [size]="16"></lucide-icon>
+                  Sin asignar
+                </span>
               </div>
             </td>
 
@@ -190,7 +216,10 @@
             </td>
 
             <td>
-              <div class="fecha">{{ formatearFecha(caso.fecha_inicio) }}</div>
+              <div class="fecha">
+                <lucide-icon name="calendar" [size]="14"></lucide-icon>
+                {{ formatearFecha(caso.fecha_inicio) }}
+              </div>
             </td>
 
             <td class="acciones-cell" (click)="$event.stopPropagation()">
@@ -199,21 +228,21 @@
                   class="btn-accion btn-ver"
                   (click)="verDetalle(caso.id)"
                   title="Ver detalle">
-                  👁️
+                  <lucide-icon name="eye" [size]="16"></lucide-icon>
                 </button>
 
                 <button
                   class="btn-accion btn-editar"
                   (click)="editarCaso(caso.id, $event)"
                   title="Editar">
-                  ✏️
+                  <lucide-icon name="pencil" [size]="16"></lucide-icon>
                 </button>
 
                 <button
                   class="btn-accion btn-eliminar"
                   (click)="eliminarCaso(caso.id, $event)"
                   title="Eliminar">
-                  🗑️
+                  <lucide-icon name="trash-2" [size]="16"></lucide-icon>
                 </button>
               </div>
             </td>

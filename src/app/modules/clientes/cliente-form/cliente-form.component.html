@@ -1,8 +1,14 @@
 <div class="form-container">
   <!-- Header -->
   <div class="form-header">
-    <button class="btn-back" (click)="cancelar()">← Volver</button>
-    <h1>{{ isEditMode ? '✏️ Editar Cliente' : '➕ Nuevo Cliente' }}</h1>
+    <button class="btn-back" (click)="cancelar()">
+      <i-lucide name="arrow-left" [size]="18"></i-lucide>
+      Volver
+    </button>
+    <h1>
+      <i-lucide [name]="isEditMode ? 'edit-2' : 'user-plus'" [size]="32"></i-lucide>
+      {{ isEditMode ? 'Editar Cliente' : 'Nuevo Cliente' }}
+    </h1>
     <p>{{ isEditMode ? 'Modifica los datos del cliente' : 'Completa el formulario para registrar un nuevo cliente' }}</p>
   </div>
 
@@ -17,16 +23,23 @@
 
     <!-- Error Message -->
     <div *ngIf="errorMessage" class="error-alert">
-      ⚠️ {{ errorMessage }}
+      <i-lucide name="alert-triangle" [size]="20"></i-lucide>
+      {{ errorMessage }}
     </div>
 
     <!-- Sección: Información Personal -->
     <div class="form-section">
-      <h2>👤 Información Personal</h2>
+      <h2>
+        <i-lucide name="user" [size]="24"></i-lucide>
+        Información Personal
+      </h2>
 
       <div class="form-grid">
         <div class="form-group">
-          <label for="nombre">Nombre *</label>
+          <label for="nombre">
+            <i-lucide name="user" [size]="16"></i-lucide>
+            Nombre *
+          </label>
           <input
             type="text"
             id="nombre"
@@ -34,12 +47,16 @@
             placeholder="Ej: Juan"
             [class.error]="clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched">
           <div class="error-message" *ngIf="clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched">
+            <i-lucide name="alert-circle" [size]="14"></i-lucide>
             {{ getErrorMessage('nombre') }}
           </div>
         </div>
 
         <div class="form-group">
-          <label for="apellido">Apellido *</label>
+          <label for="apellido">
+            <i-lucide name="user" [size]="16"></i-lucide>
+            Apellido *
+          </label>
           <input
             type="text"
             id="apellido"
@@ -47,12 +64,16 @@
             placeholder="Ej: Pérez"
             [class.error]="clienteForm.get('apellido')?.invalid && clienteForm.get('apellido')?.touched">
           <div class="error-message" *ngIf="clienteForm.get('apellido')?.invalid && clienteForm.get('apellido')?.touched">
+            <i-lucide name="alert-circle" [size]="14"></i-lucide>
             {{ getErrorMessage('apellido') }}
           </div>
         </div>
 
         <div class="form-group">
-          <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+          <label for="fecha_nacimiento">
+            <i-lucide name="calendar" [size]="16"></i-lucide>
+            Fecha de Nacimiento
+          </label>
           <input
             type="date"
             id="fecha_nacimiento"
@@ -63,11 +84,17 @@
 
     <!-- Sección: Documentación -->
     <div class="form-section">
-      <h2>📄 Documentación</h2>
+      <h2>
+        <i-lucide name="file-text" [size]="24"></i-lucide>
+        Documentación
+      </h2>
 
       <div class="form-grid">
         <div class="form-group">
-          <label for="tipo_documento">Tipo de Documento *</label>
+          <label for="tipo_documento">
+            <i-lucide name="credit-card" [size]="16"></i-lucide>
+            Tipo de Documento *
+          </label>
           <select
             id="tipo_documento"
             formControlName="tipo_documento">
@@ -78,7 +105,10 @@
         </div>
 
         <div class="form-group">
-          <label for="documento_identidad">Número de Documento *</label>
+          <label for="documento_identidad">
+            <i-lucide name="hash" [size]="16"></i-lucide>
+            Número de Documento *
+          </label>
           <input
             type="text"
             id="documento_identidad"
@@ -86,6 +116,7 @@
             placeholder="Ej: 1234567890"
             [class.error]="clienteForm.get('documento_identidad')?.invalid && clienteForm.get('documento_identidad')?.touched">
           <div class="error-message" *ngIf="clienteForm.get('documento_identidad')?.invalid && clienteForm.get('documento_identidad')?.touched">
+            <i-lucide name="alert-circle" [size]="14"></i-lucide>
             {{ getErrorMessage('documento_identidad') }}
           </div>
         </div>
@@ -94,11 +125,17 @@
 
     <!-- Sección: Contacto -->
     <div class="form-section">
-      <h2>📞 Información de Contacto</h2>
+      <h2>
+        <i-lucide name="phone" [size]="24"></i-lucide>
+        Información de Contacto
+      </h2>
 
       <div class="form-grid">
         <div class="form-group">
-          <label for="email">Email *</label>
+          <label for="email">
+            <i-lucide name="mail" [size]="16"></i-lucide>
+            Email *
+          </label>
           <input
             type="email"
             id="email"
@@ -106,12 +143,16 @@
             placeholder="ejemplo@email.com"
             [class.error]="clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched">
           <div class="error-message" *ngIf="clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched">
+            <i-lucide name="alert-circle" [size]="14"></i-lucide>
             {{ getErrorMessage('email') }}
           </div>
         </div>
 
         <div class="form-group">
-          <label for="telefono">Teléfono *</label>
+          <label for="telefono">
+            <i-lucide name="phone" [size]="16"></i-lucide>
+            Teléfono *
+          </label>
           <input
             type="tel"
             id="telefono"
@@ -119,6 +160,7 @@
             placeholder="+593-99-123-4567"
             [class.error]="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">
           <div class="error-message" *ngIf="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">
+            <i-lucide name="alert-circle" [size]="14"></i-lucide>
             {{ getErrorMessage('telefono') }}
           </div>
         </div>
@@ -127,10 +169,16 @@
 
     <!-- Sección: Ubicación -->
     <div class="form-section">
-      <h2>📍 Ubicación</h2>
+      <h2>
+        <i-lucide name="map-pin" [size]="24"></i-lucide>
+        Ubicación
+      </h2>
 
       <div class="form-group full-width">
-        <label for="direccion">Dirección</label>
+        <label for="direccion">
+          <i-lucide name="home" [size]="16"></i-lucide>
+          Dirección
+        </label>
         <input
           type="text"
           id="direccion"
@@ -140,7 +188,10 @@
 
       <div class="form-grid">
         <div class="form-group">
-          <label for="ciudad">Ciudad</label>
+          <label for="ciudad">
+            <i-lucide name="map-pin" [size]="16"></i-lucide>
+            Ciudad
+          </label>
           <input
             type="text"
             id="ciudad"
@@ -149,7 +200,10 @@
         </div>
 
         <div class="form-group">
-          <label for="provincia">Provincia</label>
+          <label for="provincia">
+            <i-lucide name="map" [size]="16"></i-lucide>
+            Provincia
+          </label>
           <select id="provincia" formControlName="provincia">
             <option value="">Seleccione una provincia</option>
             <option *ngFor="let provincia of provincias" [value]="provincia">
@@ -162,10 +216,16 @@
 
     <!-- Sección: Estado y Notas -->
     <div class="form-section">
-      <h2>📝 Información Adicional</h2>
+      <h2>
+        <i-lucide name="file-text" [size]="24"></i-lucide>
+        Información Adicional
+      </h2>
 
       <div class="form-group" *ngIf="isEditMode">
-        <label for="estado">Estado</label>
+        <label for="estado">
+          <i-lucide name="toggle-right" [size]="16"></i-lucide>
+          Estado
+        </label>
         <select id="estado" formControlName="estado">
           <option value="activo">Activo</option>
           <option value="inactivo">Inactivo</option>
@@ -173,7 +233,10 @@
       </div>
 
       <div class="form-group full-width">
-        <label for="notas">Notas / Observaciones</label>
+        <label for="notas">
+          <i-lucide name="file-text" [size]="16"></i-lucide>
+          Notas / Observaciones
+        </label>
         <textarea
           id="notas"
           formControlName="notas"
@@ -185,9 +248,11 @@
     <!-- Botones -->
     <div class="form-actions">
       <button type="button" class="btn-secondary" (click)="cancelar()" [disabled]="loading">
-        Cancelar
+        <i-lucide name="x" [size]="18"></i-lucide>
+        <span>Cancelar</span>
       </button>
       <button type="submit" class="btn-primary" [disabled]="clienteForm.invalid || loading">
+        <i-lucide [name]="isEditMode ? 'save' : 'check'" [size]="18" *ngIf="!loading"></i-lucide>
         <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Cliente' : 'Crear Cliente' }}</span>
         <span *ngIf="loading">Guardando...</span>
       </button>

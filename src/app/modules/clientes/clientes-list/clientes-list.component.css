@@ -247,6 +247,7 @@
 /* ===== TABLA ===== */
 .clientes-table-container {
   overflow-x: auto;
+  border-radius: 8px;
 }
 
 .clientes-table {

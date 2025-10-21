@@ -4,11 +4,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClientesRoutingModule } from './clientes-routing.module';
 
 // Importar Lucide Icons
-import {
-  LucideAngularModule,
+import { 
+  LucideAngularModule, 
   Users, UserPlus, UserCheck, UserX, Search, Filter, Users2,
   Eye, Edit2, PauseCircle, PlayCircle, Trash2, Phone, MapPin,
-  Calendar, User, Mail, FileText, MapPinned
+  Calendar, User, Mail, FileText, MapPinned, ArrowLeft, AlertTriangle,
+  AlertCircle, CreditCard, Hash, Home, Map, ToggleRight, X, Check, Save,
+  // Nuevos iconos para cliente-detalle
+  Edit, Smartphone, Activity, CheckCircle, XCircle, CalendarDays,
+  Clock, Scale, Circle, Plus, Inbox, Tag, Heart, FolderOpen, 
+  Briefcase, AtSign
 } from 'lucide-angular';
 
 // Componentes
@@ -46,7 +51,35 @@ import { ClienteFormComponent } from './cliente-form/cliente-form.component';
       User,
       Mail,
       FileText,
-      MapPinned
+      MapPinned,
+      ArrowLeft,
+      AlertTriangle,
+      AlertCircle,
+      CreditCard,
+      Hash,
+      Home,
+      Map,
+      ToggleRight,
+      X,
+      Check,
+      Save,
+      // Nuevos iconos para cliente-detalle
+      Edit,
+      Smartphone,
+      Activity,
+      CheckCircle,
+      XCircle,
+      CalendarDays,
+      Clock,
+      Scale,
+      Circle,
+      Plus,
+      Inbox,
+      Tag,
+      Heart,
+      FolderOpen,
+      Briefcase,
+      AtSign
     })
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
