@@ -174,33 +174,12 @@ export class DashboardAdminComponent implements OnInit {
   ];
 
   casosPorTipo = [
-    { tipo: 'Laboral', cantidad: 45, color: '#3498db' },
     { tipo: 'Civil', cantidad: 32, color: '#9b59b6' },
-    { tipo: 'Penal', cantidad: 18, color: '#e74c3c' },
-    { tipo: 'Familia', cantidad: 25, color: '#2ecc71' },
-    { tipo: 'Comercial', cantidad: 8, color: '#f39c12' }
+    { tipo: 'Penal', cantidad: 18, color: '#3498db' },
+    { tipo: 'Familia', cantidad: 25, color: '#f39c12' },
   ];
 
-  alertas = [
-    {
-      tipo: 'urgente',
-      titulo: '3 Audiencias esta semana',
-      descripcion: 'Revisa el calendario de audiencias',
-      icon: '⚠️'
-    },
-    {
-      tipo: 'info',
-      titulo: '5 Casos pendientes de asignación',
-      descripcion: 'Asigna abogados a los casos nuevos',
-      icon: 'ℹ️'
-    },
-    {
-      tipo: 'exito',
-      titulo: '12 Casos cerrados este mes',
-      descripcion: 'Excelente progreso del equipo',
-      icon: '✅'
-    }
-  ];
+  
 
   constructor(private router: Router) {}
 

@@ -107,11 +107,11 @@
 }
 
 .stat-card.orange { 
-  border-left-color: #C7B47C;
+  border-left-color: #003366;
 }
 
 .stat-card.green { 
-  border-left-color: #28A745;
+  border-left-color: #003366;
 }
 
 .stat-card.purple { 
@@ -130,22 +130,22 @@
 }
 
 .stat-card.blue .stat-icon {
-  background: rgba(0, 51, 102, 0.1);
+  background: rgba(0, 51, 102, 0.05);
   color: #003366;
 }
 
 .stat-card.orange .stat-icon {
-  background: rgba(199, 180, 124, 0.2);
-  color: #C7B47C;
+  background: rgba(0, 51, 102, 0.05);
+  color: #003366;
 }
 
 .stat-card.green .stat-icon {
-  background: rgba(40, 167, 69, 0.1);
-  color: #28A745;
+  background: rgba(0, 51, 102, 0.05);
+  color: #003366;
 }
 
 .stat-card.purple .stat-icon {
-  background: rgba(0, 51, 102, 0.1);
+  background: rgba(0, 51, 102, 0.05);
   color: #003366;
 }
 
@@ -156,7 +156,7 @@
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  color: #003366;
+  color: #212529;
   line-height: 1;
   margin-bottom: 0.25rem;
 }
@@ -356,13 +356,13 @@
 .numero-badge {
   display: inline-block;
   padding: 0.5rem 0.875rem;
-  background: linear-gradient(135deg, #003366 0%, #002447 100%);
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #212529;
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 700;
   font-family: 'Courier New', monospace;
-  border: 2px solid #C7B47C;
+  border: 1px solid #003366;
 }
 
 /* ===== TÍTULO ===== */

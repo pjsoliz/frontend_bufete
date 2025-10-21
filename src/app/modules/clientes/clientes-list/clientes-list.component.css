@@ -84,9 +84,9 @@
 }
 
 .stat-card.blue { border-left-color: #003366; }
-.stat-card.green { border-left-color: #28A745; }
-.stat-card.orange { border-left-color: #FFA500; }
-.stat-card.purple { border-left-color: #C7B47C; }
+.stat-card.green { border-left-color: #003366;}
+.stat-card.orange { border-left-color: #003366; }
+.stat-card.purple { border-left-color: #003366; }
 
 .stat-icon {
   font-size: 2.5rem;
@@ -100,22 +100,22 @@
 }
 
 .stat-card.green .stat-icon {
-  background: rgba(40, 167, 69, 0.1);
-  color: #28A745;
+  background: rgba(0, 51, 102, 0.05);
+  color: #003366;
 }
 
 .stat-card.orange .stat-icon {
-  background: rgba(255, 165, 0, 0.1);
-  color: #FFA500;
+  background: rgba(0, 51, 102, 0.05);
+  color: #003366;
 }
 
 .stat-card.purple .stat-icon {
-  background: rgba(199, 180, 124, 0.15);
-  color: #C7B47C;
+  background: rgba(0, 51, 102, 0.05);
+  color: #003366;
 }
 
 .stat-card.blue .stat-icon {
-  background: rgba(0, 51, 102, 0.1);
+  background: rgba(0, 51, 102, 0.05);
   color: #003366;
 }
 

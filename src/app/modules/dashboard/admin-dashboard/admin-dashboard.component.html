@@ -34,20 +34,6 @@
     </div>
   </div>
 
-  <!-- Alertas -->
-  <div class="alertas-section">
-    <div class="alerta-card" *ngFor="let alerta of alertas" [class.urgente]="alerta.tipo === 'urgente'"
-         [class.info]="alerta.tipo === 'info'" [class.exito]="alerta.tipo === 'exito'">
-      <div class="alerta-icon">
-        <i-lucide [name]="getAlertIcon(alerta.tipo)" [size]="24"></i-lucide>
-      </div>
-      <div class="alerta-content">
-        <div class="alerta-titulo">{{ alerta.titulo }}</div>
-        <div class="alerta-descripcion">{{ alerta.descripcion }}</div>
-      </div>
-    </div>
-  </div>
-
   <!-- Grid Principal -->
   <div class="main-grid">
 
