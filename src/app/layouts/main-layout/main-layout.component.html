@@ -1,48 +1,10 @@
 <div class="main-layout">
-  <!-- Sidebar -->
-  <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
-    <div class="sidebar-header">
-      <h2 *ngIf="!isSidebarCollapsed">Genesis</h2>
-      <h2 *ngIf="isSidebarCollapsed">G</h2>
-    </div>
-
-    <nav class="sidebar-nav">
-      <a *ngFor="let item of menuItems"
-         class="nav-item"
-         [class.active]="item.route && router.url.includes(item.route)"
-         (click)="navigate(item)">
-        <span class="nav-icon">{{ item.icon }}</span>
-        <span class="nav-label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
-      </a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <button class="logout-btn" (click)="logout()">
-        <span class="nav-icon">🚪</span>
-        <span *ngIf="!isSidebarCollapsed">Cerrar Sesión</span>
-      </button>
-    </div>
-  </aside>
-
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Header -->
-    <header class="header">
-      <button class="toggle-btn" (click)="toggleSidebar()">
-        <span *ngIf="!isSidebarCollapsed">☰</span>
-        <span *ngIf="isSidebarCollapsed">☰</span>
-      </button>
-
-      <div class="header-right">
-        <div class="user-info" *ngIf="usuario">
-          <span class="user-name">{{ usuario.first_name }} {{ usuario.last_name }}</span>
-          <span class="user-role">{{ usuario.rol }}</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- Content Area -->
-    <main class="content">
+  <app-navbar (sidebarToggle)="toggleSidebar()"></app-navbar>
+  
+  <div class="layout-container">
+    <app-sidebar [isCollapsed]="sidebarCollapsed"></app-sidebar>
+    
+    <main class="content-area">
       <router-outlet></router-outlet>
     </main>
   </div>

@@ -8,10 +8,10 @@
   <nav class="sidebar-nav">
     <div class="nav-section">
       <p class="nav-section-title" *ngIf="!isCollapsed">Principal</p>
-
+      
       <!-- Dashboard -->
-      <a
-        routerLink="/dashboard"
+      <a 
+        routerLink="/dashboard" 
         routerLinkActive="active"
         class="nav-item"
         [title]="isCollapsed ? 'Dashboard' : ''"
@@ -20,112 +20,69 @@
         <span class="nav-text" *ngIf="!isCollapsed">Dashboard</span>
       </a>
 
-      <!-- Clientes -->
-      <a
-        routerLink="/clientes"
-        routerLinkActive="active"
-        class="nav-item"
-        *ngIf="hasPermission(['ADMIN', 'ABOGADO', 'ASISTENTE_LEGAL'])"
-        [title]="isCollapsed ? 'Clientes' : ''"
-      >
-        <i-lucide name="users" [size]="22"></i-lucide>
-        <span class="nav-text" *ngIf="!isCollapsed">Clientes</span>
-        <span class="badge badge-primary" *ngIf="!isCollapsed && clientesCount > 0">
-          {{ clientesCount }}
-        </span>
-      </a>
-
-      <!-- Casos -->
-      <a
-        routerLink="/casos"
-        routerLinkActive="active"
-        class="nav-item"
-        *ngIf="hasPermission(['ADMIN', 'ABOGADO', 'ASISTENTE_LEGAL'])"
-        [title]="isCollapsed ? 'Casos' : ''"
-      >
-        <i-lucide name="briefcase" [size]="22"></i-lucide>
-        <span class="nav-text" *ngIf="!isCollapsed">Casos</span>
-        <span class="badge badge-warning" *ngIf="!isCollapsed && casosActivos > 0">
-          {{ casosActivos }}
-        </span>
-      </a>
-
       <!-- Citas -->
-      <a
-        routerLink="/citas"
+      <a 
+        routerLink="/citas" 
         routerLinkActive="active"
         class="nav-item"
         [title]="isCollapsed ? 'Citas' : ''"
       >
-        <i-lucide name="calendar" [size]="22"></i-lucide>
+        <i-lucide name="Calendar" [size]="22"></i-lucide>
         <span class="nav-text" *ngIf="!isCollapsed">Citas</span>
-        <span class="badge badge-success" *ngIf="!isCollapsed && citasHoy > 0">
-          {{ citasHoy }}
-        </span>
       </a>
 
-      <!-- Chat IA -->
-      <a
-        routerLink="/chat"
+      <!-- Casos -->
+      <a 
+        routerLink="/casos" 
         routerLinkActive="active"
         class="nav-item"
-        [title]="isCollapsed ? 'Asistente IA' : ''"
+        [title]="isCollapsed ? 'Casos' : ''"
       >
-        <i-lucide name="message-circle" [size]="22"></i-lucide>
-        <span class="nav-text" *ngIf="!isCollapsed">Asistente IA</span>
-        <span class="ai-badge" *ngIf="!isCollapsed">
-          <i-lucide name="sparkles" [size]="14"></i-lucide>
-        </span>
+        <i-lucide name="briefcase" [size]="22"></i-lucide>
+        <span class="nav-text" *ngIf="!isCollapsed">Casos</span>
       </a>
-    </div>
-
-    <!-- Sección de Gestión -->
-    <div class="nav-section" *ngIf="hasPermission(['ADMIN', 'ABOGADO'])">
-      <p class="nav-section-title" *ngIf="!isCollapsed">Gestión</p>
 
       <!-- Reportes -->
-      <a
-        routerLink="/reportes"
+      <a 
+        routerLink="/reportes" 
         routerLinkActive="active"
         class="nav-item"
         [title]="isCollapsed ? 'Reportes' : ''"
       >
-        <i-lucide name="bar-chart-3" [size]="22"></i-lucide>
+        <i-lucide name="chart-no-axes-combined" [size]="22"></i-lucide>
         <span class="nav-text" *ngIf="!isCollapsed">Reportes</span>
       </a>
 
-      <!-- Documentos -->
-      <a
-        routerLink="/documentos"
+      <!-- Clientes-->
+      <a 
+        routerLink="/clientes" 
         routerLinkActive="active"
         class="nav-item"
-        *ngIf="hasPermission(['ADMIN', 'ABOGADO'])"
-        [title]="isCollapsed ? 'Documentos' : ''"
+        [title]="isCollapsed ? 'Clientes' : ''"
       >
-        <i-lucide name="file-text" [size]="22"></i-lucide>
-        <span class="nav-text" *ngIf="!isCollapsed">Documentos</span>
+        <i-lucide name="user" [size]="22"></i-lucide>
+        <span class="nav-text" *ngIf="!isCollapsed">Clientes</span>
       </a>
 
       <!-- Usuarios (Solo Admin) -->
-      <a
-        routerLink="/usuarios"
+      <a 
+        routerLink="/usuarios" 
         routerLinkActive="active"
         class="nav-item"
-        *ngIf="hasPermission(['ADMIN'])"
         [title]="isCollapsed ? 'Usuarios' : ''"
       >
-        <i-lucide name="user-cog" [size]="22"></i-lucide>
+        <i-lucide name="users" [size]="22"></i-lucide>
         <span class="nav-text" *ngIf="!isCollapsed">Usuarios</span>
       </a>
     </div>
-
+    
     <!-- Sección de Configuración -->
     <div class="nav-section nav-section-bottom">
       <div class="divider-dorado" *ngIf="!isCollapsed"></div>
 
       <!-- Configuración -->
-      <a
-        routerLink="/configuracion"
+      <a 
+        routerLink="/configuracion" 
         routerLinkActive="active"
         class="nav-item"
         [title]="isCollapsed ? 'Configuración' : ''"
@@ -135,8 +92,8 @@
       </a>
 
       <!-- Ayuda -->
-      <a
-        routerLink="/ayuda"
+      <a 
+        routerLink="/ayuda" 
         routerLinkActive="active"
         class="nav-item"
         [title]="isCollapsed ? 'Ayuda' : ''"

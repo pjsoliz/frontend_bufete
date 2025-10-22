@@ -15,7 +15,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 2px solid var(--color-dorado);
+  border-bottom: 4px solid var(--color-dorado);
 }
 
 /* ===== MARCA / LOGO ===== */
@@ -480,6 +480,7 @@
   font-weight: var(--font-weight-semibold);
   border-radius: var(--radius-full);
   text-transform: uppercase;
+  color: var(--color-azul-marino);
   letter-spacing: 0.5px;
 }
 

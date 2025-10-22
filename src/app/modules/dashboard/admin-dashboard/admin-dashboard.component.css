@@ -179,63 +179,6 @@
   font-size: 1.2rem;
 }
 
-/* ===== ALERTAS ===== */
-.alertas-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.alerta-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.25rem;
-  border-radius: 12px;
-  border-left: 4px solid;
-  transition: all 0.3s;
-  background: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.alerta-card:hover {
-  transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.alerta-card.urgente {
-  background: rgba(255, 165, 0, 0.1);
-  border-left-color: #FFA500;
-}
-
-.alerta-card.info {
-  background: rgba(0, 123, 255, 0.1);
-  border-left-color: #007BFF;
-}
-
-.alerta-card.exito {
-  background: rgba(40, 167, 69, 0.1);
-  border-left-color: #28A745;
-}
-
-.alerta-icon {
-  font-size: 2rem;
-  flex-shrink: 0;
-}
-
-.alerta-titulo {
-  color: #212529;
-  font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
-}
-
-.alerta-descripcion {
-  color: #6C757D;
-  font-size: 0.9rem;
-}
-
 /* ===== MAIN GRID ===== */
 .main-grid {
   display: grid;
@@ -351,12 +294,12 @@
 .bar-value {
   font-weight: 700;
   color: #212529;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .bar-label {
   color: #6C757D;
-  font-size: 0.85rem;
+  font-size: 0.90rem;
   font-weight: 600;
 }
 
@@ -526,11 +469,6 @@
   background: rgba(0, 51, 102, 0.1);
   transform: translateX(4px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.cita-item.hoy {
-  background: rgba(255, 165, 0, 0.1);
-  border-left-color: #FFA500;
 }
 
 .cita-fecha {

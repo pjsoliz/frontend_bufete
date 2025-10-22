@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,9 +8,9 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class SidebarComponent implements OnInit {
   @Input() isCollapsed = false;
-
+  
   userRole: string = '';
-
+  
   // Contadores para badges
   clientesCount = 156;
   casosActivos = 23;
@@ -28,8 +28,31 @@ export class SidebarComponent implements OnInit {
    */
   private loadUserRole(): void {
     const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
-      this.userRole = currentUser.rol || '';
+
+    // Manejar valor directo, Observable o Promise
+    const userAny = currentUser as any;
+    if (!userAny) {
+      this.userRole = '';
+      return;
+    }
+
+    if (typeof userAny.subscribe === 'function') {
+      // Observable
+      userAny.subscribe((u: any) => {
+        this.userRole = u?.rol ?? '';
+      }, () => {
+        this.userRole = '';
+      });
+    } else if (typeof userAny.then === 'function') {
+      // Promise
+      userAny.then((u: any) => {
+        this.userRole = u?.rol ?? '';
+      }).catch(() => {
+        this.userRole = '';
+      });
+    } else {
+      // Valor directo
+      this.userRole = userAny?.rol ?? '';
     }
   }
 

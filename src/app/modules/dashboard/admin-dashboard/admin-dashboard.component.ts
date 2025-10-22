@@ -174,9 +174,9 @@ export class DashboardAdminComponent implements OnInit {
   ];
 
   casosPorTipo = [
-    { tipo: 'Civil', cantidad: 32, color: '#9b59b6' },
-    { tipo: 'Penal', cantidad: 18, color: '#3498db' },
-    { tipo: 'Familia', cantidad: 25, color: '#f39c12' },
+    { tipo: 'Civil', cantidad: 32, color: '#003366' },
+    { tipo: 'Penal', cantidad: 18, color: '#003366'},
+    { tipo: 'Familia', cantidad: 25, color: '#003366' },
   ];
 
   
