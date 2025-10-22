@@ -17,12 +17,9 @@ export class CasoFormComponent implements OnInit {
 
   // Opciones para los selects
   tiposCaso = [
-    { value: 'laboral', label: 'Laboral' },
     { value: 'civil', label: 'Civil' },
     { value: 'penal', label: 'Penal' },
     { value: 'familia', label: 'Familia' },
-    { value: 'comercial', label: 'Comercial' },
-    { value: 'otro', label: 'Otro' }
   ];
 
   estados = [

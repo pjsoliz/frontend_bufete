@@ -1,8 +1,14 @@
 <div class="form-container">
   <!-- Header -->
   <div class="form-header">
-    <button class="btn-back" (click)="cancelar()">← Volver</button>
-    <h1>{{ isEditMode ? '✏️ Editar Caso' : '➕ Nuevo Caso' }}</h1>
+    <button class="btn-back" (click)="cancelar()">
+      <i-lucide name="arrow-left" class="icon"></i-lucide>
+      Volver
+    </button>
+    <h1>
+      <i-lucide [name]="isEditMode ? 'edit' : 'plus-circle'" class="icon-title"></i-lucide>
+      {{ isEditMode ? 'Editar Caso' : 'Nuevo Caso' }}
+    </h1>
     <p>{{ isEditMode ? 'Modifica los datos del caso' : 'Completa el formulario para crear un nuevo caso' }}</p>
   </div>
 
@@ -17,15 +23,22 @@
 
     <!-- Error Message -->
     <div *ngIf="errorMessage" class="error-alert">
-      ⚠️ {{ errorMessage }}
+      <i-lucide name="alert-triangle" class="icon-alert"></i-lucide>
+      {{ errorMessage }}
     </div>
 
     <!-- Sección: Información Básica -->
     <div class="form-section">
-      <h2>📋 Información Básica</h2>
+      <h2>
+        <i-lucide name="clipboard-list" class="icon-section"></i-lucide>
+        Información Básica
+      </h2>
 
       <div class="form-group full-width">
-        <label for="titulo">Título del Caso *</label>
+        <label for="titulo">
+          <i-lucide name="file-text" [size]="14" class="icon-label"></i-lucide>
+          Título del Caso *
+        </label>
         <input
           type="text"
           id="titulo"
@@ -33,12 +46,16 @@
           placeholder="Ej: Demanda Laboral - Despido Injustificado"
           [class.error]="casoForm.get('titulo')?.invalid && casoForm.get('titulo')?.touched">
         <div class="error-message" *ngIf="casoForm.get('titulo')?.invalid && casoForm.get('titulo')?.touched">
+          <i-lucide name="alert-circle" [size]="12" class="icon-error"></i-lucide>
           {{ getErrorMessage('titulo') }}
         </div>
       </div>
 
       <div class="form-group full-width">
-        <label for="descripcion">Descripción *</label>
+        <label for="descripcion">
+          <i-lucide name="align-left"  [size]="14" class="icon-label"></i-lucide>
+          Descripción *
+        </label>
         <textarea
           id="descripcion"
           formControlName="descripcion"
@@ -46,13 +63,17 @@
           placeholder="Describe los detalles del caso..."
           [class.error]="casoForm.get('descripcion')?.invalid && casoForm.get('descripcion')?.touched"></textarea>
         <div class="error-message" *ngIf="casoForm.get('descripcion')?.invalid && casoForm.get('descripcion')?.touched">
+          <i-lucide name="alert-circle" [size]="12" class="icon-error"></i-lucide>
           {{ getErrorMessage('descripcion') }}
         </div>
       </div>
 
       <div class="form-grid">
         <div class="form-group">
-          <label for="tipo">Tipo de Caso *</label>
+          <label for="tipo">
+            <i-lucide name="folder" [size]="14" class="icon-label"></i-lucide>
+            Tipo de Caso *
+          </label>
           <select
             id="tipo"
             formControlName="tipo"
@@ -63,12 +84,16 @@
             </option>
           </select>
           <div class="error-message" *ngIf="casoForm.get('tipo')?.invalid && casoForm.get('tipo')?.touched">
+            <i-lucide name="alert-circle"  [size]="12" class="icon-error"></i-lucide>
             El tipo es requerido
           </div>
         </div>
 
         <div class="form-group">
-          <label for="prioridad">Prioridad *</label>
+          <label for="prioridad">
+            <i-lucide name="flag" [size]="14" class="icon-label"></i-lucide>
+            Prioridad *
+          </label>
           <select id="prioridad" formControlName="prioridad">
             <option *ngFor="let prioridad of prioridades" [value]="prioridad.value">
               {{ prioridad.label }}
@@ -77,7 +102,10 @@
         </div>
 
         <div class="form-group" *ngIf="isEditMode">
-          <label for="estado">Estado</label>
+          <label for="estado">
+            <i-lucide name="activity" [size]="14" class="icon-label"></i-lucide>
+            Estado
+          </label>
           <select id="estado" formControlName="estado">
             <option *ngFor="let estado of estados" [value]="estado.value">
               {{ estado.label }}
@@ -89,11 +117,17 @@
 
     <!-- Sección: Participantes -->
     <div class="form-section">
-      <h2>👥 Participantes</h2>
+      <h2>
+        <i-lucide name="users" class="icon-section"></i-lucide>
+        Participantes
+      </h2>
 
       <div class="form-grid">
         <div class="form-group">
-          <label for="cliente">Cliente *</label>
+          <label for="cliente">
+            <i-lucide name="user" [size]="14" class="icon-label"></i-lucide>
+            Cliente *
+          </label>
           <select
             id="cliente"
             formControlName="cliente"
@@ -104,12 +138,16 @@
             </option>
           </select>
           <div class="error-message" *ngIf="casoForm.get('cliente')?.invalid && casoForm.get('cliente')?.touched">
+            <i-lucide name="alert-circle" [size]="12" class="icon-error"></i-lucide>
             El cliente es requerido
           </div>
         </div>
 
         <div class="form-group">
-          <label for="abogado">Abogado Asignado</label>
+          <label for="abogado">
+            <i-lucide name="briefcase" [size]="14" class="icon-label"></i-lucide>
+            Abogado Asignado
+          </label>
           <select id="abogado" formControlName="abogado">
             <option value="">Sin asignar</option>
             <option *ngFor="let abogado of abogados" [value]="abogado">
@@ -122,28 +160,41 @@
 
     <!-- Sección: Fechas y Montos -->
     <div class="form-section">
-      <h2>📅 Fechas y Montos</h2>
+      <h2>
+        <i-lucide name="calendar" class="icon-section"></i-lucide>
+        Fechas y Montos
+      </h2>
 
       <div class="form-grid">
         <div class="form-group">
-          <label for="fecha_inicio">Fecha de Inicio *</label>
+          <label for="fecha_inicio">
+            <i-lucide name="calendar-check" [size]="14" class="icon-label"></i-lucide>
+            Fecha de Inicio *
+          </label>
           <input
             type="date"
             id="fecha_inicio"
             formControlName="fecha_inicio"
             [class.error]="casoForm.get('fecha_inicio')?.invalid && casoForm.get('fecha_inicio')?.touched">
           <div class="error-message" *ngIf="casoForm.get('fecha_inicio')?.invalid && casoForm.get('fecha_inicio')?.touched">
+            <i-lucide name="alert-circle" [size]="12" class="icon-error"></i-lucide>
             La fecha de inicio es requerida
           </div>
         </div>
 
         <div class="form-group" *ngIf="isEditMode">
-          <label for="fecha_cierre">Fecha de Cierre</label>
+          <label for="fecha_cierre">
+            <i-lucide name="calendar-x" [size]="14" class="icon-label"></i-lucide>
+            Fecha de Cierre
+          </label>
           <input type="date" id="fecha_cierre" formControlName="fecha_cierre">
         </div>
 
         <div class="form-group">
-          <label for="monto_reclamado">Monto Reclamado ($)</label>
+          <label for="monto_reclamado">
+            <i-lucide name="dollar-sign" [size]="14" class="icon-label"></i-lucide>
+            Monto Reclamado ($)
+          </label>
           <input
             type="number"
             id="monto_reclamado"
@@ -153,7 +204,10 @@
         </div>
 
         <div class="form-group" *ngIf="isEditMode">
-          <label for="monto_ganado">Monto Ganado ($)</label>
+          <label for="monto_ganado">
+            <i-lucide name="coins" [size]="14" class="icon-label"></i-lucide>
+            Monto Ganado ($)
+          </label>
           <input
             type="number"
             id="monto_ganado"
@@ -166,11 +220,17 @@
 
     <!-- Sección: Detalles Legales -->
     <div class="form-section">
-      <h2>⚖️ Detalles Legales</h2>
+      <h2>
+        <i-lucide name="scale"  class="icon-section"></i-lucide>
+        Detalles Legales
+      </h2>
 
       <div class="form-grid">
         <div class="form-group">
-          <label for="juzgado">Juzgado</label>
+          <label for="juzgado">
+            <i-lucide name="landmark" [size]="14" class="icon-label"></i-lucide>
+            Juzgado
+          </label>
           <select id="juzgado" formControlName="juzgado">
             <option value="">Seleccione un juzgado</option>
             <option *ngFor="let juzgado of juzgados" [value]="juzgado">
@@ -180,7 +240,10 @@
         </div>
 
         <div class="form-group">
-          <label for="numero_expediente">Número de Expediente</label>
+          <label for="numero_expediente">
+            <i-lucide name="hash"  [size]="14" class="icon-label"></i-lucide>
+            Número de Expediente
+          </label>
           <input
             type="text"
             id="numero_expediente"
@@ -190,7 +253,10 @@
       </div>
 
       <div class="form-group full-width">
-        <label for="notas">Notas / Observaciones</label>
+        <label for="notas">
+          <i-lucide name="file-edit" [size]="14" class="icon-label"></i-lucide>
+          Notas / Observaciones
+        </label>
         <textarea
           id="notas"
           formControlName="notas"

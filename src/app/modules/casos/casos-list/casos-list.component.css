@@ -174,7 +174,7 @@
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   margin-bottom: 2rem;
-  border-top: 3px solid #C7B47C;
+  border: 2px solid #C7B47C;
 }
 
 .filtros-grid {
@@ -252,6 +252,7 @@
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 2px solid #C7B47C;
 }
 
 .contador {
@@ -259,7 +260,7 @@
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #F8F9FA;
+  border-bottom: 2px solid #C7B47C;
 }
 
 .contador strong {
@@ -329,7 +330,7 @@
 
 .casos-table td {
   padding: 1.25rem;
-  border-bottom: 1px solid #F8F9FA;
+  border-bottom: 1px solid #C7B47C;
   vertical-align: middle;
   color: #212529;
 }

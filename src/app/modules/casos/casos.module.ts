@@ -8,7 +8,9 @@ import { CasoFormComponent } from './caso-form/caso-form.component';
 import { CasoDetalleComponent } from './caso-detalle/caso-detalle.component';
 import { LucideAngularModule, FolderOpen, Plus, Briefcase, Clock, Zap, 
   CheckCircle, Search, Activity, Scale, Flag, SearchX, MapPin, User, 
-  UserX, Eye, Pencil, Trash2, Calendar } from 'lucide-angular';
+  UserX, Eye, Pencil, Trash2, Calendar,ArrowLeft, Edit, PlusCircle, AlertTriangle, ClipboardList, FileText, 
+  AlignLeft, Folder, Users, CalendarCheck, CalendarX, DollarSign, 
+  Coins, Landmark, Hash, FileEdit, X, Save, Check, AlertCircle  } from 'lucide-angular';
 
 
 @NgModule({
@@ -40,7 +42,26 @@ import { LucideAngularModule, FolderOpen, Plus, Briefcase, Clock, Zap,
       Eye, 
       Pencil, 
       Trash2, 
-      Calendar 
+      Calendar,ArrowLeft,
+      Edit,
+      PlusCircle,
+      AlertTriangle,
+      ClipboardList,
+      FileText,
+      AlignLeft,
+      Folder,
+      Users,
+      CalendarCheck,
+      CalendarX,
+      DollarSign,
+      Coins,
+      Landmark,
+      Hash,
+      FileEdit,
+      X,
+      Save,
+      Check,
+      AlertCircle 
     })
   ]
 })

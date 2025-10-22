@@ -248,11 +248,9 @@
     <!-- Botones -->
     <div class="form-actions">
       <button type="button" class="btn-secondary" (click)="cancelar()" [disabled]="loading">
-        <i-lucide name="x" [size]="18"></i-lucide>
         <span>Cancelar</span>
       </button>
       <button type="submit" class="btn-primary" [disabled]="clienteForm.invalid || loading">
-        <i-lucide [name]="isEditMode ? 'save' : 'check'" [size]="18" *ngIf="!loading"></i-lucide>
         <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Cliente' : 'Crear Cliente' }}</span>
         <span *ngIf="loading">Guardando...</span>
       </button>

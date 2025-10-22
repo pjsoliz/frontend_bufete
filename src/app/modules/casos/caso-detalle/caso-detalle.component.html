@@ -7,7 +7,9 @@
 
   <!-- Error -->
   <div *ngIf="!loading && errorMessage" class="error-container">
-    <div class="error-icon">⚠️</div>
+    <div class="error-icon">
+      <i-lucide name="alert-triangle" class="icon-error-large"></i-lucide>
+    </div>
     <h2>{{ errorMessage }}</h2>
     <button class="btn-primary" (click)="volver()">Volver a Casos</button>
   </div>
@@ -17,7 +19,10 @@
 
     <!-- Header -->
     <div class="detalle-header">
-      <button class="btn-back" (click)="volver()">← Volver</button>
+      <button class="btn-back" (click)="volver()">
+        <i-lucide name="arrow-left" class="icon"></i-lucide>
+        Volver
+      </button>
 
       <div class="header-main">
         <div class="header-left">
@@ -38,16 +43,20 @@
 
         <div class="header-right">
           <button class="btn-action" (click)="abrirModalEstado()" title="Cambiar Estado">
-            🔄 Estado
+            <i-lucide name="activity" class="icon-btn"></i-lucide>
+            Estado
           </button>
           <button class="btn-action" (click)="abrirModalAbogado()" title="Asignar Abogado">
-            👤 Abogado
+            <i-lucide name="user" class="icon-btn"></i-lucide>
+            Abogado
           </button>
           <button class="btn-action btn-edit" (click)="editarCaso()" title="Editar">
-            ✏️ Editar
+            <i-lucide name="pencil" class="icon-btn"></i-lucide>
+            Editar
           </button>
           <button class="btn-action btn-delete" (click)="eliminarCaso()" title="Eliminar">
-            🗑️ Eliminar
+            <i-lucide name="trash-2" class="icon-btn"></i-lucide>
+            Eliminar
           </button>
         </div>
       </div>
@@ -61,46 +70,59 @@
 
         <!-- Información General -->
         <div class="info-card">
-          <h2>📋 Información General</h2>
+          <h2>
+            <i-lucide name="clipboard-list" class="icon-section"></i-lucide>
+            Información General
+          </h2>
 
           <div class="info-grid">
             <div class="info-item">
-              <div class="info-label">Cliente</div>
+              <div class="info-label">
+                <i-lucide name="user" [size]="16" class="icon-label"></i-lucide>
+                Cliente
+              </div>
               <div class="info-value">
-                <span class="icon">👤</span>
                 {{ caso.cliente }}
               </div>
             </div>
 
             <div class="info-item">
-              <div class="info-label">Abogado Asignado</div>
+              <div class="info-label">
+                <i-lucide name="briefcase" [size]="16" class="icon-label"></i-lucide>
+                Abogado Asignado
+              </div>
               <div class="info-value">
-                <span *ngIf="caso.abogado" class="icon">⚖️</span>
                 <span *ngIf="caso.abogado">{{ caso.abogado }}</span>
                 <span *ngIf="!caso.abogado" class="sin-asignar">Sin asignar</span>
               </div>
             </div>
 
             <div class="info-item">
-              <div class="info-label">Fecha de Inicio</div>
+              <div class="info-label">
+                <i-lucide name="calendar" [size]="16" class="icon-label"></i-lucide>
+                Fecha de Inicio
+              </div>
               <div class="info-value">
-                <span class="icon">📅</span>
                 {{ formatearFecha(caso.fecha_inicio) }}
               </div>
             </div>
 
             <div class="info-item" *ngIf="caso.fecha_cierre">
-              <div class="info-label">Fecha de Cierre</div>
+              <div class="info-label">
+                <i-lucide name="calendar-check" [size]="16" class="icon-label"></i-lucide>
+                Fecha de Cierre
+              </div>
               <div class="info-value">
-                <span class="icon">✅</span>
                 {{ formatearFecha(caso.fecha_cierre) }}
               </div>
             </div>
 
             <div class="info-item" *ngIf="caso.proxima_audiencia">
-              <div class="info-label">Próxima Audiencia</div>
+              <div class="info-label">
+                <i-lucide name="clock" [size]="16" class="icon-label"></i-lucide>
+                Próxima Audiencia
+              </div>
               <div class="info-value highlight">
-                <span class="icon">⚖️</span>
                 {{ formatearFecha(caso.proxima_audiencia) }}
               </div>
             </div>
@@ -109,55 +131,55 @@
 
         <!-- Descripción -->
         <div class="info-card">
-          <h2>📝 Descripción del Caso</h2>
+          <h2>
+            <i-lucide name="file-text" class="icon-section"></i-lucide>
+            Descripción del Caso
+          </h2>
           <p class="descripcion">{{ caso.descripcion }}</p>
         </div>
 
         <!-- Detalles Legales -->
         <div class="info-card" *ngIf="caso.juzgado || caso.numero_expediente">
-          <h2>⚖️ Detalles Legales</h2>
+          <h2>
+            <i-lucide name="scale" class="icon-section"></i-lucide>
+            Detalles Legales
+          </h2>
 
           <div class="info-grid">
             <div class="info-item" *ngIf="caso.juzgado">
-              <div class="info-label">Juzgado</div>
+              <div class="info-label">
+                <i-lucide name="landmark" [size]="16" class="icon-label"></i-lucide>
+                Juzgado
+              </div>
               <div class="info-value">{{ caso.juzgado }}</div>
             </div>
 
             <div class="info-item" *ngIf="caso.numero_expediente">
-              <div class="info-label">N° Expediente</div>
+              <div class="info-label">
+                <i-lucide name="hash" [size]="16" class="icon-label"></i-lucide>
+                N° Expediente
+              </div>
               <div class="info-value">{{ caso.numero_expediente }}</div>
             </div>
 
             <div class="info-item" *ngIf="caso.documentos">
-              <div class="info-label">Documentos</div>
+              <div class="info-label">
+                <i-lucide name="folder-open" [size]="16" class="icon-label"></i-lucide>
+                Documentos
+              </div>
               <div class="info-value">
-                <span class="icon">📄</span>
                 {{ caso.documentos }} archivos
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Información Financiera -->
-        <div class="info-card" *ngIf="caso.monto_reclamado || caso.monto_ganado">
-          <h2>💰 Información Financiera</h2>
-
-          <div class="montos-grid">
-            <div class="monto-card reclamado" *ngIf="caso.monto_reclamado">
-              <div class="monto-label">Monto Reclamado</div>
-              <div class="monto-value">${{ caso.monto_reclamado.toLocaleString() }}</div>
-            </div>
-
-            <div class="monto-card ganado" *ngIf="caso.monto_ganado">
-              <div class="monto-label">Monto Ganado</div>
-              <div class="monto-value">${{ caso.monto_ganado.toLocaleString() }}</div>
-            </div>
-          </div>
-        </div>
-
         <!-- Notas -->
         <div class="info-card" *ngIf="caso.notas">
-          <h2>📌 Notas</h2>
+          <h2>
+            <i-lucide name="file-edit" class="icon-section"></i-lucide>
+            Notas
+          </h2>
           <p class="notas">{{ caso.notas }}</p>
         </div>
 
@@ -166,21 +188,29 @@
       <!-- Columna Derecha - Timeline -->
       <div class="right-column">
         <div class="timeline-card">
-          <h2>📅 Timeline de Actividades</h2>
+          <h2>
+            <i-lucide name="activity" class="icon-section"></i-lucide>
+            Timeline de Actividades
+          </h2>
 
           <div class="timeline" *ngIf="caso.actividades && caso.actividades.length > 0">
             <div class="timeline-item" *ngFor="let actividad of caso.actividades">
-              <div class="timeline-icon">{{ getActividadIcon(actividad.tipo) }}</div>
+              <div class="timeline-icon">
+                <i-lucide name="check-circle" [size]="16" class="icon-timeline"></i-lucide>
+              </div>
               <div class="timeline-content">
                 <div class="timeline-fecha">{{ formatearFechaCorta(actividad.fecha) }}</div>
                 <div class="timeline-descripcion">{{ actividad.descripcion }}</div>
-                <div class="timeline-usuario">Por: {{ actividad.usuario }}</div>
+                <div class="timeline-usuario">
+                  <i-lucide name="user" [size]="16" class="icon-small"></i-lucide>
+                  Por: {{ actividad.usuario }}
+                </div>
               </div>
             </div>
           </div>
 
           <div class="sin-actividades" *ngIf="!caso.actividades || caso.actividades.length === 0">
-            <div class="sin-actividades-icon">📭</div>
+            <i-lucide name="inbox" class="sin-actividades-icon"></i-lucide>
             <p>No hay actividades registradas</p>
           </div>
         </div>
@@ -194,13 +224,21 @@
   <div class="modal-overlay" *ngIf="mostrarModalEstado" (click)="cerrarModalEstado()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>🔄 Cambiar Estado del Caso</h3>
-        <button class="modal-close" (click)="cerrarModalEstado()">✕</button>
+        <h3>
+          <i-lucide name="activity" class="icon-modal"></i-lucide>
+          Cambiar Estado del Caso
+        </h3>
+        <button class="modal-close" (click)="cerrarModalEstado()">
+          <i-lucide name="x"></i-lucide>
+        </button>
       </div>
 
       <div class="modal-body">
         <div class="form-group">
-          <label>Nuevo Estado</label>
+          <label>
+            <i-lucide name="flag" class="icon-label"></i-lucide>
+            Nuevo Estado
+          </label>
           <select [(ngModel)]="nuevoEstado" class="modal-select">
             <option value="pendiente">Pendiente</option>
             <option value="en_progreso">En Progreso</option>
@@ -211,8 +249,14 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn-secondary" (click)="cerrarModalEstado()">Cancelar</button>
-        <button class="btn-primary" (click)="cambiarEstado()">Guardar</button>
+        <button class="btn-secondary" (click)="cerrarModalEstado()">
+          <i-lucide name="x" class="icon-btn-small"></i-lucide>
+          Cancelar
+        </button>
+        <button class="btn-primary" (click)="cambiarEstado()">
+          <i-lucide name="check" class="icon-btn-small"></i-lucide>
+          Guardar
+        </button>
       </div>
     </div>
   </div>
@@ -221,13 +265,21 @@
   <div class="modal-overlay" *ngIf="mostrarModalAbogado" (click)="cerrarModalAbogado()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>👤 Asignar Abogado</h3>
-        <button class="modal-close" (click)="cerrarModalAbogado()">✕</button>
+        <h3>
+          <i-lucide name="user" class="icon-modal"></i-lucide>
+          Asignar Abogado
+        </h3>
+        <button class="modal-close" (click)="cerrarModalAbogado()">
+          <i-lucide name="x"></i-lucide>
+        </button>
       </div>
 
       <div class="modal-body">
         <div class="form-group">
-          <label>Seleccionar Abogado</label>
+          <label>
+            <i-lucide name="briefcase" class="icon-label"></i-lucide>
+            Seleccionar Abogado
+          </label>
           <select [(ngModel)]="abogadoSeleccionado" class="modal-select">
             <option value="">Sin asignar</option>
             <option *ngFor="let abogado of abogadosDisponibles" [value]="abogado">
@@ -238,8 +290,14 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn-secondary" (click)="cerrarModalAbogado()">Cancelar</button>
-        <button class="btn-primary" (click)="asignarAbogado()">Asignar</button>
+        <button class="btn-secondary" (click)="cerrarModalAbogado()">
+          <i-lucide name="x" class="icon-btn-small"></i-lucide>
+          Cancelar
+        </button>
+        <button class="btn-primary" (click)="asignarAbogado()">
+          <i-lucide name="check" class="icon-btn-small"></i-lucide>
+          Asignar
+        </button>
       </div>
     </div>
   </div>
