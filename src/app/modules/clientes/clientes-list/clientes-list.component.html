@@ -16,49 +16,6 @@
     </div>
   </div>
 
-  <!-- Estadísticas -->
-  <div class="stats-section">
-    <div class="stat-card blue">
-      <div class="stat-icon">
-        <i-lucide name="users" [size]="28"></i-lucide>
-      </div>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats.total }}</div>
-        <div class="stat-label">Total Clientes</div>
-      </div>
-    </div>
-
-    <div class="stat-card green">
-      <div class="stat-icon">
-        <i-lucide name="user-check" [size]="28"></i-lucide>
-      </div>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats.activos }}</div>
-        <div class="stat-label">Activos</div>
-      </div>
-    </div>
-
-    <div class="stat-card orange">
-      <div class="stat-icon">
-        <i-lucide name="user-x" [size]="28"></i-lucide>
-      </div>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats.inactivos }}</div>
-        <div class="stat-label">Inactivos</div>
-      </div>
-    </div>
-
-    <div class="stat-card purple">
-      <div class="stat-icon">
-        <i-lucide name="user-plus" [size]="28"></i-lucide>
-      </div>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats.nuevos_mes }}</div>
-        <div class="stat-label">Nuevos (30 días)</div>
-      </div>
-    </div>
-  </div>
-
   <!-- Filtros -->
   <div class="filtros-section">
     <div class="filtros-grid">
@@ -200,20 +157,13 @@
             <td class="acciones-cell" (click)="$event.stopPropagation()">
               <div class="acciones-buttons">
                 <button
-                  class="btn-accion btn-ver"
-                  (click)="verDetalle(cliente.id)"
-                  title="Ver detalle">
-                  <i-lucide name="eye" [size]="16"></i-lucide>
-                </button>
-
-                <button
                   class="btn-accion btn-editar"
                   (click)="editarCliente(cliente.id, $event)"
                   title="Editar">
                   <i-lucide name="edit-2" [size]="16"></i-lucide>
                 </button>
 
-                <!--<button
+                <button
                   *ngIf="cliente.estado === 'activo'"
                   class="btn-accion btn-desactivar"
                   (click)="cambiarEstado(cliente.id, 'inactivo', $event)"
@@ -227,7 +177,7 @@
                   (click)="cambiarEstado(cliente.id, 'activo', $event)"
                   title="Activar">
                   <i-lucide name="play-circle" [size]="16"></i-lucide>
-                </button>-->
+                </button>
 
                 <button
                   class="btn-accion btn-eliminar"

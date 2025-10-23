@@ -35,10 +35,11 @@
       </h2>
 
       <div class="form-grid">
+
         <div class="form-group">
           <label for="nombre">
             <i-lucide name="user" [size]="16"></i-lucide>
-            Nombre *
+              Nombre *
           </label>
           <input
             type="text"
@@ -55,7 +56,7 @@
         <div class="form-group">
           <label for="apellido">
             <i-lucide name="user" [size]="16"></i-lucide>
-            Apellido *
+              Apellido *
           </label>
           <input
             type="text"
@@ -70,71 +71,9 @@
         </div>
 
         <div class="form-group">
-          <label for="fecha_nacimiento">
-            <i-lucide name="calendar" [size]="16"></i-lucide>
-            Fecha de Nacimiento
-          </label>
-          <input
-            type="date"
-            id="fecha_nacimiento"
-            formControlName="fecha_nacimiento">
-        </div>
-      </div>
-    </div>
-
-    <!-- Sección: Documentación -->
-    <div class="form-section">
-      <h2>
-        <i-lucide name="file-text" [size]="24"></i-lucide>
-        Documentación
-      </h2>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="tipo_documento">
-            <i-lucide name="credit-card" [size]="16"></i-lucide>
-            Tipo de Documento *
-          </label>
-          <select
-            id="tipo_documento"
-            formControlName="tipo_documento">
-            <option *ngFor="let tipo of tiposDocumento" [value]="tipo.value">
-              {{ tipo.label }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="documento_identidad">
-            <i-lucide name="hash" [size]="16"></i-lucide>
-            Número de Documento *
-          </label>
-          <input
-            type="text"
-            id="documento_identidad"
-            formControlName="documento_identidad"
-            placeholder="Ej: 1234567890"
-            [class.error]="clienteForm.get('documento_identidad')?.invalid && clienteForm.get('documento_identidad')?.touched">
-          <div class="error-message" *ngIf="clienteForm.get('documento_identidad')?.invalid && clienteForm.get('documento_identidad')?.touched">
-            <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            {{ getErrorMessage('documento_identidad') }}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sección: Contacto -->
-    <div class="form-section">
-      <h2>
-        <i-lucide name="phone" [size]="24"></i-lucide>
-        Información de Contacto
-      </h2>
-
-      <div class="form-grid">
-        <div class="form-group">
           <label for="email">
             <i-lucide name="mail" [size]="16"></i-lucide>
-            Email *
+              Email *
           </label>
           <input
             type="email"
@@ -151,7 +90,7 @@
         <div class="form-group">
           <label for="telefono">
             <i-lucide name="phone" [size]="16"></i-lucide>
-            Teléfono *
+              Teléfono *
           </label>
           <input
             type="tel"
@@ -163,34 +102,29 @@
             <i-lucide name="alert-circle" [size]="14"></i-lucide>
             {{ getErrorMessage('telefono') }}
           </div>
-        </div>
-      </div>
-    </div>
+        </div> 
 
-    <!-- Sección: Ubicación -->
-    <div class="form-section">
-      <h2>
-        <i-lucide name="map-pin" [size]="24"></i-lucide>
-        Ubicación
-      </h2>
+        <div class="form-group">
+          <label for="documento_identidad">
+            <i-lucide name="credit-card" [size]="16"></i-lucide>
+              Carnet de Identidad *
+          </label>
+          <input
+            type="text"
+            id="documento_identidad"
+            formControlName="documento_identidad"
+            placeholder="Ej: 1234567890"
+            [class.error]="clienteForm.get('documento_identidad')?.invalid && clienteForm.get('documento_identidad')?.touched">
+          <div class="error-message" *ngIf="clienteForm.get('documento_identidad')?.invalid && clienteForm.get('documento_identidad')?.touched">
+            <i-lucide name="alert-circle" [size]="14"></i-lucide>
+            {{ getErrorMessage('documento_identidad') }}
+          </div>
+        </div> 
 
-      <div class="form-group full-width">
-        <label for="direccion">
-          <i-lucide name="home" [size]="16"></i-lucide>
-          Dirección
-        </label>
-        <input
-          type="text"
-          id="direccion"
-          formControlName="direccion"
-          placeholder="Ej: Av. Principal 123">
-      </div>
-
-      <div class="form-grid">
         <div class="form-group">
           <label for="ciudad">
             <i-lucide name="map-pin" [size]="16"></i-lucide>
-            Ciudad
+              Departamento
           </label>
           <input
             type="text"
@@ -202,7 +136,7 @@
         <div class="form-group">
           <label for="provincia">
             <i-lucide name="map" [size]="16"></i-lucide>
-            Provincia
+              Provincia
           </label>
           <select id="provincia" formControlName="provincia">
             <option value="">Seleccione una provincia</option>
@@ -211,39 +145,34 @@
             </option>
           </select>
         </div>
+
+        <div class="form-group">
+          <label for="direccion">
+            <i-lucide name="home" [size]="16"></i-lucide>
+              Dirección
+          </label>
+          <input
+            type="text"
+            id="direccion"
+            formControlName="direccion"
+            placeholder="Ej: Av. Principal 123">
+        </div>
+
+        <div class="form-group full-width">
+          <label for="notas">
+            <i-lucide name="file-text" [size]="16"></i-lucide>
+              Notas / Observaciones
+          </label>
+          <textarea
+            id="notas"
+            formControlName="notas"
+            rows="4"
+            placeholder="Agregue notas adicionales sobre el cliente..."></textarea>
+        </div>
+        
       </div>
     </div>
 
-    <!-- Sección: Estado y Notas -->
-    <div class="form-section">
-      <h2>
-        <i-lucide name="file-text" [size]="24"></i-lucide>
-        Información Adicional
-      </h2>
-
-      <div class="form-group" *ngIf="isEditMode">
-        <label for="estado">
-          <i-lucide name="toggle-right" [size]="16"></i-lucide>
-          Estado
-        </label>
-        <select id="estado" formControlName="estado">
-          <option value="activo">Activo</option>
-          <option value="inactivo">Inactivo</option>
-        </select>
-      </div>
-
-      <div class="form-group full-width">
-        <label for="notas">
-          <i-lucide name="file-text" [size]="16"></i-lucide>
-          Notas / Observaciones
-        </label>
-        <textarea
-          id="notas"
-          formControlName="notas"
-          rows="4"
-          placeholder="Agregue notas adicionales sobre el cliente..."></textarea>
-      </div>
-    </div>
 
     <!-- Botones -->
     <div class="form-actions">

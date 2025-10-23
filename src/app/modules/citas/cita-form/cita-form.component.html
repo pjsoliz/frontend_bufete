@@ -35,6 +35,107 @@
       </h2>
       
       <div class="form-grid">
+
+        <div class="form-group">
+          <label for="cliente">
+            <i-lucide name="user" [size]="16"  class="icon-label"></i-lucide>
+            Cliente *
+          </label>
+          <select 
+            id="cliente" 
+            formControlName="cliente"
+            [class.error]="citaForm.get('cliente')?.invalid && citaForm.get('cliente')?.touched">
+            <option value="">Seleccione un cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente">
+              {{ cliente }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="citaForm.get('cliente')?.invalid && citaForm.get('cliente')?.touched">
+            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
+            El cliente es requerido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tipo">
+            <i-lucide name="folder" [size]="16"  class="icon-label"></i-lucide>
+            Tipo de Cita *
+          </label>
+          <select 
+            id="tipo" 
+            formControlName="tipo"
+            [class.error]="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
+            <option value="">Seleccione un tipo</option>
+            <option *ngFor="let tipo of tiposCita" [value]="tipo">
+              {{ tipo }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
+            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
+            El tipo de cita es requerido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tipo">
+            <i-lucide name="folder" [size]="16"  class="icon-label"></i-lucide>
+            Tipo de Cita *
+          </label>
+          <select 
+            id="tipo" 
+            formControlName="tipo"
+            [class.error]="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
+            <option value="">Seleccione un tipo</option>
+            <option *ngFor="let tipo of tiposCita" [value]="tipo">
+              {{ tipo }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
+            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
+            El tipo de cita es requerido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tipo">
+            <i-lucide name="folder" [size]="16"  class="icon-label"></i-lucide>
+            Tipo de Cita *
+          </label>
+          <select 
+            id="tipo" 
+            formControlName="tipo"
+            [class.error]="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
+            <option value="">Seleccione un tipo</option>
+            <option *ngFor="let tipo of tiposCita" [value]="tipo">
+              {{ tipo }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
+            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
+            El tipo de cita es requerido
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="abogado">
+            <i-lucide name="briefcase" [size]="16"  class="icon-label"></i-lucide>
+            Abogado *
+          </label>
+          <select 
+            id="abogado" 
+            formControlName="abogado"
+            [class.error]="citaForm.get('abogado')?.invalid && citaForm.get('abogado')?.touched">
+            <option value="">Seleccione un abogado</option>
+            <option *ngFor="let abogado of abogados" [value]="abogado">
+              {{ abogado }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="citaForm.get('abogado')?.invalid && citaForm.get('abogado')?.touched">
+            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
+            El abogado es requerido
+          </div>
+        </div>
+
         <div class="form-group">
           <label for="fecha">
             <i-lucide name="calendar" [size]="16"  class="icon-label"></i-lucide>
@@ -66,114 +167,8 @@
             La hora es requerida
           </div>
         </div>
-
-        <div class="form-group">
-          <label for="duracion">
-            <i-lucide name="clock" [size]="16"  class="icon-label"></i-lucide>
-            Duración *
-          </label>
-          <select id="duracion" formControlName="duracion">
-            <option *ngFor="let dur of duraciones" [value]="dur.value">
-              {{ dur.label }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sección: Participantes -->
-    <div class="form-section">
-      <h2>
-        <i-lucide name="users" class="icon-section"></i-lucide>
-        Participantes
-      </h2>
-      
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="cliente">
-            <i-lucide name="user" [size]="16"  class="icon-label"></i-lucide>
-            Cliente *
-          </label>
-          <select 
-            id="cliente" 
-            formControlName="cliente"
-            [class.error]="citaForm.get('cliente')?.invalid && citaForm.get('cliente')?.touched">
-            <option value="">Seleccione un cliente</option>
-            <option *ngFor="let cliente of clientes" [value]="cliente">
-              {{ cliente }}
-            </option>
-          </select>
-          <div class="error-message" *ngIf="citaForm.get('cliente')?.invalid && citaForm.get('cliente')?.touched">
-            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
-            El cliente es requerido
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="abogado">
-            <i-lucide name="briefcase" [size]="16"  class="icon-label"></i-lucide>
-            Abogado *
-          </label>
-          <select 
-            id="abogado" 
-            formControlName="abogado"
-            [class.error]="citaForm.get('abogado')?.invalid && citaForm.get('abogado')?.touched">
-            <option value="">Seleccione un abogado</option>
-            <option *ngFor="let abogado of abogados" [value]="abogado">
-              {{ abogado }}
-            </option>
-          </select>
-          <div class="error-message" *ngIf="citaForm.get('abogado')?.invalid && citaForm.get('abogado')?.touched">
-            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
-            El abogado es requerido
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sección: Detalles -->
-    <div class="form-section">
-      <h2>
-        <i-lucide name="clipboard-list" class="icon-section"></i-lucide>
-        Detalles de la Cita
-      </h2>
-      
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="tipo">
-            <i-lucide name="folder" [size]="16"  class="icon-label"></i-lucide>
-            Tipo de Cita *
-          </label>
-          <select 
-            id="tipo" 
-            formControlName="tipo"
-            [class.error]="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
-            <option value="">Seleccione un tipo</option>
-            <option *ngFor="let tipo of tiposCita" [value]="tipo">
-              {{ tipo }}
-            </option>
-          </select>
-          <div class="error-message" *ngIf="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
-            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
-            El tipo de cita es requerido
-          </div>
-        </div>
-
-        <div class="form-group" *ngIf="isEditMode">
-          <label for="estado">
-            <i-lucide name="activity" [size]="16"  class="icon-label"></i-lucide>
-            Estado
-          </label>
-          <select id="estado" formControlName="estado">
-            <option value="programada">Programada</option>
-            <option value="confirmada">Confirmada</option>
-            <option value="completada">Completada</option>
-            <option value="cancelada">Cancelada</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group full-width">
+        
+        <div class="form-group full-width">
         <label for="notas">
           <i-lucide name="file-text" [size]="16"  class="icon-label"></i-lucide>
           Notas / Observaciones
@@ -183,6 +178,8 @@
           formControlName="notas"
           rows="4"
           placeholder="Agregue notas adicionales sobre la cita..."></textarea>
+      </div>
+      
       </div>
     </div>
 

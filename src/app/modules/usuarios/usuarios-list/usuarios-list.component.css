@@ -61,9 +61,7 @@
 }
 
 .icon-title {
-  width: 32px;
-  height: 32px;
-  color: var(--color-dorado);
+  color: var(--color-azul-marino);
 }
 
 .header-left p {
@@ -71,11 +69,10 @@
   font-size: 1rem;
   opacity: 0.7;
 }
-
 .btn-primary {
   padding: 0.875rem 1.5rem;
-  background: var(--color-azul-acento);
-  color: var(--color-blanco);
+  background: linear-gradient(135deg, #003366 0%, #002447 100%);
+  color: #FFFFFF;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -85,20 +82,16 @@
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-  border: 2px solid var(--color-azul-acento);
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
-  background: #0056b3;
+  box-shadow: 0 6px 16px rgba(0, 51, 102, 0.4);
+  background: linear-gradient(135deg, #C7B47C 0%, #B5A36A 100%);
+  color: #003366;
 }
 
-.btn-icon {
-  width: 20px;
-  height: 20px;
-}
 
 /* ============================================
    ESTADÍSTICAS
@@ -194,13 +187,13 @@
 .icon-label {
   width: 16px;
   height: 16px;
-  color: var(--color-dorado);
+  color: var(--color-azul-marino);
 }
 
 .filtro-item input,
 .filtro-item select {
   padding: 0.75rem;
-  border: 2px solid var(--color-borde);
+  border: 1px solid var(--color-dorado);
   border-radius: 8px;
   font-size: 0.95rem;
   transition: all 0.3s;
@@ -312,6 +305,7 @@
    ============================================ */
 .usuarios-table-container {
   overflow-x: auto;
+  border-radius: 12px;
 }
 
 .usuarios-table {
@@ -320,30 +314,32 @@
 }
 
 .usuarios-table thead {
-  background: var(--color-fondo-principal);
+  color: #FFFFFF;
+  background-color: var(--color-azul-marino);
 }
 
 .usuarios-table th {
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: var(--color-azul-marino);
+  color: var(--color-blanco);
   border-bottom: 2px solid var(--color-dorado);
   font-size: 0.95rem;
 }
 
 .usuarios-table td {
   padding: 1rem;
-  border-bottom: 1px solid var(--color-borde);
+  border-bottom: 1px solid var(--color-dorado);
 }
 
 .usuario-row {
   cursor: pointer;
   transition: all 0.2s;
+  color: var(--color-blanco);
 }
 
 .usuario-row:hover {
-  background: var(--color-fondo-principal);
+  background: #f1f1f1;
 }
 
 /* ============================================
@@ -368,9 +364,9 @@
 }
 
 .avatar-icon {
-  width: 24px;
-  height: 24px;
-  color: var(--color-blanco);
+  width: 30px;
+  height: 32px;
+  color: #FFFFFF;
 }
 
 .usuario-datos {
@@ -428,11 +424,9 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: 600;
-  border: 1px solid;
 }
 
 .icon-badge {
@@ -440,23 +434,6 @@
   height: 16px;
 }
 
-.rol-admin {
-  background: rgba(156, 39, 176, 0.1);
-  color: #7b1fa2;
-  border-color: #9c27b0;
-}
-
-.rol-abogado {
-  background: rgba(0, 123, 255, 0.1);
-  color: #1565c0;
-  border-color: var(--color-azul-acento);
-}
-
-.rol-asistente {
-  background: rgba(255, 193, 7, 0.1);
-  color: #e65100;
-  border-color: var(--color-advertencia);
-}
 
 /* ============================================
    ESTADO BADGE
@@ -477,9 +454,10 @@
 }
 
 .estado-inactivo {
-  background: rgba(97, 97, 97, 0.1);
-  color: #616161;
-  border-color: #757575;
+  background: rgba(255, 0, 0, 0.1);
+  color: var(--color-error);
+  border-color: var(--color-error);
+  
 }
 
 /* ============================================

@@ -108,33 +108,6 @@ export class CitasService {
       descripcion: 'Audiencia preliminar caso laboral',
       notas: 'Preparar argumentos principales'
     },
-    {
-      id: 7,
-      titulo: 'Reunión de Seguimiento',
-      fecha: '2025-10-19',
-      hora: '16:00',
-      duracion: 45,
-      tipo: 'reunion',
-      cliente: 'Jorge Castillo',
-      estado: 'cancelada',
-      ubicacion: 'Oficina Principal - Sala 2',
-      descripcion: 'Seguimiento del caso de herencia',
-      notas: 'Cliente canceló por motivos personales'
-    },
-    {
-      id: 8,
-      titulo: 'Consulta Urgente',
-      fecha: '2025-10-17',
-      hora: '17:00',
-      duracion: 30,
-      tipo: 'consulta',
-      cliente: 'Sandra Morales',
-      abogado: 'Dra. Ana Torres',
-      estado: 'completada',
-      ubicacion: 'Oficina Principal - Sala 3',
-      descripcion: 'Consulta urgente sobre caso comercial',
-      notas: 'Atendida el mismo día'
-    }
   ];
 
   constructor() {}

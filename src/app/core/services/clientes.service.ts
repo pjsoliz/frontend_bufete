@@ -136,42 +136,6 @@ export class ClientesService {
       casos_activos: 0,
       casos_totales: 1
     },
-    {
-      id: 7,
-      nombre: 'Jorge',
-      apellido: 'Castillo',
-      email: 'jorge.castillo@email.com',
-      telefono: '+593-93-111-2222',
-      tipo_documento: 'cedula',
-      documento_identidad: '4433221100',
-      fecha_nacimiento: '1992-04-25',
-      direccion: 'Vía a la Costa',
-      ciudad: 'Guayaquil',
-      provincia: 'Guayas',
-      estado: 'activo',
-      fecha_registro: '2025-09-28',
-      notas: 'Cliente nuevo, proceso de herencia',
-      casos_activos: 1,
-      casos_totales: 1
-    },
-    {
-      id: 8,
-      nombre: 'Sandra',
-      apellido: 'Morales',
-      email: 'sandra.morales@email.com',
-      telefono: '+593-92-999-8888',
-      tipo_documento: 'ruc',
-      documento_identidad: '1234567890001',
-      fecha_nacimiento: '1980-08-14',
-      direccion: 'Parque Industrial',
-      ciudad: 'Ambato',
-      provincia: 'Tungurahua',
-      estado: 'activo',
-      fecha_registro: '2025-08-15',
-      notas: 'Empresa, caso comercial',
-      casos_activos: 1,
-      casos_totales: 1
-    }
   ];
 
   constructor() {}

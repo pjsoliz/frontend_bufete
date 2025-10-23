@@ -218,55 +218,6 @@ export class CasosService {
         }
       ]
     },
-    {
-      id: 7,
-      numero_caso: 'CAS-2025-007',
-      titulo: 'Pensión Alimenticia',
-      descripcion: 'Demanda de pensión alimenticia para menores.',
-      tipo: 'familia',
-      estado: 'en_progreso',
-      prioridad: 'alta',
-      cliente: 'Sandra Morales',
-      abogado: 'Dra. María González',
-      fecha_inicio: '2025-06-01',
-      juzgado: 'Juzgado de Familia N°2',
-      numero_expediente: 'EXP-FAM-2025-091',
-      documentos: 6,
-      proxima_audiencia: '2025-10-28',
-      notas: 'Caso urgente, menores involucrados',
-      actividades: [
-        {
-          id: 1,
-          fecha: '2025-10-14',
-          tipo: 'audiencia',
-          descripcion: 'Audiencia de fijación de pensión',
-          usuario: 'Dra. María González'
-        }
-      ]
-    },
-    {
-      id: 8,
-      numero_caso: 'CAS-2025-008',
-      titulo: 'Herencia - Sucesión Intestada',
-      descripcion: 'Proceso de sucesión intestada, disputa entre herederos.',
-      tipo: 'civil',
-      estado: 'pendiente',
-      prioridad: 'media',
-      cliente: 'Jorge Castillo',
-      fecha_inicio: '2025-09-28',
-      juzgado: 'Juzgado Civil N°3',
-      documentos: 3,
-      notas: 'Caso nuevo, en fase de recopilación de documentos',
-      actividades: [
-        {
-          id: 1,
-          fecha: '2025-09-28',
-          tipo: 'nota',
-          descripcion: 'Cliente registrado',
-          usuario: 'Recepción'
-        }
-      ]
-    }
   ];
 
   constructor() {}

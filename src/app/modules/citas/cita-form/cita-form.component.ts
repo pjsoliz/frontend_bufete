@@ -27,11 +27,11 @@ export class CitaFormComponent implements OnInit {
   ];
 
   abogados = [
-    'Dr. Carlos Méndez',
-    'Dra. Ana Torres',
-    'Dr. Luis Ramírez',
-    'Dra. María González',
-    'Dr. Pedro Sánchez'
+    'Dr. Isaac Soliz',
+    'Dra. Elena Fernández',
+    'Dr. Eliseo Saca',
+    'Dra. Claudia Zelada',
+    'Dr. Cesar Zelada'
   ];
 
   clientes = [
@@ -43,15 +43,6 @@ export class CitaFormComponent implements OnInit {
     'Carmen Ruiz',
     'Jorge Castillo',
     'Sandra Morales'
-  ];
-
-  duraciones = [
-    { value: 30, label: '30 minutos' },
-    { value: 45, label: '45 minutos' },
-    { value: 60, label: '1 hora' },
-    { value: 90, label: '1.5 horas' },
-    { value: 120, label: '2 horas' },
-    { value: 180, label: '3 horas' }
   ];
 
   constructor(

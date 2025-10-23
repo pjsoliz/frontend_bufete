@@ -39,54 +39,12 @@ export class UsuariosService {
     },
     {
       id: 2,
-      nombre: 'Ana',
-      apellido: 'Torres',
-      email: 'ana.torres@genesis.com',
-      username: 'atorres',
-      rol: 'abogado',
-      estado: 'activo',
-      telefono: '+593-98-222-3333',
-      fecha_registro: '2024-02-20',
-      ultimo_acceso: '2025-10-17',
-      especialidad: 'Derecho Civil y Familia',
-      casos_asignados: 6
-    },
-    {
-      id: 3,
-      nombre: 'Luis',
-      apellido: 'Ramírez',
-      email: 'luis.ramirez@genesis.com',
-      username: 'lramirez',
-      rol: 'abogado',
-      estado: 'activo',
-      telefono: '+593-97-333-4444',
-      fecha_registro: '2024-03-10',
-      ultimo_acceso: '2025-10-16',
-      especialidad: 'Derecho Penal',
-      casos_asignados: 5
-    },
-    {
-      id: 4,
-      nombre: 'María',
-      apellido: 'González',
-      email: 'maria.gonzalez@genesis.com',
-      username: 'mgonzalez',
-      rol: 'abogado',
-      estado: 'activo',
-      telefono: '+593-96-444-5555',
-      fecha_registro: '2024-05-15',
-      ultimo_acceso: '2025-10-15',
-      especialidad: 'Derecho de Familia',
-      casos_asignados: 4
-    },
-    {
-      id: 5,
       nombre: 'Pedro',
       apellido: 'Sánchez',
       email: 'pedro.sanchez@genesis.com',
       username: 'psanchez',
       rol: 'abogado',
-      estado: 'activo',
+      estado: 'inactivo',
       telefono: '+593-95-555-6666',
       fecha_registro: '2024-07-01',
       ultimo_acceso: '2025-10-14',
@@ -94,7 +52,7 @@ export class UsuariosService {
       casos_asignados: 3
     },
     {
-      id: 6,
+      id: 3,
       nombre: 'Laura',
       apellido: 'Jiménez',
       email: 'laura.jimenez@genesis.com',
@@ -107,7 +65,7 @@ export class UsuariosService {
       casos_asignados: 0
     },
     {
-      id: 7,
+      id: 4,
       nombre: 'Roberto',
       apellido: 'Castro',
       email: 'roberto.castro@genesis.com',
@@ -120,33 +78,7 @@ export class UsuariosService {
       casos_asignados: 0
     },
     {
-      id: 8,
-      nombre: 'Carmen',
-      apellido: 'Vargas',
-      email: 'carmen.vargas@genesis.com',
-      username: 'cvargas',
-      rol: 'asistente_legal',
-      estado: 'activo',
-      telefono: '+593-92-888-9999',
-      fecha_registro: '2024-06-15',
-      ultimo_acceso: '2025-10-15',
-      casos_asignados: 0
-    },
-    {
-      id: 9,
-      nombre: 'Diego',
-      apellido: 'Morales',
-      email: 'diego.morales@genesis.com',
-      username: 'dmorales',
-      rol: 'asistente_legal',
-      estado: 'inactivo',
-      telefono: '+593-91-999-0000',
-      fecha_registro: '2024-01-20',
-      ultimo_acceso: '2025-08-15',
-      casos_asignados: 0
-    },
-    {
-      id: 10,
+      id: 5,
       nombre: 'Admin',
       apellido: 'Sistema',
       email: 'admin@genesis.com',

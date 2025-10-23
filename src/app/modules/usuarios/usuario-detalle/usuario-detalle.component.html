@@ -25,13 +25,13 @@
       <div class="header-main">
         <div class="header-left">
           <div class="usuario-avatar-large">
-            <i-lucide [name]="getRolIconName(usuario.rol)" class="avatar-icon-large"></i-lucide>
+            <i-lucide [name]="getRolIconName(usuario.rol)" [size]="60" class="avatar-icon-large"></i-lucide>
           </div>
           <div class="usuario-info-header">
             <h1>{{ getNombreCompleto() }}</h1>
             <div class="badges-row">
               <span class="badge-rol" [ngClass]="getRolClass(usuario.rol)">
-                <i-lucide [name]="getRolIconName(usuario.rol)" class="icon-badge"></i-lucide>
+                <i-lucide [name]="getRolIconName(usuario.rol)" [size]="16" class="icon-badge"></i-lucide>
                 {{ getRolTexto(usuario.rol) }}
               </span>
               <span class="badge-estado" [ngClass]="getEstadoClass(usuario.estado)">
@@ -40,11 +40,11 @@
             </div>
             <div class="username-email">
               <span class="username">
-                <i-lucide name="at-sign" class="icon-small"></i-lucide>
+                <i-lucide name="at-sign" [size]="16" class="icon-small"></i-lucide>
                 {{ usuario.username }}
               </span>
               <span class="email">
-                <i-lucide name="mail" class="icon-small"></i-lucide>
+                <i-lucide name="mail" [size]="16" class="icon-small"></i-lucide>
                 {{ usuario.email }}
               </span>
             </div>
@@ -54,15 +54,15 @@
         <div class="header-right">
           <button class="btn-action" (click)="cambiarEstado()"
                   [title]="usuario.estado === 'activo' ? 'Desactivar' : 'Activar'">
-            <i-lucide [name]="usuario.estado === 'activo' ? 'pause-circle' : 'play-circle'" class="icon-btn"></i-lucide>
+            <i-lucide [name]="usuario.estado === 'activo' ? 'pause-circle' : 'play-circle'" [size]="20" class="icon-btn"></i-lucide>
             {{ usuario.estado === 'activo' ? 'Desactivar' : 'Activar' }}
           </button>
           <button class="btn-action btn-edit" (click)="editarUsuario()">
-            <i-lucide name="pencil" class="icon-btn"></i-lucide>
+            <i-lucide name="pencil" [size]="20"  class="icon-btn"></i-lucide>
             Editar
           </button>
           <button class="btn-action btn-delete" (click)="eliminarUsuario()">
-            <i-lucide name="trash-2" class="icon-btn"></i-lucide>
+            <i-lucide name="trash-2" [size]="20"  class="icon-btn"></i-lucide>
             Eliminar
           </button>
         </div>
@@ -83,10 +83,10 @@
           </h2>
 
           <div class="info-grid">
-            <div class="info-item full-width">
+            <div class="info-item">
               <div class="info-label">Email</div>
               <div class="info-value">
-                <i-lucide name="mail" class="icon"></i-lucide>
+                <i-lucide name="mail" [size]="16"  class="icon"></i-lucide>
                 <a [href]="'mailto:' + usuario.email">{{ usuario.email }}</a>
               </div>
             </div>
@@ -94,7 +94,7 @@
             <div class="info-item" *ngIf="usuario.telefono">
               <div class="info-label">Teléfono</div>
               <div class="info-value">
-                <i-lucide name="phone" class="icon"></i-lucide>
+                <i-lucide name="phone" [size]="16" class="icon"></i-lucide>
                 <a [href]="'tel:' + usuario.telefono">{{ usuario.telefono }}</a>
               </div>
             </div>
@@ -102,7 +102,7 @@
             <div class="info-item">
               <div class="info-label">Usuario del Sistema</div>
               <div class="info-value">
-                <i-lucide name="at-sign" class="icon"></i-lucide>
+                <i-lucide name="at-sign" [size]="16" class="icon"></i-lucide>
                 {{ usuario.username }}
               </div>
             </div>
@@ -117,10 +117,10 @@
           </h2>
 
           <div class="info-grid">
-            <div class="info-item full-width">
+            <div class="info-item">
               <div class="info-label">Especialidad</div>
               <div class="info-value especialidad-destacada">
-                <i-lucide name="briefcase" class="icon"></i-lucide>
+                <i-lucide name="briefcase" [size]="16" class="icon"></i-lucide>
                 {{ usuario.especialidad }}
               </div>
             </div>
@@ -146,7 +146,7 @@
             <div class="info-item">
               <div class="info-label">Fecha de Registro</div>
               <div class="info-value">
-                <i-lucide name="calendar" class="icon"></i-lucide>
+                <i-lucide name="calendar" [size]="16" class="icon"></i-lucide>
                 {{ formatearFecha(usuario.fecha_registro) }}
               </div>
             </div>
@@ -154,7 +154,7 @@
             <div class="info-item" *ngIf="usuario.ultimo_acceso">
               <div class="info-label">Último Acceso</div>
               <div class="info-value">
-                <i-lucide name="clock" class="icon"></i-lucide>
+                <i-lucide name="clock" [size]="16" class="icon"></i-lucide>
                 {{ formatearFecha(usuario.ultimo_acceso) }}
               </div>
             </div>
@@ -162,7 +162,7 @@
             <div class="info-item" *ngIf="calcularDiasDesdeAcceso() !== null">
               <div class="info-label">Actividad</div>
               <div class="info-value">
-                <i-lucide name="activity" class="icon"></i-lucide>
+                <i-lucide name="activity" [size]="16" class="icon"></i-lucide>
                 <span *ngIf="calcularDiasDesdeAcceso() === 0" class="texto-verde">Activo hoy</span>
                 <span *ngIf="calcularDiasDesdeAcceso()! > 0 && calcularDiasDesdeAcceso()! <= 7" class="texto-verde">
                   Hace {{ calcularDiasDesdeAcceso() }} días
@@ -184,7 +184,7 @@
 
           <div class="permisos-lista">
             <div class="permiso-item" *ngIf="usuario.rol === 'administrador'">
-              <i-lucide name="check-circle" class="permiso-check"></i-lucide>
+              <i-lucide name="check-circle" [size]="16" class="permiso-check"></i-lucide>
               <div class="permiso-texto">
                 <strong>Acceso Total al Sistema</strong>
                 <p>Gestión completa de usuarios, casos, clientes y configuración del sistema.</p>
@@ -192,7 +192,7 @@
             </div>
 
             <div class="permiso-item" *ngIf="usuario.rol === 'abogado'">
-              <i-lucide name="check-circle" class="permiso-check"></i-lucide>
+              <i-lucide name="check-circle" [size]="16" class="permiso-check"></i-lucide>
               <div class="permiso-texto">
                 <strong>Gestión de Casos</strong>
                 <p>Crear, editar y gestionar casos asignados.</p>
@@ -200,7 +200,7 @@
             </div>
 
             <div class="permiso-item" *ngIf="usuario.rol === 'abogado'">
-              <i-lucide name="check-circle" class="permiso-check"></i-lucide>
+              <i-lucide name="check-circle" [size]="16" class="permiso-check"></i-lucide>
               <div class="permiso-texto">
                 <strong>Gestión de Citas</strong>
                 <p>Agendar y administrar citas con clientes.</p>
@@ -208,7 +208,7 @@
             </div>
 
             <div class="permiso-item" *ngIf="usuario.rol === 'asistente_legal'">
-              <i-lucide name="check-circle" class="permiso-check"></i-lucide>
+              <i-lucide name="check-circle" [size]="16" class="permiso-check"></i-lucide>
               <div class="permiso-texto">
                 <strong>Soporte Administrativo</strong>
                 <p>Gestionar citas, clientes y dar soporte general.</p>
@@ -216,7 +216,7 @@
             </div>
 
             <div class="permiso-item" *ngIf="usuario.rol === 'asistente_legal'">
-              <i-lucide name="check-circle" class="permiso-check"></i-lucide>
+              <i-lucide name="check-circle" [size]="16" class="permiso-check"></i-lucide>
               <div class="permiso-texto">
                 <strong>Visualización de Casos</strong>
                 <p>Ver información de casos sin poder editarlos.</p>
@@ -266,7 +266,7 @@
 
           <!-- Sin Casos -->
           <div class="sin-casos" *ngIf="casosAsignados.length === 0">
-            <i-lucide name="folder-x" class="sin-casos-icon"></i-lucide>
+            <i-lucide name="folder-x" [size]="50" class="sin-casos-icon"></i-lucide>
             <p>Este abogado no tiene casos asignados actualmente</p>
           </div>
         </div>

@@ -24,7 +24,7 @@ import {
   AtSign,          // Username
   Shield,          // Admin avatar
   Phone,           // Teléfono
-  Eye,             // Ver detalle
+  Eye,        // Ver detalle
   Pencil,          // Editar
   PauseCircle,     // Desactivar
   PlayCircle,      // Activar
@@ -34,7 +34,10 @@ import {
   Save,            // Guardar (para form)
   X,               // Cerrar/Cancelar (para form)
   AlertTriangle,   // Alertas (para form)
-  Calendar,        // Fecha registro (para detalle)
+  Calendar,
+  FolderX,
+  Folder,
+  Monitor,        // Fecha registro (para detalle)
   Clock,           // Último acceso (para detalle)
   FileText,        // Notas (para detalle)
   Briefcase,       // Casos asignados (para detalle)
@@ -71,7 +74,9 @@ import {
       Activity,
       SearchX,
       Mail,
-      AtSign,
+      AtSign,FolderX,
+  Folder,
+  Monitor, 
       Shield,
       Phone,
       Eye,
@@ -88,20 +93,12 @@ import {
       Calendar,
       FileText,
       // Iconos para usuario-detalle
-
       Edit,
-
       Clock,
- 
-
-
-      MapPin,
       Briefcase,
-
       UserCheck,
       UserX,
       Info,
-
     })
   ]
 })

@@ -14,38 +14,14 @@ export class ClienteFormComponent implements OnInit {
   isEditMode = false;
   clienteId: number | null = null;
   errorMessage = '';
-
-  tiposDocumento = [
-    { value: 'cedula', label: 'Cédula' },
-    { value: 'pasaporte', label: 'Pasaporte' },
-    { value: 'ruc', label: 'RUC' }
-  ];
-
   provincias = [
-    'Azuay',
+    'Cercado',
     'Bolívar',
-    'Cañar',
-    'Carchi',
-    'Chimborazo',
-    'Cotopaxi',
-    'El Oro',
-    'Esmeraldas',
-    'Galápagos',
-    'Guayas',
-    'Imbabura',
-    'Loja',
-    'Los Ríos',
-    'Manabí',
-    'Morona Santiago',
-    'Napo',
-    'Orellana',
-    'Pastaza',
-    'Pichincha',
-    'Santa Elena',
-    'Santo Domingo de los Tsáchilas',
-    'Sucumbíos',
-    'Tungurahua',
-    'Zamora Chinchipe'
+    'Sacaba',
+    'Quillacollo',
+    'Chapare',
+    'Campero',
+    'Arani'
   ];
 
   constructor(

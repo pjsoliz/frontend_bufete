@@ -16,55 +16,12 @@
     </div>
   </div>
 
-  <!-- Estadísticas -->
-  <div class="stats-section">
-    <div class="stat-card blue">
-      <i-lucide name="users" class="stat-icon"></i-lucide>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats.total }}</div>
-        <div class="stat-label">Total Usuarios</div>
-      </div>
-    </div>
-
-    <div class="stat-card purple">
-      <i-lucide name="crown" class="stat-icon"></i-lucide>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats.administradores }}</div>
-        <div class="stat-label">Administradores</div>
-      </div>
-    </div>
-
-    <div class="stat-card green">
-      <i-lucide name="scale" class="stat-icon"></i-lucide>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats.abogados }}</div>
-        <div class="stat-label">Abogados</div>
-      </div>
-    </div>
-
-    <div class="stat-card orange">
-      <i-lucide name="clipboard-list" class="stat-icon"></i-lucide>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats.asistentes }}</div>
-        <div class="stat-label">Asistentes</div>
-      </div>
-    </div>
-
-    <div class="stat-card teal">
-      <i-lucide name="check-circle" class="stat-icon"></i-lucide>
-      <div class="stat-content">
-        <div class="stat-value">{{ stats.activos }}</div>
-        <div class="stat-label">Activos</div>
-      </div>
-    </div>
-  </div>
-
   <!-- Filtros -->
   <div class="filtros-section">
     <div class="filtros-grid">
       <div class="filtro-item">
         <label>
-          <i-lucide name="search" class="icon-label"></i-lucide>
+          <i-lucide name="search" [size]="18" class="icon-label"></i-lucide>
           Buscar
         </label>
         <input
@@ -76,7 +33,7 @@
 
       <div class="filtro-item">
         <label>
-          <i-lucide name="user-circle" class="icon-label"></i-lucide>
+          <i-lucide name="user-circle" [size]="18" class="icon-label"></i-lucide>
           Rol
         </label>
         <select [(ngModel)]="filtroRol" (change)="onFiltroChange()">
@@ -89,7 +46,7 @@
 
       <div class="filtro-item">
         <label>
-          <i-lucide name="activity" class="icon-label"></i-lucide>
+          <i-lucide name="activity" [size]="18" class="icon-label"></i-lucide>
           Estado
         </label>
         <select [(ngModel)]="filtroEstado" (change)="onFiltroChange()">
@@ -149,7 +106,7 @@
             <td>
               <div class="usuario-info">
                 <div class="usuario-avatar">
-                  <i-lucide [name]="getRolIconName(usuario.rol)" class="avatar-icon"></i-lucide>
+                  <i-lucide [name]="getRolIconName(usuario.rol)" [size]="30" class="avatar-icon"></i-lucide>
                 </div>
                 <div class="usuario-datos">
                   <div class="nombre">{{ getNombreCompleto(usuario) }}</div>
@@ -163,11 +120,11 @@
             <td>
               <div class="email-username">
                 <div class="email">
-                  <i-lucide name="mail" class="icon-small"></i-lucide>
+                  <i-lucide name="mail" [size]="16" class="icon-small"></i-lucide>
                   {{ usuario.email }}
                 </div>
                 <div class="username">
-                  <i-lucide name="at-sign" class="icon-small"></i-lucide>
+                  <i-lucide name="at-sign" [size]="16" class="icon-small"></i-lucide>
                   {{ usuario.username }}
                 </div>
               </div>
@@ -175,7 +132,7 @@
 
             <td>
               <span class="rol-badge" [ngClass]="getRolClass(usuario.rol)">
-                <i-lucide [name]="getRolIconName(usuario.rol)" class="icon-badge"></i-lucide>
+                <i-lucide [name]="getRolIconName(usuario.rol)" [size]="16" class="icon-badge"></i-lucide>
                 {{ getRolTexto(usuario.rol) }}
               </span>
             </td>
@@ -188,7 +145,7 @@
 
             <td>
               <div class="telefono" *ngIf="usuario.telefono">
-                <i-lucide name="phone" class="icon-small"></i-lucide>
+                <i-lucide name="phone" [size]="16" class="icon-small"></i-lucide>
                 {{ usuario.telefono }}
               </div>
               <div *ngIf="!usuario.telefono" class="sin-dato">-</div>
@@ -204,6 +161,7 @@
 
             <td>
               <div class="ultimo-acceso" *ngIf="usuario.ultimo_acceso">
+                <i-lucide name="calendar" [size]="16" class="icon-accion"></i-lucide>
                 {{ formatearFecha(usuario.ultimo_acceso) }}
               </div>
               <div *ngIf="!usuario.ultimo_acceso" class="sin-dato">-</div>
@@ -212,17 +170,10 @@
             <td class="acciones-cell" (click)="$event.stopPropagation()">
               <div class="acciones-buttons">
                 <button
-                  class="btn-accion btn-ver"
-                  (click)="verDetalle(usuario.id)"
-                  title="Ver detalle">
-                  <i-lucide name="eye" class="icon-accion"></i-lucide>
-                </button>
-
-                <button
                   class="btn-accion btn-editar"
                   (click)="editarUsuario(usuario.id, $event)"
                   title="Editar">
-                  <i-lucide name="pencil" class="icon-accion"></i-lucide>
+                  <i-lucide name="pencil" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <button
@@ -230,7 +181,7 @@
                   class="btn-accion btn-desactivar"
                   (click)="cambiarEstado(usuario.id, 'inactivo', $event)"
                   title="Desactivar">
-                  <i-lucide name="pause-circle" class="icon-accion"></i-lucide>
+                  <i-lucide name="pause-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <button
@@ -238,14 +189,14 @@
                   class="btn-accion btn-activar"
                   (click)="cambiarEstado(usuario.id, 'activo', $event)"
                   title="Activar">
-                  <i-lucide name="play-circle" class="icon-accion"></i-lucide>
+                  <i-lucide name="play-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <button
                   class="btn-accion btn-eliminar"
                   (click)="eliminarUsuario(usuario.id, $event)"
                   title="Eliminar">
-                  <i-lucide name="trash-2" class="icon-accion"></i-lucide>
+                  <i-lucide name="trash-2" [size]="16" class="icon-accion"></i-lucide>
                 </button>
               </div>
             </td>

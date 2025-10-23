@@ -103,29 +103,24 @@
 
 .btn-back {
   padding: 0.5rem 1rem;
-  background: var(--color-blanco);
-  border: 2px solid var(--color-borde);
-  border-radius: 8px;
+  background: #F8F9FA;
+  border: 2px solid #DEE2E6;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.95rem;
-  color: var(--color-azul-marino);
+  color: #003366;
   transition: all 0.3s;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-weight: 600;
-}
-
-.icon-back {
-  width: 18px;
-  height: 18px;
 }
 
 .btn-back:hover {
-  background: var(--color-azul-marino);
-  color: var(--color-blanco);
-  border-color: var(--color-azul-marino);
+  background: #003366;
+  color: #FFFFFF;
+  border-color: #003366;
   transform: translateX(-4px);
 }
 
@@ -164,9 +159,7 @@
 }
 
 .avatar-icon-large {
-  width: 50px;
-  height: 50px;
-  color: var(--color-blanco);
+  color: #FFFFFF;
 }
 
 .usuario-info-header h1 {
@@ -350,12 +343,14 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-dorado);
 }
 
 .icon-section {
   width: 24px;
   height: 24px;
-  color: var(--color-dorado);
+  color: var(--color-azul-marino);
 }
 
 .info-grid {
@@ -425,8 +420,8 @@
 }
 
 .texto-verde {
-  color: var(--color-exito);
-  font-weight: 600;
+  color: var(--color-texto-principal);
+  font-weight: 400;
 }
 
 .texto-naranja {
@@ -438,7 +433,7 @@
    PERMISOS CARD
    ============================================ */
 .permisos-card {
-  background: linear-gradient(135deg, rgba(199, 180, 124, 0.08) 0%, rgba(199, 180, 124, 0.08) 100%);
+  background: #FFFFFF;
 }
 
 .permisos-lista {
@@ -451,10 +446,9 @@
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  background: var(--color-blanco);
   border-radius: 10px;
-  border-left: 4px solid var(--color-exito);
-  border: 1px solid var(--color-borde);
+  border: 1px solid var(--color-dorado);
+  background:#f4f3f0;
 }
 
 .permiso-check {
@@ -501,6 +495,8 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-dorado);
 }
 
 .casos-stat {

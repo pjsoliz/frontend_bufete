@@ -164,7 +164,7 @@
 .filtro-item input,
 .filtro-item select {
   padding: 0.75rem;
-  border: 2px solid #DEE2E6;
+  border: 1px solid var(--color-dorado);
   border-radius: 8px;
   font-size: 0.95rem;
   transition: all 0.3s;
