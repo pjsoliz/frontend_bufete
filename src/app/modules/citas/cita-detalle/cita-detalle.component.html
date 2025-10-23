@@ -7,7 +7,9 @@
 
   <!-- Error -->
   <div *ngIf="!loading && errorMessage" class="error-container">
-    <div class="error-icon">⚠️</div>
+    <div class="error-icon">
+      <i-lucide name="alert-triangle" class="icon-error-large"></i-lucide>
+    </div>
     <h2>{{ errorMessage }}</h2>
     <button class="btn-primary" (click)="volver()">Volver a Citas</button>
   </div>
@@ -17,11 +19,16 @@
     
     <!-- Header -->
     <div class="detalle-header">
-      <button class="btn-back" (click)="volver()">← Volver</button>
+      <button class="btn-back" (click)="volver()">
+        <i-lucide name="arrow-left" class="icon-back"></i-lucide>
+        Volver
+      </button>
       
       <div class="header-main">
         <div class="header-left">
-          <div class="cita-icon-large">📅</div>
+          <div class="cita-icon-large">
+            <i-lucide name="calendar" class="icon-calendar-large"></i-lucide>
+          </div>
           <div class="cita-info-header">
             <h1>{{ cita.titulo }}</h1>
             <div class="badges-row">
@@ -32,7 +39,8 @@
                 {{ getEstadoTexto(cita.estado) }}
               </span>
               <span class="badge-urgente" *ngIf="esHoy()">
-                🔴 HOY
+                <i-lucide name="alert-circle" class="icon-badge"></i-lucide>
+                HOY
               </span>
             </div>
           </div>
@@ -43,27 +51,32 @@
                   (click)="confirmarCita()"
                   *ngIf="cita.estado === 'pendiente'"
                   title="Confirmar">
-            ✅ Confirmar
+            <i-lucide name="check-circle" class="icon-btn"></i-lucide>
+            Confirmar
           </button>
           <button class="btn-action btn-completar" 
                   (click)="completarCita()"
                   *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
                   title="Completar">
-            ✔️ Completar
+            <i-lucide name="check" class="icon-btn"></i-lucide>
+            Completar
           </button>
           <button class="btn-action btn-edit" 
                   (click)="editarCita()"
                   *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'">
-            ✏️ Editar
+            <i-lucide name="pencil" class="icon-btn"></i-lucide>
+            Editar
           </button>
           <button class="btn-action btn-cancelar" 
                   (click)="cancelarCita()"
                   *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
                   title="Cancelar">
-            ⏸️ Cancelar
+            <i-lucide name="pause-circle" class="icon-btn"></i-lucide>
+            Cancelar
           </button>
           <button class="btn-action btn-delete" (click)="eliminarCita()">
-            🗑️ Eliminar
+            <i-lucide name="trash-2" class="icon-btn"></i-lucide>
+            Eliminar
           </button>
         </div>
       </div>
@@ -77,11 +90,16 @@
         
         <!-- Información de Fecha y Hora -->
         <div class="info-card fecha-card">
-          <h2>🕐 Fecha y Hora</h2>
+          <h2>
+            <i-lucide name="clock" class="icon-section"></i-lucide>
+            Fecha y Hora
+          </h2>
           
           <div class="fecha-hora-grid">
             <div class="fecha-hora-item">
-              <div class="fecha-hora-icon">📅</div>
+              <div class="fecha-hora-icon">
+                <i-lucide name="calendar" class="icon-fecha"></i-lucide>
+              </div>
               <div class="fecha-hora-info">
                 <div class="fecha-hora-label">Fecha</div>
                 <div class="fecha-hora-value">{{ formatearFecha(cita.fecha) }}</div>
@@ -89,7 +107,9 @@
             </div>
 
             <div class="fecha-hora-item">
-              <div class="fecha-hora-icon">⏰</div>
+              <div class="fecha-hora-icon">
+                <i-lucide name="clock" class="icon-fecha"></i-lucide>
+              </div>
               <div class="fecha-hora-info">
                 <div class="fecha-hora-label">Hora</div>
                 <div class="fecha-hora-value">{{ formatearHora(cita.hora) }}</div>
@@ -97,7 +117,9 @@
             </div>
 
             <div class="fecha-hora-item">
-              <div class="fecha-hora-icon">⏱️</div>
+              <div class="fecha-hora-icon">
+                <i-lucide name="timer" class="icon-fecha"></i-lucide>
+              </div>
               <div class="fecha-hora-info">
                 <div class="fecha-hora-label">Duración</div>
                 <div class="fecha-hora-value">{{ cita.duracion }} minutos</div>
@@ -106,23 +128,28 @@
           </div>
 
           <div class="alerta-tiempo" *ngIf="esPasada() && cita.estado !== 'completada' && cita.estado !== 'cancelada'">
-            ⚠️ Esta cita ya pasó. Considera completarla o cancelarla.
+            <i-lucide name="alert-triangle" class="icon-alerta"></i-lucide>
+            Esta cita ya pasó. Considera completarla o cancelarla.
           </div>
 
           <div class="alerta-hoy" *ngIf="esHoy() && cita.estado !== 'completada' && cita.estado !== 'cancelada'">
-            🔔 Esta cita es HOY. ¡No olvides confirmarla!
+            <i-lucide name="bell" class="icon-alerta"></i-lucide>
+            Esta cita es HOY. ¡No olvides confirmarla!
           </div>
         </div>
 
         <!-- Participantes -->
         <div class="info-card">
-          <h2>👥 Participantes</h2>
+          <h2>
+            <i-lucide name="users" class="icon-section"></i-lucide>
+            Participantes
+          </h2>
           
           <div class="info-grid">
             <div class="info-item">
               <div class="info-label">Cliente</div>
               <div class="info-value">
-                <span class="icon">👤</span>
+                <i-lucide name="user" class="icon"></i-lucide>
                 {{ cita.cliente }}
               </div>
             </div>
@@ -130,33 +157,44 @@
             <div class="info-item" *ngIf="cita.abogado">
               <div class="info-label">Abogado Asignado</div>
               <div class="info-value">
-                <span class="icon">⚖️</span>
+                <i-lucide name="briefcase" class="icon"></i-lucide>
                 {{ cita.abogado }}
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Ubicación -->
-        <div class="info-card" *ngIf="cita.ubicacion">
-          <h2>📍 Ubicación</h2>
-          <div class="ubicacion-content">
-            <div class="ubicacion-icon">🏢</div>
-            <div class="ubicacion-texto">{{ cita.ubicacion }}</div>
-          </div>
-        </div>
+        <!-- Ubicación - USAR EL MÉTODO HELPER -->
+<div class="info-card" *ngIf="tieneUbicacion()">
+  <h2>
+    <i-lucide name="map-pin" class="icon-section"></i-lucide>
+    Ubicación
+  </h2>
+  <div class="ubicacion-content">
+    <div class="ubicacion-icon">
+      <i-lucide name="map-pin" class="icon-ubicacion"></i-lucide>
+    </div>
+    <div class="ubicacion-texto">{{ cita!.ubicacion }}</div>
+  </div>
+</div>
 
-        <!-- Descripción -->
-        <div class="info-card" *ngIf="cita.descripcion">
-          <h2>📝 Descripción</h2>
-          <p class="descripcion">{{ cita.descripcion }}</p>
-        </div>
+<!-- Descripción - USAR EL MÉTODO HELPER -->
+<div class="info-card" *ngIf="tieneDescripcion()">
+  <h2>
+    <i-lucide name="file-text" class="icon-section"></i-lucide>
+    Descripción
+  </h2>
+  <p class="descripcion">{{ cita!.descripcion }}</p>
+</div>
 
-        <!-- Notas -->
-        <div class="info-card" *ngIf="cita.notas">
-          <h2>📌 Notas Adicionales</h2>
-          <p class="notas">{{ cita.notas }}</p>
-        </div>
+<!-- Notas - USAR EL MÉTODO HELPER -->
+<div class="info-card" *ngIf="tieneNotas()">
+  <h2>
+    <i-lucide name="sticky-note" class="icon-section"></i-lucide>
+    Notas Adicionales
+  </h2>
+  <p class="notas">{{ cita!.notas }}</p>
+</div>
 
       </div>
 
@@ -165,14 +203,17 @@
         
         <!-- Estado de la Cita -->
         <div class="estado-card">
-          <h2>📊 Estado de la Cita</h2>
+          <h2>
+            <i-lucide name="activity" class="icon-section"></i-lucide>
+            Estado de la Cita
+          </h2>
           
           <div class="estado-visual">
             <div class="estado-icon-grande" [ngClass]="getEstadoClass(cita.estado)">
-              <span *ngIf="cita.estado === 'pendiente'">⏳</span>
-              <span *ngIf="cita.estado === 'confirmada'">✅</span>
-              <span *ngIf="cita.estado === 'completada'">✔️</span>
-              <span *ngIf="cita.estado === 'cancelada'">❌</span>
+              <i-lucide *ngIf="cita.estado === 'pendiente'" name="clock" class="icon-estado"></i-lucide>
+              <i-lucide *ngIf="cita.estado === 'confirmada'" name="check-circle" class="icon-estado"></i-lucide>
+              <i-lucide *ngIf="cita.estado === 'completada'" name="check" class="icon-estado"></i-lucide>
+              <i-lucide *ngIf="cita.estado === 'cancelada'" name="x-circle" class="icon-estado"></i-lucide>
             </div>
             <div class="estado-texto-grande">{{ getEstadoTexto(cita.estado) }}</div>
           </div>
@@ -184,17 +225,17 @@
             <button class="accion-rapida confirmar" 
                     (click)="confirmarCita()"
                     *ngIf="cita.estado === 'pendiente'">
-              <span class="accion-icon">✅</span>
+              <i-lucide name="check-circle" class="accion-icon"></i-lucide>
               <span class="accion-texto">Confirmar Cita</span>
             </button>
 
             <button class="accion-rapida completar" (click)="completarCita()">
-              <span class="accion-icon">✔️</span>
+              <i-lucide name="check" class="accion-icon"></i-lucide>
               <span class="accion-texto">Marcar como Completada</span>
             </button>
 
             <button class="accion-rapida cancelar" (click)="cancelarCita()">
-              <span class="accion-icon">❌</span>
+              <i-lucide name="x-circle" class="accion-icon"></i-lucide>
               <span class="accion-texto">Cancelar Cita</span>
             </button>
           </div>
@@ -202,7 +243,10 @@
 
         <!-- Información Adicional -->
         <div class="info-adicional-card">
-          <h2>ℹ️ Información Adicional</h2>
+          <h2>
+            <i-lucide name="info" class="icon-section"></i-lucide>
+            Información Adicional
+          </h2>
           
           <div class="info-item-simple">
             <div class="info-simple-label">Tipo de Cita</div>
@@ -220,12 +264,18 @@
 
           <div class="info-item-simple" *ngIf="esPasada()">
             <div class="info-simple-label">Estado</div>
-            <div class="info-simple-value texto-rojo">⚠️ Cita pasada</div>
+            <div class="info-simple-value texto-rojo">
+              <i-lucide name="alert-triangle" class="icon-small"></i-lucide>
+              Cita pasada
+            </div>
           </div>
 
           <div class="info-item-simple" *ngIf="esHoy()">
             <div class="info-simple-label">Importante</div>
-            <div class="info-simple-value texto-naranja">🔔 Cita programada para HOY</div>
+            <div class="info-simple-value texto-naranja">
+              <i-lucide name="bell" class="icon-small"></i-lucide>
+              Cita programada para HOY
+            </div>
           </div>
         </div>
 

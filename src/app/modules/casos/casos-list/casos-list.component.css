@@ -219,6 +219,11 @@
 .filtro-item input::placeholder {
   color: #ADB5BD;
 }
+.icon-label {
+  width: 16px;
+  height: 16px;
+  color: var(--color-azul-marino);
+}
 
 /* ===== LOADING ===== */
 .loading-container {

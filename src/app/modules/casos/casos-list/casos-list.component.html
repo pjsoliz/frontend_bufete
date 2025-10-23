@@ -64,7 +64,7 @@
     <div class="filtros-grid">
       <div class="filtro-item">
         <label>
-          <lucide-icon name="search" [size]="16"></lucide-icon>
+          <lucide-icon name="search" [size]="16" class="icon-label"></lucide-icon>
           Buscar
         </label>
         <input
@@ -76,7 +76,7 @@
 
       <div class="filtro-item">
         <label>
-          <lucide-icon name="activity" [size]="16"></lucide-icon>
+          <lucide-icon name="activity" [size]="16" class="icon-label"></lucide-icon>
           Estado
         </label>
         <select [(ngModel)]="filtroEstado" (change)="onFiltroChange()">
@@ -89,7 +89,7 @@
 
       <div class="filtro-item">
         <label>
-          <lucide-icon name="scale" [size]="16"></lucide-icon>
+          <lucide-icon name="scale" [size]="16" class="icon-label"></lucide-icon>
           Tipo
         </label>
         <select [(ngModel)]="filtroTipo" (change)="onFiltroChange()">
@@ -102,7 +102,7 @@
 
       <div class="filtro-item">
         <label>
-          <lucide-icon name="flag" [size]="16"></lucide-icon>
+          <lucide-icon name="flag" [size]="16" class="icon-label"></lucide-icon>
           Prioridad
         </label>
         <select [(ngModel)]="filtroPrioridad" (change)="onFiltroChange()">

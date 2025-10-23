@@ -21,6 +21,8 @@
   max-width: 500px;
   margin: auto;
   width: 100%;
+  border: 3px solid #C7B47C;
+  border-radius: 12px;
 }
 
 /* ===== HEADER ===== */

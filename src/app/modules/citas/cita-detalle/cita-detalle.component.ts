@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CitasService, Cita } from '../../../core/services/citas.service';
 
@@ -15,7 +15,8 @@ export class CitaDetalleComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public router: Router,
-    private citasService: CitasService
+    private citasService: CitasService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -27,19 +28,37 @@ export class CitaDetalleComponent implements OnInit {
 
   cargarCita(id: number): void {
     this.loading = true;
+    this.errorMessage = '';
+    
     this.citasService.getCitaById(id).subscribe({
       next: (cita) => {
         if (cita) {
-          this.cita = cita;
+          // ⭐ Asegurar que las propiedades existan con valores por defecto
+          this.cita = {
+            ...cita,
+            ubicacion: cita.ubicacion || 'No especificada',
+            descripcion: cita.descripcion || 'Sin descripción',
+            notas: cita.notas || 'Sin notas adicionales'
+          };
+          console.log('Cita cargada:', this.cita); // Para debug
         } else {
           this.errorMessage = 'Cita no encontrada';
         }
         this.loading = false;
+        
+        // ⭐ CRÍTICO: Forzar detección de cambios con setTimeout
+        setTimeout(() => {
+          this.cdr.detectChanges();
+        }, 0);
       },
       error: (error) => {
         console.error('Error al cargar cita:', error);
         this.errorMessage = 'Error al cargar la cita';
         this.loading = false;
+        
+        setTimeout(() => {
+          this.cdr.detectChanges();
+        }, 0);
       }
     });
   }
@@ -74,6 +93,9 @@ export class CitaDetalleComponent implements OnInit {
       this.citasService.updateCita(this.cita.id, { estado: 'confirmada' }).subscribe({
         next: (citaActualizada) => {
           this.cita = citaActualizada;
+          setTimeout(() => {
+            this.cdr.detectChanges();
+          }, 0);
           alert('Cita confirmada exitosamente');
         },
         error: (error) => {
@@ -89,6 +111,9 @@ export class CitaDetalleComponent implements OnInit {
       this.citasService.updateCita(this.cita.id, { estado: 'cancelada' }).subscribe({
         next: (citaActualizada) => {
           this.cita = citaActualizada;
+          setTimeout(() => {
+            this.cdr.detectChanges();
+          }, 0);
           alert('Cita cancelada');
         },
         error: (error) => {
@@ -104,6 +129,9 @@ export class CitaDetalleComponent implements OnInit {
       this.citasService.updateCita(this.cita.id, { estado: 'completada' }).subscribe({
         next: (citaActualizada) => {
           this.cita = citaActualizada;
+          setTimeout(() => {
+            this.cdr.detectChanges();
+          }, 0);
           alert('Cita completada');
         },
         error: (error) => {
@@ -112,6 +140,19 @@ export class CitaDetalleComponent implements OnInit {
         }
       });
     }
+  }
+
+  // ⭐ MÉTODOS HELPER PARA VERIFICAR EXISTENCIA DE DATOS
+  tieneUbicacion(): boolean {
+    return !!(this.cita?.ubicacion && this.cita.ubicacion.trim() !== '' && this.cita.ubicacion !== 'No especificada');
+  }
+
+  tieneDescripcion(): boolean {
+    return !!(this.cita?.descripcion && this.cita.descripcion.trim() !== '' && this.cita.descripcion !== 'Sin descripción');
+  }
+
+  tieneNotas(): boolean {
+    return !!(this.cita?.notas && this.cita.notas.trim() !== '' && this.cita.notas !== 'Sin notas adicionales');
   }
 
   getEstadoClass(estado: string): string {

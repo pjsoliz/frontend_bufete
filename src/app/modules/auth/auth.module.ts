@@ -8,7 +8,7 @@ import {
   LucideAngularModule, 
   Scale, Mail, AtSign, Lock, Key, Eye, EyeOff, 
   AlertCircle, CheckCircle, AlertTriangle, HelpCircle, 
-  ShieldCheck, Briefcase, CheckCircle2, LogIn 
+  ShieldCheck, Briefcase, CheckCircle2, LogIn, User,
 } from 'lucide-angular';
 
 // Componentes
@@ -30,6 +30,7 @@ import { LoginComponent } from './login/login.component';
       Key,
       Eye,
       EyeOff,
+      User,
       AlertCircle,
       CheckCircle,
       AlertTriangle,

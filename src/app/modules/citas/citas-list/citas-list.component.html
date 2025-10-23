@@ -2,12 +2,15 @@
   <!-- Header -->
   <div class="citas-header">
     <div class="header-left">
-      <h1>📅 Gestión de Citas</h1>
+      <h1>
+        <i-lucide name="calendar" [size]="32" class="icon-title"></i-lucide>
+        Gestión de Citas
+      </h1>
       <p>Administra todas las citas del sistema</p>
     </div>
     <div class="header-right">
       <button class="btn-primary" (click)="nuevaCita()">
-        <span class="btn-icon">➕</span>
+        <i-lucide name="plus"  [size]="20" class="icon-btn"></i-lucide>
         Nueva Cita
       </button>
     </div>
@@ -17,7 +20,10 @@
   <div class="filtros-section">
     <div class="filtros-grid">
       <div class="filtro-item">
-        <label>🔍 Buscar</label>
+        <label>
+          <i-lucide name="search" [size]="17" class="icon-label"></i-lucide>
+          Buscar
+        </label>
         <input
           type="text"
           placeholder="Buscar por cliente, abogado o tipo..."
@@ -26,7 +32,10 @@
       </div>
 
       <div class="filtro-item">
-        <label>📊 Estado</label>
+        <label>
+          <i-lucide name="activity" [size]="17"  class="icon-label"></i-lucide>
+          Estado
+        </label>
         <select (change)="onFiltroEstadoChange($event)">
           <option value="todas">Todas</option>
           <option value="programada">Programada</option>
@@ -37,7 +46,10 @@
       </div>
 
       <div class="filtro-item">
-        <label>📅 Fecha</label>
+        <label>
+          <i-lucide name="calendar" [size]="17" class="icon-label"></i-lucide>
+          Fecha
+        </label>
         <input
           type="date"
           [(ngModel)]="filtroFecha"
@@ -62,7 +74,9 @@
 
     <!-- Sin resultados -->
     <div *ngIf="citasFiltradas.length === 0" class="sin-resultados">
-      <div class="sin-resultados-icon">🔍</div>
+      <div class="sin-resultados-icon">
+        <i-lucide name="calendar-x" class="icon-empty"></i-lucide>
+      </div>
       <h3>No se encontraron citas</h3>
       <p>Intenta ajustar los filtros o crea una nueva cita</p>
       <button class="btn-primary" (click)="nuevaCita()">
@@ -92,20 +106,23 @@
             <td>
               <div class="fecha-info">
                 <div class="fecha">{{ formatearFecha(cita.fecha) }}</div>
-                <div class="hora">🕐 {{ cita.hora }}</div>
+                <div class="hora">
+                  <i-lucide name="clock" [size]="16" class="icon-inline"></i-lucide>
+                  {{ cita.hora }}
+                </div>
               </div>
             </td>
 
             <td>
               <div class="cliente-info">
-                <span class="cliente-icon">👤</span>
+                <i-lucide name="user" [size]="16" class="icon-inline"></i-lucide>
                 <span>{{ cita.cliente }}</span>
               </div>
             </td>
 
             <td>
               <div class="abogado-info">
-                <span class="abogado-icon">⚖️</span>
+                <i-lucide name="briefcase" [size]="16" class="icon-inline"></i-lucide>
                 <span>{{ cita.abogado }}</span>
               </div>
             </td>
@@ -115,7 +132,10 @@
             </td>
 
             <td>
-              <span class="duracion">{{ cita.duracion }} min</span>
+              <div class="abogado-info">
+                <i-lucide name="clock" [size]="16" class="icon-inline"></i-lucide>
+                <span class="duracion">{{ cita.duracion }} min</span>
+              </div>
             </td>
 
             <td>
@@ -132,7 +152,7 @@
                   class="btn-accion btn-confirmar"
                   (click)="confirmarCita(cita.id, $event)"
                   title="Confirmar">
-                  ✅
+                  <i-lucide name="check-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <button
@@ -140,14 +160,14 @@
                   class="btn-accion btn-completar"
                   (click)="completarCita(cita.id, $event)"
                   title="Completar">
-                  ✔️
+                  <i-lucide name="check" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <button
                   class="btn-accion btn-editar"
                   (click)="editarCita(cita.id); $event.stopPropagation()"
                   title="Editar">
-                  ✏️
+                  <i-lucide name="pencil" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <button
@@ -155,14 +175,14 @@
                   class="btn-accion btn-cancelar"
                   (click)="cancelarCita(cita.id, $event)"
                   title="Cancelar">
-                  ❌
+                  <i-lucide name="x-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <button
                   class="btn-accion btn-eliminar"
                   (click)="eliminarCita(cita.id, $event)"
                   title="Eliminar">
-                  🗑️
+                  <i-lucide name="trash-2" [size]="16" class="icon-accion"></i-lucide>
                 </button>
               </div>
             </td>

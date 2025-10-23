@@ -495,7 +495,6 @@
   .stats-section {
     grid-template-columns: repeat(2, 1fr);
   }
-
   .filtros-grid {
     grid-template-columns: 1fr;
   }

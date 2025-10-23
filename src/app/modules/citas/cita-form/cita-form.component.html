@@ -1,8 +1,14 @@
 <div class="form-container">
   <!-- Header -->
   <div class="form-header">
-    <button class="btn-back" (click)="cancelar()">← Volver</button>
-    <h1>{{ isEditMode ? '✏️ Editar Cita' : '➕ Nueva Cita' }}</h1>
+    <button class="btn-back" (click)="cancelar()">
+      <i-lucide name="arrow-left" class="icon"></i-lucide>
+      Volver
+    </button>
+    <h1>
+      <i-lucide [name]="isEditMode ? 'edit' : 'plus-circle'" class="icon-title"></i-lucide>
+      {{ isEditMode ? 'Editar Cita' : 'Nueva Cita' }}
+    </h1>
     <p>{{ isEditMode ? 'Modifica los datos de la cita' : 'Completa el formulario para agendar una nueva cita' }}</p>
   </div>
 
@@ -17,40 +23,55 @@
     
     <!-- Error Message -->
     <div *ngIf="errorMessage" class="error-alert">
-      ⚠️ {{ errorMessage }}
+      <i-lucide name="alert-triangle" class="icon-alert"></i-lucide>
+      {{ errorMessage }}
     </div>
 
     <!-- Sección: Información Básica -->
     <div class="form-section">
-      <h2>📅 Fecha y Hora</h2>
+      <h2>
+        <i-lucide name="calendar" class="icon-section"></i-lucide>
+        Fecha y Hora
+      </h2>
       
       <div class="form-grid">
         <div class="form-group">
-          <label for="fecha">Fecha *</label>
+          <label for="fecha">
+            <i-lucide name="calendar" class="icon-label"></i-lucide>
+            Fecha *
+          </label>
           <input 
             type="date" 
             id="fecha" 
             formControlName="fecha"
             [class.error]="citaForm.get('fecha')?.invalid && citaForm.get('fecha')?.touched">
           <div class="error-message" *ngIf="citaForm.get('fecha')?.invalid && citaForm.get('fecha')?.touched">
+            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
             La fecha es requerida
           </div>
         </div>
 
         <div class="form-group">
-          <label for="hora">Hora *</label>
+          <label for="hora">
+            <i-lucide name="clock" class="icon-label"></i-lucide>
+            Hora *
+          </label>
           <input 
             type="time" 
             id="hora" 
             formControlName="hora"
             [class.error]="citaForm.get('hora')?.invalid && citaForm.get('hora')?.touched">
           <div class="error-message" *ngIf="citaForm.get('hora')?.invalid && citaForm.get('hora')?.touched">
+            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
             La hora es requerida
           </div>
         </div>
 
         <div class="form-group">
-          <label for="duracion">Duración *</label>
+          <label for="duracion">
+            <i-lucide name="clock" class="icon-label"></i-lucide>
+            Duración *
+          </label>
           <select id="duracion" formControlName="duracion">
             <option *ngFor="let dur of duraciones" [value]="dur.value">
               {{ dur.label }}
@@ -62,11 +83,17 @@
 
     <!-- Sección: Participantes -->
     <div class="form-section">
-      <h2>👥 Participantes</h2>
+      <h2>
+        <i-lucide name="users" class="icon-section"></i-lucide>
+        Participantes
+      </h2>
       
       <div class="form-grid">
         <div class="form-group">
-          <label for="cliente">Cliente *</label>
+          <label for="cliente">
+            <i-lucide name="user" class="icon-label"></i-lucide>
+            Cliente *
+          </label>
           <select 
             id="cliente" 
             formControlName="cliente"
@@ -77,12 +104,16 @@
             </option>
           </select>
           <div class="error-message" *ngIf="citaForm.get('cliente')?.invalid && citaForm.get('cliente')?.touched">
+            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
             El cliente es requerido
           </div>
         </div>
 
         <div class="form-group">
-          <label for="abogado">Abogado *</label>
+          <label for="abogado">
+            <i-lucide name="briefcase" class="icon-label"></i-lucide>
+            Abogado *
+          </label>
           <select 
             id="abogado" 
             formControlName="abogado"
@@ -93,6 +124,7 @@
             </option>
           </select>
           <div class="error-message" *ngIf="citaForm.get('abogado')?.invalid && citaForm.get('abogado')?.touched">
+            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
             El abogado es requerido
           </div>
         </div>
@@ -101,11 +133,17 @@
 
     <!-- Sección: Detalles -->
     <div class="form-section">
-      <h2>📋 Detalles de la Cita</h2>
+      <h2>
+        <i-lucide name="clipboard-list" class="icon-section"></i-lucide>
+        Detalles de la Cita
+      </h2>
       
       <div class="form-grid">
         <div class="form-group">
-          <label for="tipo">Tipo de Cita *</label>
+          <label for="tipo">
+            <i-lucide name="folder" class="icon-label"></i-lucide>
+            Tipo de Cita *
+          </label>
           <select 
             id="tipo" 
             formControlName="tipo"
@@ -116,12 +154,16 @@
             </option>
           </select>
           <div class="error-message" *ngIf="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
+            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
             El tipo de cita es requerido
           </div>
         </div>
 
         <div class="form-group" *ngIf="isEditMode">
-          <label for="estado">Estado</label>
+          <label for="estado">
+            <i-lucide name="activity" class="icon-label"></i-lucide>
+            Estado
+          </label>
           <select id="estado" formControlName="estado">
             <option value="programada">Programada</option>
             <option value="confirmada">Confirmada</option>
@@ -132,7 +174,10 @@
       </div>
 
       <div class="form-group full-width">
-        <label for="notas">Notas / Observaciones</label>
+        <label for="notas">
+          <i-lucide name="file-text" class="icon-label"></i-lucide>
+          Notas / Observaciones
+        </label>
         <textarea 
           id="notas" 
           formControlName="notas"
@@ -144,9 +189,11 @@
     <!-- Botones -->
     <div class="form-actions">
       <button type="button" class="btn-secondary" (click)="cancelar()" [disabled]="loading">
+        <i-lucide name="x" class="icon-btn"></i-lucide>
         Cancelar
       </button>
       <button type="submit" class="btn-primary" [disabled]="citaForm.invalid || loading">
+        <i-lucide [name]="isEditMode ? 'save' : 'check'" class="icon-btn"></i-lucide>
         <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Cita' : 'Crear Cita' }}</span>
         <span *ngIf="loading">Guardando...</span>
       </button>
