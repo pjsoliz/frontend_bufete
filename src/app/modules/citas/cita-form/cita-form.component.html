@@ -6,7 +6,7 @@
       Volver
     </button>
     <h1>
-      <i-lucide [name]="isEditMode ? 'edit' : 'plus-circle'" class="icon-title"></i-lucide>
+      <i-lucide [name]="isEditMode ? 'edit' : 'plus-circle'" [size]="30" class="icon-title"></i-lucide>
       {{ isEditMode ? 'Editar Cita' : 'Nueva Cita' }}
     </h1>
     <p>{{ isEditMode ? 'Modifica los datos de la cita' : 'Completa el formulario para agendar una nueva cita' }}</p>
@@ -37,7 +37,7 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="fecha">
-            <i-lucide name="calendar" class="icon-label"></i-lucide>
+            <i-lucide name="calendar" [size]="16"  class="icon-label"></i-lucide>
             Fecha *
           </label>
           <input 
@@ -46,14 +46,14 @@
             formControlName="fecha"
             [class.error]="citaForm.get('fecha')?.invalid && citaForm.get('fecha')?.touched">
           <div class="error-message" *ngIf="citaForm.get('fecha')?.invalid && citaForm.get('fecha')?.touched">
-            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
+            <i-lucide name="alert-circle"  [size]="16"  class="icon-error"></i-lucide>
             La fecha es requerida
           </div>
         </div>
 
         <div class="form-group">
           <label for="hora">
-            <i-lucide name="clock" class="icon-label"></i-lucide>
+            <i-lucide name="clock" [size]="16"  class="icon-label"></i-lucide>
             Hora *
           </label>
           <input 
@@ -62,14 +62,14 @@
             formControlName="hora"
             [class.error]="citaForm.get('hora')?.invalid && citaForm.get('hora')?.touched">
           <div class="error-message" *ngIf="citaForm.get('hora')?.invalid && citaForm.get('hora')?.touched">
-            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
+            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
             La hora es requerida
           </div>
         </div>
 
         <div class="form-group">
           <label for="duracion">
-            <i-lucide name="clock" class="icon-label"></i-lucide>
+            <i-lucide name="clock" [size]="16"  class="icon-label"></i-lucide>
             Duración *
           </label>
           <select id="duracion" formControlName="duracion">
@@ -91,7 +91,7 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="cliente">
-            <i-lucide name="user" class="icon-label"></i-lucide>
+            <i-lucide name="user" [size]="16"  class="icon-label"></i-lucide>
             Cliente *
           </label>
           <select 
@@ -104,14 +104,14 @@
             </option>
           </select>
           <div class="error-message" *ngIf="citaForm.get('cliente')?.invalid && citaForm.get('cliente')?.touched">
-            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
+            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
             El cliente es requerido
           </div>
         </div>
 
         <div class="form-group">
           <label for="abogado">
-            <i-lucide name="briefcase" class="icon-label"></i-lucide>
+            <i-lucide name="briefcase" [size]="16"  class="icon-label"></i-lucide>
             Abogado *
           </label>
           <select 
@@ -124,7 +124,7 @@
             </option>
           </select>
           <div class="error-message" *ngIf="citaForm.get('abogado')?.invalid && citaForm.get('abogado')?.touched">
-            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
+            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
             El abogado es requerido
           </div>
         </div>
@@ -141,7 +141,7 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="tipo">
-            <i-lucide name="folder" class="icon-label"></i-lucide>
+            <i-lucide name="folder" [size]="16"  class="icon-label"></i-lucide>
             Tipo de Cita *
           </label>
           <select 
@@ -154,14 +154,14 @@
             </option>
           </select>
           <div class="error-message" *ngIf="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
-            <i-lucide name="alert-circle" class="icon-error"></i-lucide>
+            <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
             El tipo de cita es requerido
           </div>
         </div>
 
         <div class="form-group" *ngIf="isEditMode">
           <label for="estado">
-            <i-lucide name="activity" class="icon-label"></i-lucide>
+            <i-lucide name="activity" [size]="16"  class="icon-label"></i-lucide>
             Estado
           </label>
           <select id="estado" formControlName="estado">
@@ -175,7 +175,7 @@
 
       <div class="form-group full-width">
         <label for="notas">
-          <i-lucide name="file-text" class="icon-label"></i-lucide>
+          <i-lucide name="file-text" [size]="16"  class="icon-label"></i-lucide>
           Notas / Observaciones
         </label>
         <textarea 
@@ -189,11 +189,9 @@
     <!-- Botones -->
     <div class="form-actions">
       <button type="button" class="btn-secondary" (click)="cancelar()" [disabled]="loading">
-        <i-lucide name="x" class="icon-btn"></i-lucide>
         Cancelar
       </button>
       <button type="submit" class="btn-primary" [disabled]="citaForm.invalid || loading">
-        <i-lucide [name]="isEditMode ? 'save' : 'check'" class="icon-btn"></i-lucide>
         <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Cita' : 'Crear Cita' }}</span>
         <span *ngIf="loading">Guardando...</span>
       </button>

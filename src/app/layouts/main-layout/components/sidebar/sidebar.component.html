@@ -31,6 +31,17 @@
         <span class="nav-text" *ngIf="!isCollapsed">Citas</span>
       </a>
 
+      <!-- Clientes-->
+      <a 
+        routerLink="/clientes" 
+        routerLinkActive="active"
+        class="nav-item"
+        [title]="isCollapsed ? 'Clientes' : ''"
+      >
+        <i-lucide name="user" [size]="22"></i-lucide>
+        <span class="nav-text" *ngIf="!isCollapsed">Clientes</span>
+      </a>
+
       <!-- Casos -->
       <a 
         routerLink="/casos" 
@@ -51,17 +62,6 @@
       >
         <i-lucide name="chart-no-axes-combined" [size]="22"></i-lucide>
         <span class="nav-text" *ngIf="!isCollapsed">Reportes</span>
-      </a>
-
-      <!-- Clientes-->
-      <a 
-        routerLink="/clientes" 
-        routerLinkActive="active"
-        class="nav-item"
-        [title]="isCollapsed ? 'Clientes' : ''"
-      >
-        <i-lucide name="user" [size]="22"></i-lucide>
-        <span class="nav-text" *ngIf="!isCollapsed">Clientes</span>
       </a>
 
       <!-- Usuarios (Solo Admin) -->

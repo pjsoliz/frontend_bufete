@@ -140,15 +140,15 @@ export class UsuariosListComponent implements OnInit {
     return textos[rol] || rol;
   }
 
-  getRolIcon(rol: string): string {
-    const iconos: any = {
-      'administrador': '👑',
-      'abogado': '⚖️',
-      'asistente_legal': '📋'
-    };
-    return iconos[rol] || '👤';
-  }
 
+  getRolIconName(rol: string): string {
+  const icons: any = {
+    'administrador': 'shield',
+    'abogado': 'scale',
+    'asistente_legal': 'clipboard-list'
+  };
+  return icons[rol] || 'user';
+} 
   getEstadoClass(estado: string): string {
     return estado === 'activo' ? 'estado-activo' : 'estado-inactivo';
   }

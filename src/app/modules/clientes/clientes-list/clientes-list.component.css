@@ -137,7 +137,7 @@
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   margin-bottom: 2rem;
-  border-top: 3px solid #C7B47C;
+  border: 2px solid #C7B47C;
 }
 
 .filtros-grid {
@@ -178,6 +178,11 @@
   box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
 }
 
+.icon-label {
+  width: 16px;
+  height: 20px;
+  color: var(--color-azul-marino);
+}
 /* ===== LOADING ===== */
 .loading-container {
   display: flex;
@@ -208,19 +213,21 @@
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 2px solid#C7B47C;
 }
 
 .contador {
   color: #6C757D;
   font-size: 0.95rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #C7B47C;
 }
 
 .contador strong {
   color: #003366;
-  font-weight: 600;
+  font-weight: 700;
 }
-
 /* ===== SIN RESULTADOS ===== */
 .sin-resultados {
   text-align: center;
@@ -270,7 +277,7 @@
 
 .clientes-table td {
   padding: 1rem;
-  border-bottom: 1px solid #DEE2E6;
+  border-bottom: 1px solid #C7B47C;
 }
 
 .cliente-row {

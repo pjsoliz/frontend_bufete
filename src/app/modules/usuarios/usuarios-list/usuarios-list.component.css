@@ -1,10 +1,46 @@
+/* ============================================
+   🎨 USUARIOS LIST - PALETA PROFESIONAL
+   Azul Marino #003366 + Dorado #C7B47C
+   ============================================ */
+:root {
+  /* Dominante (60%) */
+  --color-fondo-principal: #F8F9FA;
+  
+  /* Base */
+  --color-blanco: #FFFFFF;
+  
+  /* Texto/Detalles */
+  --color-texto-principal: #212529;
+  
+  /* Primario (30%) */
+  --color-azul-marino: #003366;
+  
+  /* Secundario (10%) */
+  --color-dorado: #C7B47C;
+  
+  /* Acento (Acciones) */
+  --color-azul-acento: #007BFF;
+  
+  /* Colores adicionales */
+  --color-error: #dc3545;
+  --color-exito: #28a745;
+  --color-advertencia: #ffc107;
+  --color-borde: #dee2e6;
+}
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
 .usuarios-container {
   padding: 2rem;
   max-width: 1800px;
   margin: 0 auto;
+  background-color: var(--color-fondo-principal);
 }
 
-/* Header */
+/* ============================================
+   HEADER
+   ============================================ */
 .usuarios-header {
   display: flex;
   justify-content: space-between;
@@ -15,20 +51,31 @@
 }
 
 .header-left h1 {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-size: 2rem;
   margin-bottom: 0.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-title {
+  width: 32px;
+  height: 32px;
+  color: var(--color-dorado);
 }
 
 .header-left p {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   font-size: 1rem;
+  opacity: 0.7;
 }
 
 .btn-primary {
   padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--color-azul-acento);
+  color: var(--color-blanco);
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -38,19 +85,24 @@
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  border: 2px solid var(--color-azul-acento);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+  background: #0056b3;
 }
 
 .btn-icon {
-  font-size: 1.2rem;
+  width: 20px;
+  height: 20px;
 }
 
-/* Estadísticas */
+/* ============================================
+   ESTADÍSTICAS
+   ============================================ */
 .stats-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -59,50 +111,63 @@
 }
 
 .stat-card {
-  background: white;
+  background: var(--color-blanco);
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  border-left: 4px solid;
+  box-shadow: 0 2px 12px rgba(0, 51, 102, 0.08);
+  border: 2px solid var(--color-dorado);
   transition: all 0.3s;
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px rgba(0, 51, 102, 0.12);
 }
 
-.stat-card.blue { border-left-color: #3498db; }
-.stat-card.purple { border-left-color: #9b59b6; }
-.stat-card.green { border-left-color: #2ecc71; }
-.stat-card.orange { border-left-color: #f39c12; }
-.stat-card.teal { border-left-color: #1abc9c; }
+.stat-card .stat-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
 
-.stat-icon {
-  font-size: 2.5rem;
+/* Colores de iconos por tipo */
+.stat-card.blue .stat-icon { color: var(--color-azul-acento); }
+.stat-card.purple .stat-icon { color: #9b59b6; }
+.stat-card.green .stat-icon { color: var(--color-exito); }
+.stat-card.orange .stat-icon { color: var(--color-advertencia); }
+.stat-card.teal .stat-icon { color: #1abc9c; }
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: var(--color-azul-marino);
 }
 
 .stat-label {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   font-size: 0.9rem;
+  opacity: 0.7;
 }
 
-/* Filtros */
+/* ============================================
+   FILTROS
+   ============================================ */
 .filtros-section {
-  background: white;
+  background: var(--color-blanco);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 51, 102, 0.08);
   margin-bottom: 2rem;
+  border: 2px solid var(--color-dorado);
 }
 
 .filtros-grid {
@@ -118,28 +183,50 @@
 }
 
 .filtro-item label {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-weight: 600;
   font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-label {
+  width: 16px;
+  height: 16px;
+  color: var(--color-dorado);
 }
 
 .filtro-item input,
 .filtro-item select {
   padding: 0.75rem;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--color-borde);
   border-radius: 8px;
   font-size: 0.95rem;
   transition: all 0.3s;
+  color: var(--color-texto-principal);
+  background-color: var(--color-blanco);
 }
 
 .filtro-item input:focus,
 .filtro-item select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--color-azul-acento);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-/* Loading */
+.filtro-item select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23003366' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  padding-right: 2.5rem;
+}
+
+/* ============================================
+   LOADING
+   ============================================ */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -149,8 +236,8 @@
 }
 
 .spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
+  border: 4px solid var(--color-fondo-principal);
+  border-top: 4px solid var(--color-azul-acento);
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -163,49 +250,66 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Content */
-.usuarios-content {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.contador {
-  color: #7f8c8d;
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-}
-
-.contador strong {
-  color: #2c3e50;
+.loading-container p {
+  color: var(--color-texto-principal);
   font-weight: 600;
 }
 
-/* Sin Resultados */
+/* ============================================
+   CONTENT
+   ============================================ */
+.usuarios-content {
+  background: var(--color-blanco);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 51, 102, 0.08);
+  border: 2px solid var(--color-dorado);
+}
+
+.contador {
+  color: var(--color-texto-principal);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.contador strong {
+  color: var(--color-azul-marino);
+  font-weight: 600;
+}
+
+/* ============================================
+   SIN RESULTADOS
+   ============================================ */
 .sin-resultados {
   text-align: center;
   padding: 4rem 2rem;
 }
 
 .sin-resultados-icon {
-  font-size: 5rem;
-  margin-bottom: 1rem;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
   opacity: 0.3;
+  color: var(--color-texto-principal);
 }
 
 .sin-resultados h3 {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 
 .sin-resultados p {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   margin-bottom: 2rem;
+  opacity: 0.7;
 }
 
-/* Tabla */
+/* ============================================
+   TABLA
+   ============================================ */
 .usuarios-table-container {
   overflow-x: auto;
 }
@@ -216,21 +320,21 @@
 }
 
 .usuarios-table thead {
-  background: #f8f9fa;
+  background: var(--color-fondo-principal);
 }
 
 .usuarios-table th {
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: #2c3e50;
-  border-bottom: 2px solid #dee2e6;
+  color: var(--color-azul-marino);
+  border-bottom: 2px solid var(--color-dorado);
   font-size: 0.95rem;
 }
 
 .usuarios-table td {
   padding: 1rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--color-borde);
 }
 
 .usuario-row {
@@ -239,10 +343,12 @@
 }
 
 .usuario-row:hover {
-  background: #f8f9fa;
+  background: var(--color-fondo-principal);
 }
 
-/* Usuario Info */
+/* ============================================
+   USUARIO INFO
+   ============================================ */
 .usuario-info {
   display: flex;
   align-items: center;
@@ -253,12 +359,18 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-azul-marino) 0%, #004d99 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
   flex-shrink: 0;
+  border: 2px solid var(--color-dorado);
+}
+
+.avatar-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-blanco);
 }
 
 .usuario-datos {
@@ -268,80 +380,117 @@
 }
 
 .nombre {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-weight: 600;
   font-size: 0.95rem;
 }
 
 .especialidad {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   font-size: 0.85rem;
+  opacity: 0.7;
 }
 
-/* Email Username */
+/* ============================================
+   EMAIL USERNAME
+   ============================================ */
 .email-username {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.email {
-  color: #2c3e50;
+.email,
+.username {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-texto-principal);
   font-size: 0.9rem;
 }
 
+.icon-small {
+  width: 14px;
+  height: 14px;
+  color: var(--color-dorado);
+  flex-shrink: 0;
+}
+
 .username {
-  color: #7f8c8d;
+  opacity: 0.7;
   font-size: 0.85rem;
 }
 
-/* Rol Badge */
+/* ============================================
+   ROL BADGE
+   ============================================ */
 .rol-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.5rem 1rem;
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: 600;
+  border: 1px solid;
+}
+
+.icon-badge {
+  width: 16px;
+  height: 16px;
 }
 
 .rol-admin {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: rgba(156, 39, 176, 0.1);
+  color: #7b1fa2;
+  border-color: #9c27b0;
 }
 
 .rol-abogado {
-  background: #e3f2fd;
+  background: rgba(0, 123, 255, 0.1);
   color: #1565c0;
+  border-color: var(--color-azul-acento);
 }
 
 .rol-asistente {
-  background: #fff3e0;
+  background: rgba(255, 193, 7, 0.1);
   color: #e65100;
+  border-color: var(--color-advertencia);
 }
 
-/* Estado Badge */
+/* ============================================
+   ESTADO BADGE
+   ============================================ */
 .estado-badge {
   display: inline-block;
   padding: 0.4rem 0.875rem;
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: 600;
+  border: 1px solid;
 }
 
 .estado-activo {
-  background: #e8f5e9;
+  background: rgba(40, 167, 69, 0.1);
   color: #2e7d32;
+  border-color: var(--color-exito);
 }
 
 .estado-inactivo {
-  background: #f5f5f5;
+  background: rgba(97, 97, 97, 0.1);
   color: #616161;
+  border-color: #757575;
 }
 
-/* Teléfono */
+/* ============================================
+   TELÉFONO
+   ============================================ */
 .telefono {
-  color: #495057;
+  color: var(--color-texto-principal);
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .sin-dato {
@@ -349,7 +498,9 @@
   text-align: center;
 }
 
-/* Casos Asignados */
+/* ============================================
+   CASOS ASIGNADOS
+   ============================================ */
 .casos-asignados {
   display: flex;
   align-items: baseline;
@@ -359,21 +510,27 @@
 .casos-numero {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #2ecc71;
+  color: var(--color-exito);
 }
 
 .casos-texto {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   font-size: 0.85rem;
+  opacity: 0.7;
 }
 
-/* Último Acceso */
+/* ============================================
+   ÚLTIMO ACCESO
+   ============================================ */
 .ultimo-acceso {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   font-size: 0.9rem;
+  opacity: 0.7;
 }
 
-/* Acciones */
+/* ============================================
+   ACCIONES
+   ============================================ */
 .acciones-cell {
   width: 180px;
 }
@@ -389,22 +546,71 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 1.1rem;
   transition: all 0.2s;
-  background: #f8f9fa;
+  background: var(--color-fondo-principal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-borde);
+}
+
+.icon-accion {
+  width: 18px;
+  height: 18px;
 }
 
 .btn-accion:hover {
   transform: scale(1.1);
 }
 
-.btn-ver:hover { background: #e3f2fd; }
-.btn-editar:hover { background: #fff3e0; }
-.btn-activar:hover { background: #e8f5e9; }
-.btn-desactivar:hover { background: #fff3e0; }
-.btn-eliminar:hover { background: #ffcdd2; }
+.btn-ver:hover { 
+  background: rgba(0, 123, 255, 0.1); 
+  border-color: var(--color-azul-acento);
+}
 
-/* Responsive */
+.btn-ver:hover .icon-accion {
+  color: var(--color-azul-acento);
+}
+
+.btn-editar:hover { 
+  background: rgba(199, 180, 124, 0.15); 
+  border-color: var(--color-dorado);
+}
+
+.btn-editar:hover .icon-accion {
+  color: var(--color-dorado);
+}
+
+.btn-activar:hover { 
+  background: rgba(40, 167, 69, 0.1); 
+  border-color: var(--color-exito);
+}
+
+.btn-activar:hover .icon-accion {
+  color: var(--color-exito);
+}
+
+.btn-desactivar:hover { 
+  background: rgba(255, 193, 7, 0.1); 
+  border-color: var(--color-advertencia);
+}
+
+.btn-desactivar:hover .icon-accion {
+  color: var(--color-advertencia);
+}
+
+.btn-eliminar:hover { 
+  background: rgba(220, 53, 69, 0.1); 
+  border-color: var(--color-error);
+}
+
+.btn-eliminar:hover .icon-accion {
+  color: var(--color-error);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 1400px) {
   .usuarios-table {
     font-size: 0.9rem;
@@ -439,5 +645,25 @@
 
   .usuarios-table {
     min-width: 1400px;
+  }
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+.stat-card,
+.filtros-section,
+.usuarios-content {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

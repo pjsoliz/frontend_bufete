@@ -45,31 +45,26 @@
 }
 
 .btn-back {
+  padding: 0.5rem 1rem;
+  background: #F8F9FA;
+  border: 2px solid #DEE2E6;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #003366;
+  transition: all 0.3s;
+  margin-bottom: 1rem;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: var(--color-blanco);
-  border: 2px solid var(--color-borde);
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  color: var(--color-texto-principal);
-  transition: all 0.3s;
-  margin-bottom: 1rem;
-  font-weight: 500;
 }
 
 .btn-back:hover {
-  background: var(--color-fondo-principal);
-  border-color: var(--color-azul-marino);
-  color: var(--color-azul-marino);
-  transform: translateX(-3px);
-}
-
-.btn-back .icon {
-  width: 18px;
-  height: 18px;
+  background: #003366;
+  color: #FFFFFF;
+  border-color: #003366;
+  transform: translateX(-4px);
 }
 
 .form-header h1 {
@@ -83,9 +78,7 @@
 }
 
 .icon-title {
-  width: 32px;
-  height: 32px;
-  color: var(--color-dorado);
+  color: var(--color-azul-marino);
 }
 
 .form-header p {
@@ -168,7 +161,7 @@
 .form-section {
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid var(--color-fondo-principal);
+  border-bottom: 2px solid var(--color-borde);
 }
 
 .form-section:last-of-type {
@@ -185,12 +178,14 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--color-dorado);
 }
 
 .icon-section {
   width: 24px;
   height: 24px;
-  color: var(--color-dorado);
+  color: var(--color-azul-marino);
   flex-shrink: 0;
 }
 
@@ -201,6 +196,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
+  border-bottom: 2px solid var(--color-blanco);
 }
 
 .form-group {
@@ -225,7 +221,7 @@
 .icon-label {
   width: 16px;
   height: 16px;
-  color: var(--color-dorado);
+  color: var(--color-azul-marino);
   flex-shrink: 0;
 }
 
@@ -338,36 +334,34 @@
 }
 
 .btn-primary {
-  background: var(--color-azul-acento);
-  color: var(--color-blanco);
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-  border: 2px solid var(--color-azul-acento);
+  background: linear-gradient(135deg, #003366 0%, #002447 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #0056b3;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 51, 102, 0.4);
+  background: linear-gradient(135deg, #C7B47C 0%, #B5A36A 100%);
+  color: #003366;
 }
 
 .btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-  background: #6c757d;
-  border-color: #6c757d;
 }
 
 .btn-secondary {
-  background: var(--color-blanco);
-  color: var(--color-texto-principal);
-  border: 2px solid var(--color-borde);
+  background: #F8F9FA;
+  color: #003366;
+  border: 2px solid #003366;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: var(--color-fondo-principal);
-  border-color: var(--color-azul-marino);
-  color: var(--color-azul-marino);
+  background: #003366;
+  color: #FFFFFF;
+  border-color: #003366;
 }
 
 .btn-secondary:disabled {
@@ -427,9 +421,3 @@
   }
 }
 
-/* Estados de validación mejorados */
-.form-group input:valid:not(:placeholder-shown),
-.form-group select:valid,
-.form-group textarea:valid:not(:placeholder-shown) {
-  border-color: var(--color-exito);
-}

@@ -1,10 +1,46 @@
+/* ============================================
+   🎨 USUARIO DETALLE - PALETA PROFESIONAL
+   Azul Marino #003366 + Dorado #C7B47C
+   ============================================ */
+:root {
+  /* Dominante (60%) */
+  --color-fondo-principal: #F8F9FA;
+  
+  /* Base */
+  --color-blanco: #FFFFFF;
+  
+  /* Texto/Detalles */
+  --color-texto-principal: #212529;
+  
+  /* Primario (30%) */
+  --color-azul-marino: #003366;
+  
+  /* Secundario (10%) */
+  --color-dorado: #C7B47C;
+  
+  /* Acento (Acciones) */
+  --color-azul-acento: #007BFF;
+  
+  /* Colores adicionales */
+  --color-error: #dc3545;
+  --color-exito: #28a745;
+  --color-advertencia: #ffc107;
+  --color-borde: #dee2e6;
+}
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
 .detalle-container {
   padding: 2rem;
   max-width: 1600px;
   margin: 0 auto;
+  background-color: var(--color-fondo-principal);
 }
 
-/* Loading */
+/* ============================================
+   LOADING
+   ============================================ */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -14,8 +50,8 @@
 }
 
 .spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
+  border: 4px solid var(--color-fondo-principal);
+  border-top: 4px solid var(--color-azul-acento);
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -28,54 +64,82 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Error */
+.loading-container p {
+  color: var(--color-texto-principal);
+  font-weight: 600;
+}
+
+/* ============================================
+   ERROR
+   ============================================ */
 .error-container {
   text-align: center;
   padding: 4rem 2rem;
+  background: var(--color-blanco);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 51, 102, 0.08);
+  border: 2px solid var(--color-dorado);
 }
 
 .error-icon {
-  font-size: 5rem;
-  margin-bottom: 1rem;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+  color: var(--color-error);
 }
 
 .error-container h2 {
-  color: #e74c3c;
+  color: var(--color-error);
   margin-bottom: 2rem;
+  font-weight: 700;
 }
 
-/* Header */
+/* ============================================
+   HEADER
+   ============================================ */
 .detalle-header {
   margin-bottom: 2rem;
 }
 
 .btn-back {
   padding: 0.5rem 1rem;
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
+  background: var(--color-blanco);
+  border: 2px solid var(--color-borde);
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.95rem;
-  color: #495057;
+  color: var(--color-azul-marino);
   transition: all 0.3s;
   margin-bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.icon-back {
+  width: 18px;
+  height: 18px;
 }
 
 .btn-back:hover {
-  background: #e9ecef;
-  border-color: #adb5bd;
+  background: var(--color-azul-marino);
+  color: var(--color-blanco);
+  border-color: var(--color-azul-marino);
+  transform: translateX(-4px);
 }
 
 .header-main {
-  background: white;
+  background: var(--color-blanco);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 51, 102, 0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
   flex-wrap: wrap;
+  border: 2px solid var(--color-dorado);
 }
 
 .header-left {
@@ -90,20 +154,27 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-azul-marino) 0%, #004d99 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+  border: 3px solid var(--color-dorado);
+}
+
+.avatar-icon-large {
+  width: 50px;
+  height: 50px;
+  color: var(--color-blanco);
 }
 
 .usuario-info-header h1 {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-size: 2rem;
   margin-bottom: 1rem;
   line-height: 1.3;
+  font-weight: 700;
 }
 
 .badges-row {
@@ -119,33 +190,47 @@
   border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid;
+}
+
+.icon-badge {
+  width: 16px;
+  height: 16px;
 }
 
 /* Rol Badges */
 .rol-admin {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: rgba(156, 39, 176, 0.1);
+  color: #7b1fa2;
+  border-color: #9c27b0;
 }
 
 .rol-abogado {
-  background: #e3f2fd;
+  background: rgba(0, 123, 255, 0.1);
   color: #1565c0;
+  border-color: var(--color-azul-acento);
 }
 
 .rol-asistente {
-  background: #fff3e0;
+  background: rgba(255, 193, 7, 0.1);
   color: #e65100;
+  border-color: var(--color-advertencia);
 }
 
 /* Estado Badges */
 .estado-activo {
-  background: #e8f5e9;
+  background: rgba(40, 167, 69, 0.1);
   color: #2e7d32;
+  border-color: var(--color-exito);
 }
 
 .estado-inactivo {
-  background: #f5f5f5;
+  background: rgba(97, 97, 97, 0.1);
   color: #616161;
+  border-color: #757575;
 }
 
 .username-email {
@@ -153,7 +238,8 @@
   gap: 1.5rem;
   flex-wrap: wrap;
   font-size: 0.9rem;
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
+  opacity: 0.8;
 }
 
 .username,
@@ -163,7 +249,15 @@
   gap: 0.5rem;
 }
 
-/* Header Actions */
+.icon-small {
+  width: 14px;
+  height: 14px;
+  color: var(--color-dorado);
+}
+
+/* ============================================
+   HEADER ACTIONS
+   ============================================ */
 .header-right {
   display: flex;
   gap: 0.75rem;
@@ -172,15 +266,23 @@
 
 .btn-action {
   padding: 0.75rem 1.25rem;
-  background: #f8f9fa;
-  border: 2px solid #dee2e6;
+  background: var(--color-blanco);
+  border: 2px solid var(--color-borde);
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #495057;
+  color: var(--color-texto-principal);
   transition: all 0.3s;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  width: 16px;
+  height: 16px;
 }
 
 .btn-action:hover {
@@ -188,56 +290,72 @@
 }
 
 .btn-action.btn-edit:hover {
-  background: #fff3e0;
-  border-color: #f39c12;
-  color: #e67e22;
+  background: rgba(199, 180, 124, 0.15);
+  border-color: var(--color-dorado);
+  color: var(--color-dorado);
 }
 
 .btn-action.btn-delete:hover {
-  background: #ffebee;
-  border-color: #e74c3c;
-  color: #c62828;
+  background: rgba(220, 53, 69, 0.1);
+  border-color: var(--color-error);
+  color: var(--color-error);
 }
 
 .btn-primary {
   padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--color-azul-acento);
+  color: var(--color-blanco);
   border: none;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  border: 2px solid var(--color-azul-acento);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+  background: #0056b3;
 }
 
-/* Content Grid */
+/* ============================================
+   CONTENT GRID
+   ============================================ */
 .content-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 
-/* Info Cards */
+/* ============================================
+   INFO CARDS
+   ============================================ */
 .info-card {
-  background: white;
+  background: var(--color-blanco);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 51, 102, 0.08);
   margin-bottom: 2rem;
+  border: 2px solid var(--color-dorado);
 }
 
 .info-card h2 {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-size: 1.3rem;
   margin-bottom: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-section {
+  width: 24px;
+  height: 24px;
+  color: var(--color-dorado);
 }
 
 .info-grid {
@@ -257,13 +375,13 @@
 }
 
 .info-label {
-  color: #7f8c8d;
+  color: var(--color-azul-marino);
   font-size: 0.9rem;
   font-weight: 600;
 }
 
 .info-value {
-  color: #2c3e50;
+  color: var(--color-texto-principal);
   font-size: 1rem;
   display: flex;
   align-items: center;
@@ -271,51 +389,56 @@
 }
 
 .info-value .icon {
-  font-size: 1.2rem;
+  width: 18px;
+  height: 18px;
+  color: var(--color-dorado);
 }
 
 .info-value a {
-  color: #667eea;
+  color: var(--color-azul-acento);
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .info-value a:hover {
-  color: #764ba2;
+  color: #0056b3;
   text-decoration: underline;
 }
 
 .especialidad-destacada {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #667eea;
+  color: var(--color-azul-acento);
 }
 
 .casos-numero-grande {
   font-size: 2rem;
   font-weight: 700;
-  color: #2ecc71;
+  color: var(--color-exito);
   margin-right: 0.5rem;
 }
 
 .casos-texto {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   font-size: 0.9rem;
+  opacity: 0.7;
 }
 
 .texto-verde {
-  color: #2ecc71;
+  color: var(--color-exito);
   font-weight: 600;
 }
 
 .texto-naranja {
-  color: #e67e22;
+  color: var(--color-advertencia);
   font-weight: 600;
 }
 
-/* Permisos Card */
+/* ============================================
+   PERMISOS CARD
+   ============================================ */
 .permisos-card {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, rgba(199, 180, 124, 0.08) 0%, rgba(199, 180, 124, 0.08) 100%);
 }
 
 .permisos-lista {
@@ -328,69 +451,83 @@
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  background: white;
+  background: var(--color-blanco);
   border-radius: 10px;
-  border-left: 4px solid #2ecc71;
+  border-left: 4px solid var(--color-exito);
+  border: 1px solid var(--color-borde);
 }
 
 .permiso-check {
-  font-size: 1.5rem;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
+  color: var(--color-exito);
 }
 
 .permiso-texto strong {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   display: block;
   margin-bottom: 0.25rem;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .permiso-texto p {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 0;
+  opacity: 0.8;
 }
 
-/* Casos Card */
+/* ============================================
+   CASOS CARD
+   ============================================ */
 .casos-card {
-  background: white;
+  background: var(--color-blanco);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 51, 102, 0.08);
   position: sticky;
   top: 2rem;
+  border: 2px solid var(--color-dorado);
 }
 
 .casos-card h2 {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-size: 1.3rem;
   margin-bottom: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .casos-stat {
   text-align: center;
   padding: 2rem;
-  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%);
   border-radius: 12px;
   margin-bottom: 2rem;
+  border: 2px solid var(--color-exito);
 }
 
 .stat-numero {
   font-size: 3rem;
   font-weight: 700;
-  color: #2ecc71;
+  color: var(--color-exito);
   margin-bottom: 0.5rem;
 }
 
 .stat-texto {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-size: 1rem;
   font-weight: 600;
 }
 
-/* Lista de Casos */
+/* ============================================
+   LISTA DE CASOS
+   ============================================ */
 .casos-lista {
   display: flex;
   flex-direction: column;
@@ -400,18 +537,20 @@
 }
 
 .caso-item {
-  background: #f8f9fa;
+  background: var(--color-fondo-principal);
   border-radius: 10px;
   padding: 1.25rem;
   cursor: pointer;
   transition: all 0.3s;
-  border-left: 4px solid #667eea;
+  border: 2px solid var(--color-borde);
+  border-left: 4px solid var(--color-azul-acento);
 }
 
 .caso-item:hover {
-  background: #e9ecef;
+  background: var(--color-blanco);
   transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.1);
+  border-color: var(--color-dorado);
 }
 
 .caso-header {
@@ -423,7 +562,7 @@
 
 .caso-numero {
   font-weight: 700;
-  color: #667eea;
+  color: var(--color-azul-acento);
   font-size: 0.9rem;
 }
 
@@ -434,13 +573,13 @@
   font-weight: 600;
 }
 
-.caso-pendiente { background: #fff3e0; color: #e65100; }
-.caso-progreso { background: #e3f2fd; color: #1565c0; }
-.caso-suspendido { background: #f5f5f5; color: #616161; }
-.caso-cerrado { background: #e8f5e9; color: #2e7d32; }
+.caso-pendiente { background: rgba(255, 193, 7, 0.1); color: #e65100; border: 1px solid var(--color-advertencia); }
+.caso-progreso { background: rgba(0, 123, 255, 0.1); color: #1565c0; border: 1px solid var(--color-azul-acento); }
+.caso-suspendido { background: rgba(97, 97, 97, 0.1); color: #616161; border: 1px solid #757575; }
+.caso-cerrado { background: rgba(40, 167, 69, 0.1); color: #2e7d32; border: 1px solid var(--color-exito); }
 
 .caso-titulo {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-weight: 600;
   font-size: 0.95rem;
   margin-bottom: 0.75rem;
@@ -455,67 +594,94 @@
 
 .caso-cliente,
 .caso-fecha {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.8;
 }
 
-/* Sin Casos */
+.icon-caso {
+  width: 14px;
+  height: 14px;
+  color: var(--color-dorado);
+}
+
+/* ============================================
+   SIN CASOS
+   ============================================ */
 .sin-casos {
   text-align: center;
   padding: 3rem 1rem;
 }
 
 .sin-casos-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
   opacity: 0.3;
+  color: var(--color-texto-principal);
 }
 
 .sin-casos p {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
+  opacity: 0.7;
 }
 
-/* Info Adicional Card */
+/* ============================================
+   INFO ADICIONAL CARD
+   ============================================ */
 .info-adicional-card {
-  background: white;
+  background: var(--color-blanco);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 51, 102, 0.08);
+  border: 2px solid var(--color-dorado);
 }
 
 .info-adicional-card h2 {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-size: 1.3rem;
   margin-bottom: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .info-box {
   display: flex;
   gap: 1.5rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, rgba(199, 180, 124, 0.08) 0%, rgba(199, 180, 124, 0.08) 100%);
   border-radius: 12px;
-  border-left: 4px solid #667eea;
+  border: 2px solid var(--color-dorado);
 }
 
 .info-box-icon {
-  font-size: 3rem;
+  width: 48px;
+  height: 48px;
   flex-shrink: 0;
+  color: var(--color-azul-marino);
 }
 
 .info-box-content h3 {
-  color: #2c3e50;
+  color: var(--color-azul-marino);
   font-size: 1.2rem;
   margin-bottom: 0.75rem;
+  font-weight: 700;
 }
 
 .info-box-content p {
-  color: #7f8c8d;
+  color: var(--color-texto-principal);
   line-height: 1.6;
+  opacity: 0.8;
 }
 
-/* Responsive */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 1200px) {
   .content-grid {
     grid-template-columns: 1fr;
@@ -543,7 +709,11 @@
   .usuario-avatar-large {
     width: 80px;
     height: 80px;
-    font-size: 2.5rem;
+  }
+
+  .avatar-icon-large {
+    width: 40px;
+    height: 40px;
   }
 
   .usuario-info-header h1 {
@@ -566,5 +736,25 @@
   .username-email {
     flex-direction: column;
     gap: 0.5rem;
+  }
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+.info-card,
+.casos-card,
+.info-adicional-card {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
