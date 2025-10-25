@@ -7,7 +7,7 @@ export interface Caso {
   numero_caso: string;
   titulo: string;
   descripcion: string;
-  tipo: 'laboral' | 'civil' | 'penal' | 'familia' | 'comercial' | 'otro';
+  tipo: 'Civil' | 'Penal' | 'Familiar';
   estado: 'pendiente' | 'en_progreso' | 'suspendido' | 'cerrado';
   prioridad: 'baja' | 'media' | 'alta';
   cliente: string;
@@ -44,7 +44,7 @@ export class CasosService {
       numero_caso: 'CAS-2025-001',
       titulo: 'Demanda Laboral - Despido Injustificado',
       descripcion: 'Caso de despido injustificado de trabajador con 10 años de antigüedad. Se busca indemnización y reinstalación.',
-      tipo: 'laboral',
+      tipo: 'Civil',
       estado: 'en_progreso',
       prioridad: 'alta',
       cliente: 'Juan Pérez',
@@ -85,7 +85,7 @@ export class CasosService {
       numero_caso: 'CAS-2025-002',
       titulo: 'Divorcio Contencioso',
       descripcion: 'Proceso de divorcio con disputa de bienes y custodia de menores.',
-      tipo: 'familia',
+      tipo: 'Familiar',
       estado: 'en_progreso',
       prioridad: 'media',
       cliente: 'María López',
@@ -118,7 +118,7 @@ export class CasosService {
       numero_caso: 'CAS-2025-003',
       titulo: 'Reclamación de Daños y Perjuicios',
       descripcion: 'Accidente de tránsito con lesiones graves. Responsabilidad civil.',
-      tipo: 'civil',
+      tipo: 'Civil',
       estado: 'pendiente',
       prioridad: 'alta',
       cliente: 'Pedro González',
@@ -143,7 +143,7 @@ export class CasosService {
       numero_caso: 'CAS-2025-004',
       titulo: 'Defensa Penal - Delito Menor',
       descripcion: 'Defensa en proceso penal por delito menor. Se busca absolución.',
-      tipo: 'penal',
+      tipo: 'Penal',
       estado: 'en_progreso',
       prioridad: 'alta',
       cliente: 'Roberto Silva',
@@ -169,7 +169,7 @@ export class CasosService {
       numero_caso: 'CAS-2025-005',
       titulo: 'Contrato Comercial - Incumplimiento',
       descripcion: 'Demanda por incumplimiento de contrato comercial entre empresas.',
-      tipo: 'comercial',
+      tipo: 'Penal',
       estado: 'suspendido',
       prioridad: 'media',
       cliente: 'Laura Martínez',
@@ -195,7 +195,7 @@ export class CasosService {
       numero_caso: 'CAS-2024-156',
       titulo: 'Reclamo Laboral - Salarios Impagos',
       descripcion: 'Reclamo de salarios impagos por 6 meses.',
-      tipo: 'laboral',
+      tipo: 'Familiar',
       estado: 'cerrado',
       prioridad: 'baja',
       cliente: 'Carmen Ruiz',

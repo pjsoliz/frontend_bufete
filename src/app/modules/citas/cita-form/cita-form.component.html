@@ -59,7 +59,7 @@
         <div class="form-group">
           <label for="tipo">
             <i-lucide name="folder" [size]="16"  class="icon-label"></i-lucide>
-            Tipo de Cita *
+            Area de derecho *
           </label>
           <select 
             id="tipo" 
@@ -72,14 +72,14 @@
           </select>
           <div class="error-message" *ngIf="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
             <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
-            El tipo de cita es requerido
+            El area de derecho es requerido
           </div>
         </div>
 
         <div class="form-group">
           <label for="tipo">
             <i-lucide name="folder" [size]="16"  class="icon-label"></i-lucide>
-            Tipo de Cita *
+            Tipo de caso *
           </label>
           <select 
             id="tipo" 
@@ -92,7 +92,7 @@
           </select>
           <div class="error-message" *ngIf="citaForm.get('tipo')?.invalid && citaForm.get('tipo')?.touched">
             <i-lucide name="alert-circle" [size]="16"  class="icon-error"></i-lucide>
-            El tipo de cita es requerido
+            El tipo de caso es requerido
           </div>
         </div>
 
@@ -171,7 +171,7 @@
         <div class="form-group full-width">
         <label for="notas">
           <i-lucide name="file-text" [size]="16"  class="icon-label"></i-lucide>
-          Notas / Observaciones
+          Descripcion
         </label>
         <textarea 
           id="notas" 

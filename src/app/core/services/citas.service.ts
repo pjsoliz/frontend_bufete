@@ -11,7 +11,7 @@ export interface Cita {
   tipo: 'consulta' | 'audiencia' | 'reunion' | 'firma' | 'otro';
   cliente: string;
   abogado?: string;
-  estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada';
+  estado: 'pendiente' | 'confirmada' | 'completada' |'cancelada';
   ubicacion?: string;  // ← AGREGAR ESTA PROPIEDAD
   descripcion?: string;
   notas?: string;
@@ -61,7 +61,7 @@ export class CitasService {
       tipo: 'reunion',
       cliente: 'Pedro González',
       abogado: 'Dr. Luis Ramírez',
-      estado: 'completada',
+      estado: 'cancelada',
       ubicacion: 'Oficina Principal - Sala 2',
       descripcion: 'Revisión de avances del caso de daños y perjuicios',
       notas: 'Reunión completada exitosamente'
