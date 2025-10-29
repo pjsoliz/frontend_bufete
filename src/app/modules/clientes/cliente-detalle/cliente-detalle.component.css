@@ -534,6 +534,107 @@
   box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
 }
 
+/* Badges de plataforma */
+.badge-plataforma {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.badge-whatsapp {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.badge-telegram {
+  background: #e3f2fd;
+  color: #01579b;
+}
+
+.badge-panel {
+  background: #f3e8ff;
+  color: #4c1d95;
+}
+
+.badge-default {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.plataforma-icon {
+  font-size: 1rem;
+}
+
+/* Badge ID */
+.badge-id {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-family: 'Courier New', monospace;
+}
+
+/* Info value con acciones */
+.info-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.info-text {
+  flex: 1;
+}
+
+.info-text.id-completo {
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  word-break: break-all;
+}
+
+.info-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* Botón icono */
+.btn-icon {
+  padding: 0.25rem;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.btn-icon:hover {
+  background: #f3f4f6;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+/* Sin dato */
+.sin-dato {
+  color: #9ca3af;
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+/* Full width */
+.info-item.full-width {
+  grid-column: 1 / -1;
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
   .content-grid {

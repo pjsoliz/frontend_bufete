@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
    */
   private initForm(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]], // Removemos validación de email para aceptar username
+      email: ['', [Validators.required, Validators.email]], // ✅ Validación de email
       password: ['', [Validators.required, Validators.minLength(6)]],
       remember: [false]
     });
@@ -72,12 +72,9 @@ export class LoginComponent implements OnInit {
 
     const { email, password, remember } = this.loginForm.value;
 
-    // Convertir email a username para el mock
-    // Si el usuario ingresa "admin@genesis.com", extraemos "admin"
-    const username = email.includes('@') ? email.split('@')[0] : email;
-
+    // ✅ CORRECTO: Enviar email directamente al backend
     const credentials = {
-      username: username,
+      email: email,
       password: password
     };
 

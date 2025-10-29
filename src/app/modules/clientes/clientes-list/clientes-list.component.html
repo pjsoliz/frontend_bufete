@@ -16,6 +16,49 @@
     </div>
   </div>
 
+  <!-- Estadísticas -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i-lucide name="users" [size]="24"></i-lucide>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Total Clientes</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon stat-whatsapp">
+        <i-lucide name="phone" [size]="24"></i-lucide> 
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.whatsapp }}</div>
+        <div class="stat-label">WhatsApp</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon stat-telegram">
+        <i-lucide name="mail" [size]="24"></i-lucide> 
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.telegram }}</div>
+        <div class="stat-label">Telegram</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon stat-panel">
+        <i-lucide name="globe" [size]="24"></i-lucide>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.panel_web }}</div>
+        <div class="stat-label">Panel Web</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Filtros -->
   <div class="filtros-section">
     <div class="filtros-grid">
@@ -26,7 +69,7 @@
         </label>
         <input
           type="text"
-          placeholder="Buscar por nombre, email o documento..."
+          placeholder="Buscar por nombre, teléfono o email..."
           [(ngModel)]="filtroBusqueda"
           (input)="onFiltroChange()">
       </div>
@@ -34,12 +77,13 @@
       <div class="filtro-item">
         <label>
           <i-lucide name="filter" [size]="16" class="icon-label"></i-lucide>
-          Estado
+          Plataforma
         </label>
-        <select [(ngModel)]="filtroEstado" (change)="onFiltroChange()">
-          <option value="todos">Todos</option>
-          <option value="activo">Activos</option>
-          <option value="inactivo">Inactivos</option>
+        <select [(ngModel)]="filtroPlatforma" (change)="onFiltroChange()">
+          <option value="todos">Todas</option>
+          <option value="whatsapp">WhatsApp</option>
+          <option value="telegram">Telegram</option>
+          <option value="panel_web">Panel Web</option>
         </select>
       </div>
     </div>
@@ -78,11 +122,9 @@
         <thead>
           <tr>
             <th>Cliente</th>
-            <th>Documento</th>
-            <th>Contacto</th>
-            <th>Ubicación</th>
-            <th>Casos</th>
-            <th>Estado</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Plataforma</th>
             <th>Fecha Registro</th>
             <th>Acciones</th>
           </tr>
@@ -92,91 +134,67 @@
               class="cliente-row"
               (click)="verDetalle(cliente.id)">
 
+            <!-- Cliente -->
             <td>
               <div class="cliente-info">
-                <div class="cliente-avatar">{{ cliente.nombre.charAt(0) }}{{ cliente.apellido.charAt(0) }}</div>
+                <div class="cliente-avatar">
+                  {{ cliente.nombreCompleto.charAt(0).toUpperCase() }}
+                </div>
                 <div class="cliente-datos">
-                  <div class="nombre">{{ getNombreCompleto(cliente) }}</div>
-                  <div class="email">{{ cliente.email }}</div>
+                  <div class="nombre">{{ cliente.nombreCompleto }}</div>
+                  <div class="id-cliente">ID: {{ cliente.id.substring(0, 8) }}...</div>
                 </div>
               </div>
             </td>
 
-            <td>
-              <div class="documento-info">
-                <div class="tipo-doc">{{ getTipoDocumentoTexto(cliente.tipo_documento) }}</div>
-                <div class="num-doc">{{ cliente.documento_identidad }}</div>
-              </div>
-            </td>
-
+            <!-- Teléfono -->
             <td>
               <div class="contacto-info">
-                <div class="telefono">
-                  <i-lucide name="phone" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
-                  {{ cliente.telefono }}
-                </div>
+                <i-lucide name="phone" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
+                {{ formatearTelefono(cliente.telefono) }}
               </div>
             </td>
 
+            <!-- Email -->
             <td>
-              <div class="ubicacion-info" *ngIf="cliente.ciudad">
-                <div>
-                  <i-lucide name="map-pin" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
-                  {{ cliente.ciudad }}
-                </div>
-                <div class="provincia" *ngIf="cliente.provincia">{{ cliente.provincia }}</div>
+              <div class="email-info" *ngIf="cliente.email">
+                <i-lucide name="mail" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
+                {{ cliente.email }}
               </div>
-              <div *ngIf="!cliente.ciudad" class="sin-dato">-</div>
+              <div *ngIf="!cliente.email" class="sin-dato">-</div>
             </td>
 
+            <!-- Plataforma -->
             <td>
-              <div class="casos-info">
-                <div class="casos-activos">
-                  <span class="casos-numero">{{ cliente.casos_activos || 0 }}</span>
-                  <span class="casos-label">activos</span>
-                </div>
-                <div class="casos-total">
-                  Total: {{ cliente.casos_totales || 0 }}
-                </div>
-              </div>
-            </td>
-
-            <td>
-              <span class="estado-badge" [ngClass]="getEstadoClass(cliente.estado)">
-                {{ getEstadoTexto(cliente.estado) }}
+              <span class="plataforma-badge" [ngClass]="getPlataformaClass(cliente.plataforma)">
+                <span class="plataforma-icon">{{ getPlataformaIcon(cliente.plataforma) }}</span>
+                {{ getPlataformaTexto(cliente.plataforma) }}
               </span>
             </td>
 
+            <!-- Fecha Registro -->
             <td>
               <div class="fecha">
                 <i-lucide name="calendar" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
-                {{ formatearFecha(cliente.fecha_registro) }}
+                {{ formatearFecha(cliente.createdAt) }}
               </div>
             </td>
 
+            <!-- Acciones -->
             <td class="acciones-cell" (click)="$event.stopPropagation()">
               <div class="acciones-buttons">
+                <button
+                  class="btn-accion btn-ver"
+                  (click)="verDetalle(cliente.id)"
+                  title="Ver detalle">
+                  <i-lucide name="eye" [size]="16"></i-lucide>
+                </button>
+
                 <button
                   class="btn-accion btn-editar"
                   (click)="editarCliente(cliente.id, $event)"
                   title="Editar">
                   <i-lucide name="edit-2" [size]="16"></i-lucide>
-                </button>
-
-                <button
-                  *ngIf="cliente.estado === 'activo'"
-                  class="btn-accion btn-desactivar"
-                  (click)="cambiarEstado(cliente.id, 'inactivo', $event)"
-                  title="Desactivar">
-                  <i-lucide name="pause-circle" [size]="16"></i-lucide>
-                </button>
-
-                <button
-                  *ngIf="cliente.estado === 'inactivo'"
-                  class="btn-accion btn-activar"
-                  (click)="cambiarEstado(cliente.id, 'activo', $event)"
-                  title="Activar">
-                  <i-lucide name="play-circle" [size]="16"></i-lucide>
                 </button>
 
                 <button

@@ -33,7 +33,7 @@ const routes: Routes = [
       {
         path: 'reportes',
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'abogado', 'asistente_legal'] },
+        data: { roles: ['admin', 'asistente_legal'] },
         loadChildren: () => import('./modules/reportes/reportes.module').then(m => m.ReportesModule)
       },
       {

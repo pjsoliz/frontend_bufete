@@ -10,13 +10,7 @@ const routes: Routes = [
     path: 'admin',
     component: DashboardAdminComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['administrador'] }
-  },
-  {
-    path: 'abogado',
-    component: AbogadoDashboardComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['abogado'] }
+    data: { roles: ['admin'] }
   },
   {
     path: 'asistente',

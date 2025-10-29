@@ -13,15 +13,15 @@ export class ClientesListComponent implements OnInit {
   loading = true;
 
   // Filtros
-  filtroEstado: string = 'todos';
   filtroBusqueda: string = '';
+  filtroPlatforma: string = 'todos'; // Nuevo filtro por plataforma
 
   // Estadísticas
   stats = {
     total: 0,
-    activos: 0,
-    inactivos: 0,
-    nuevos_mes: 0
+    whatsapp: 0,
+    telegram: 0,
+    panel_web: 0
   };
 
   constructor(
@@ -37,6 +37,7 @@ export class ClientesListComponent implements OnInit {
     this.loading = true;
     this.clientesService.getClientes().subscribe({
       next: (data) => {
+        console.log('Clientes cargados:', data);
         this.clientes = data;
         this.clientesFiltrados = data;
         this.calcularEstadisticas();
@@ -46,34 +47,31 @@ export class ClientesListComponent implements OnInit {
       error: (error) => {
         console.error('Error al cargar clientes:', error);
         this.loading = false;
+        alert('Error al cargar los clientes. Verifica la conexión con el servidor.');
       }
     });
   }
 
   calcularEstadisticas(): void {
     this.stats.total = this.clientes.length;
-    this.stats.activos = this.clientes.filter(c => c.estado === 'activo').length;
-    this.stats.inactivos = this.clientes.filter(c => c.estado === 'inactivo').length;
-
-    const hoy = new Date();
-    const mesAtras = new Date(hoy.getFullYear(), hoy.getMonth() - 1, hoy.getDate());
-    this.stats.nuevos_mes = this.clientes.filter(c => {
-      const fechaReg = new Date(c.fecha_registro + 'T00:00:00');
-      return fechaReg >= mesAtras;
-    }).length;
+    this.stats.whatsapp = this.clientes.filter(c => c.plataforma === 'whatsapp').length;
+    this.stats.telegram = this.clientes.filter(c => c.plataforma === 'telegram').length;
+    this.stats.panel_web = this.clientes.filter(c => c.plataforma === 'panel_web').length;
   }
 
   aplicarFiltros(): void {
     this.clientesFiltrados = this.clientes.filter(cliente => {
-      const cumpleEstado = this.filtroEstado === 'todos' || cliente.estado === this.filtroEstado;
+      // Filtro por plataforma
+      const cumplePlataforma = this.filtroPlatforma === 'todos' || 
+                               cliente.plataforma === this.filtroPlatforma;
 
+      // Filtro por búsqueda (nombre, teléfono, email)
       const cumpleBusqueda = !this.filtroBusqueda ||
-        cliente.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        cliente.apellido.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        cliente.email.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        cliente.documento_identidad.includes(this.filtroBusqueda);
+        cliente.nombreCompleto.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
+        cliente.telefono.includes(this.filtroBusqueda) ||
+        (cliente.email && cliente.email.toLowerCase().includes(this.filtroBusqueda.toLowerCase()));
 
-      return cumpleEstado && cumpleBusqueda;
+      return cumplePlataforma && cumpleBusqueda;
     });
   }
 
@@ -85,78 +83,80 @@ export class ClientesListComponent implements OnInit {
     this.router.navigate(['/clientes/nuevo']);
   }
 
-  verDetalle(id: number): void {
+  verDetalle(id: string): void {
     this.router.navigate(['/clientes', id]);
   }
 
-  editarCliente(id: number, event: Event): void {
+  editarCliente(id: string, event: Event): void {
     event.stopPropagation();
     this.router.navigate(['/clientes/editar', id]);
   }
 
-  eliminarCliente(id: number, event: Event): void {
+  eliminarCliente(id: string, event: Event): void {
     event.stopPropagation();
-    if (confirm('¿Está seguro de eliminar este cliente? Esta acción no se puede deshacer.')) {
+    
+    const cliente = this.clientes.find(c => c.id === id);
+    const mensaje = `¿Está seguro de eliminar al cliente "${cliente?.nombreCompleto}"?\n\nEsta acción no se puede deshacer.`;
+    
+    if (confirm(mensaje)) {
       this.clientesService.deleteCliente(id).subscribe({
         next: () => {
-          this.cargarClientes();
+          console.log('Cliente eliminado exitosamente');
+          this.cargarClientes(); // Recargar la lista
         },
         error: (error) => {
           console.error('Error al eliminar cliente:', error);
-          alert('Error al eliminar el cliente');
+          alert('Error al eliminar el cliente. Puede que tenga citas asociadas.');
         }
       });
     }
   }
 
-  cambiarEstado(id: number, nuevoEstado: 'activo' | 'inactivo', event: Event): void {
-    event.stopPropagation();
-    const accion = nuevoEstado === 'activo' ? 'activar' : 'desactivar';
+  // Métodos auxiliares para el template
 
-    if (confirm(`¿Está seguro de ${accion} este cliente?`)) {
-      const operacion = nuevoEstado === 'activo'
-        ? this.clientesService.activarCliente(id)
-        : this.clientesService.desactivarCliente(id);
-
-      operacion.subscribe({
-        next: () => {
-          this.cargarClientes();
-        },
-        error: (error) => {
-          console.error('Error al cambiar estado:', error);
-          alert('Error al cambiar el estado del cliente');
-        }
-      });
-    }
-  }
-
-  getEstadoClass(estado: string): string {
-    return estado === 'activo' ? 'estado-activo' : 'estado-inactivo';
-  }
-
-  getEstadoTexto(estado: string): string {
-    return estado === 'activo' ? 'Activo' : 'Inactivo';
-  }
-
-  getTipoDocumentoTexto(tipo: string): string {
-    const tipos: any = {
-      'cedula': 'Cédula',
-      'pasaporte': 'Pasaporte',
-      'ruc': 'RUC'
+  getPlataformaIcon(plataforma?: string): string {
+    const iconos: any = {
+      'whatsapp': '📱',
+      'telegram': '✈️',
+      'panel_web': '💻'
     };
-    return tipos[tipo] || tipo;
+    return iconos[plataforma || ''] || '👤';
   }
 
-  getNombreCompleto(cliente: Cliente): string {
-    return `${cliente.nombre} ${cliente.apellido}`;
+  getPlataformaTexto(plataforma?: string): string {
+    const textos: any = {
+      'whatsapp': 'WhatsApp',
+      'telegram': 'Telegram',
+      'panel_web': 'Panel Web'
+    };
+    return textos[plataforma || ''] || 'Desconocido';
   }
 
-  formatearFecha(fecha: string): string {
-    const fechaObj = new Date(fecha + 'T00:00:00');
+  getPlataformaClass(plataforma?: string): string {
+    const clases: any = {
+      'whatsapp': 'badge-whatsapp',
+      'telegram': 'badge-telegram',
+      'panel_web': 'badge-panel'
+    };
+    return clases[plataforma || ''] || 'badge-default';
+  }
+
+  formatearFecha(fecha?: Date): string {
+    if (!fecha) return '-';
+    
+    const fechaObj = new Date(fecha);
     return fechaObj.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     });
+  }
+
+  formatearTelefono(telefono: string): string {
+    // Formatear teléfono para mejor visualización
+    if (telefono.length === 8) {
+      return `${telefono.slice(0, 4)}-${telefono.slice(4)}`;
+    }
+    return telefono;
   }
 }

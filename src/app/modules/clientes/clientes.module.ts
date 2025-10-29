@@ -7,13 +7,15 @@ import { ClientesRoutingModule } from './clientes-routing.module';
 import { 
   LucideAngularModule, 
   Users, UserPlus, UserCheck, UserX, Search, Filter, Users2,
-  Eye, Edit2, PauseCircle, PlayCircle, Trash2, Phone, MapPin,
-  Calendar, User, Mail, FileText, MapPinned, ArrowLeft, AlertTriangle,
+  Eye, Edit2, PauseCircle, PlayCircle, Trash2, Phone, MapPin,File,
+  Calendar, User, Mail, FileText, MapPinned, ArrowLeft, AlertTriangle,Info,
   AlertCircle, CreditCard, Hash, Home, Map, ToggleRight, X, Check, Save,
   // Nuevos iconos para cliente-detalle
   Edit, Smartphone, Activity, CheckCircle, XCircle, CalendarDays,
-  Clock, Scale, Circle, Plus, Inbox, Tag, Heart, FolderOpen, 
-  Briefcase, AtSign
+  Clock, Scale, Circle, Plus, Inbox, Tag, Heart, FolderOpen,
+  Briefcase, AtSign,
+  Globe,
+  Copy
 } from 'lucide-angular';
 
 // Componentes
@@ -43,10 +45,12 @@ import { ClienteFormComponent } from './cliente-form/cliente-form.component';
       Eye,
       Edit2,
       PauseCircle,
+      Info,
       PlayCircle,
       Trash2,
       Phone,
       MapPin,
+      Globe,
       Calendar,
       User,
       Mail,
@@ -75,7 +79,7 @@ import { ClienteFormComponent } from './cliente-form/cliente-form.component';
       Circle,
       Plus,
       Inbox,
-      Tag,
+      Tag,File,Copy,
       Heart,
       FolderOpen,
       Briefcase,

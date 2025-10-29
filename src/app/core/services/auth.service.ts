@@ -11,159 +11,145 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private apiUrl = environment.apiUrl;
 
-  // USUARIOS MOCK PARA PRUEBAS
-  private mockUsers = [
-    {
-      username: 'admin',
-      password: 'admin123',
-      user: {
-        id: 1,
-        username: 'admin',
-        email: 'admin@genesis.com',
-        first_name: 'Administrador',
-        last_name: 'Sistema',
-        rol: 'administrador'
-      },
-      token: 'mock-token-admin'
-    },
-    {
-      username: 'abogado',
-      password: 'abogado123',
-      user: {
-        id: 2,
-        username: 'abogado',
-        email: 'abogado@genesis.com',
-        first_name: 'Juan',
-        last_name: 'Pérez',
-        rol: 'abogado'
-      },
-      token: 'mock-token-abogado'
-    },
-    {
-      username: 'asistente',
-      password: 'asistente123',
-      user: {
-        id: 3,
-        username: 'asistente',
-        email: 'asistente@genesis.com',
-        first_name: 'María',
-        last_name: 'González',
-        rol: 'asistente_legal'
-      },
-      token: 'mock-token-asistente'
-    }
-  ];
-
   constructor(
     private http: HttpClient,
     private router: Router
   ) {}
 
+  /**
+   * Login con backend real
+   */
   login(credentials: any): Observable<any> {
     console.log('Intentando login con:', credentials);
 
-    // BUSCAR USUARIO MOCK
-    const mockUser = this.mockUsers.find(
-      u => u.username === credentials.username && u.password === credentials.password
-    );
-
-    if (mockUser) {
-      console.log('Usuario mock encontrado:', mockUser);
-
-      // Guardar en localStorage
-      localStorage.setItem('token', mockUser.token);
-      localStorage.setItem('user', JSON.stringify(mockUser.user));
-
-      return of({
-        token: mockUser.token,
-        user: mockUser.user
-      });
-    }
-
-    // Si no encuentra el usuario mock
-    console.log('Usuario no encontrado');
-    return throwError(() => new Error('Credenciales incorrectas'));
-  }
-
-  register(userData: any): Observable<any> {
-    console.log('Registro mock - datos:', userData);
-
-    // Mock de registro exitoso
-    const newUser = {
-      id: Math.floor(Math.random() * 1000),
-      username: userData.username,
-      email: userData.email,
-      first_name: userData.first_name,
-      last_name: userData.last_name,
-      rol: userData.rol || 'cliente'
-    };
-
-    return of({
-      user: newUser,
-      message: 'Usuario registrado exitosamente'
-    });
-
-    // COMENTADO: Registro real con backend
-    /*
-    return this.http.post(`${this.apiUrl}/auth/register/`, userData).pipe(
+    // ✅ LLAMADA REAL AL BACKEND
+    return this.http.post(`${this.apiUrl}/auth/login`, credentials).pipe(
+      tap((response: any) => {
+        console.log('Login exitoso:', response);
+        
+        // Guardar token (access_token)
+        localStorage.setItem('token', response.access_token);
+        
+        // Guardar usuario
+        localStorage.setItem('user', JSON.stringify(response.user));
+      }),
       catchError(error => {
-        console.error('Error en registro:', error);
-        throw error;
+        console.error('Error en login:', error);
+        
+        // Mensaje más descriptivo
+        if (error.status === 401) {
+          console.error('Credenciales incorrectas');
+        } else if (error.status === 0) {
+          console.error('No se puede conectar al servidor');
+        }
+        
+        return throwError(() => error);
       })
     );
-    */
   }
 
+  /**
+   * Registro (si lo necesitas después)
+   */
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register`, userData).pipe(
+      catchError(error => {
+        console.error('Error en registro:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Cerrar sesión
+   */
   logout(): void {
     console.log('Cerrando sesión');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 
+  /**
+   * Verificar si está autenticado
+   */
   isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
     return !!token;
   }
 
+  /**
+   * Obtener token
+   */
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
+  /**
+   * Obtener usuario actual
+   */
   getUser(): any {
     const userData = localStorage.getItem('user');
     return userData ? JSON.parse(userData) : null;
   }
 
+  /**
+   * Alias para compatibilidad
+   */
   getCurrentUser(): any {
-    // Alias de getUser() para compatibilidad
     return this.getUser();
   }
 
+  /**
+   * Obtener rol del usuario
+   */
   getUserRole(): string | null {
     const user = this.getUser();
     return user ? user.rol : null;
   }
 
-  getUserId(): number | null {
+  /**
+   * Obtener ID del usuario
+   */
+  getUserId(): string | null {
     const user = this.getUser();
     return user ? user.id : null;
   }
 
+  /**
+   * Verificar si es admin
+   */
+  isAdmin(): boolean {
+    const user = this.getUser();
+    return user?.rol === 'admin';
+  }
+
+  /**
+   * Verificar si es asistente
+   */
+  isAsistente(): boolean {
+    const user = this.getUser();
+    return user?.rol === 'asistente_legal';
+  }
+
+  /**
+   * Actualizar usuario (opcional)
+   */
   updateUser(userData: any): Observable<any> {
-    console.log('Actualizar usuario mock:', userData);
-
-    // Actualizar en localStorage
-    const currentUser = this.getUser();
-    if (currentUser) {
-      const updatedUser = { ...currentUser, ...userData };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-
-      return of({
-        user: updatedUser,
-        message: 'Usuario actualizado exitosamente'
-      });
-    }
-
-    return throwError(() => new Error('No hay usuario autenticado'));
+    const userId = this.getUserId();
+    return this.http.put(`${this.apiUrl}/usuarios/${userId}`, userData).pipe(
+      tap((response: any) => {
+        // Actualizar en localStorage
+        const currentUser = this.getUser();
+        if (currentUser) {
+          const updatedUser = { ...currentUser, ...response };
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+        }
+      }),
+      catchError(error => {
+        console.error('Error al actualizar usuario:', error);
+        return throwError(() => error);
+      })
+    );
   }
 }

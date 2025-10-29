@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientesService, Cliente } from '../../../core/services/clientes.service';
-import { CasosService, Caso } from '../../../core/services/casos.service';
 
 @Component({
   selector: 'app-cliente-detalle',
@@ -10,31 +9,29 @@ import { CasosService, Caso } from '../../../core/services/casos.service';
 })
 export class ClienteDetalleComponent implements OnInit {
   cliente: Cliente | null = null;
-  casosCliente: Caso[] = [];
   loading = true;
   errorMessage = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private clientesService: ClientesService,
-    private casosService: CasosService
+    private clientesService: ClientesService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.cargarCliente(parseInt(id));
-      this.cargarCasosCliente(parseInt(id));
+      this.cargarCliente(id);
     }
   }
 
-  cargarCliente(id: number): void {
+  cargarCliente(id: string): void {
     this.loading = true;
     this.clientesService.getClienteById(id).subscribe({
       next: (cliente) => {
         if (cliente) {
           this.cliente = cliente;
+          console.log('Cliente cargado:', cliente);
         } else {
           this.errorMessage = 'Cliente no encontrado';
         }
@@ -42,22 +39,12 @@ export class ClienteDetalleComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al cargar cliente:', error);
-        this.errorMessage = 'Error al cargar el cliente';
-        this.loading = false;
-      }
-    });
-  }
-
-  cargarCasosCliente(clienteId: number): void {
-    this.casosService.getCasos().subscribe({
-      next: (casos) => {
-        // Filtrar casos del cliente actual
-        if (this.cliente) {
-          this.casosCliente = casos.filter(c => c.cliente === this.getNombreCompleto());
+        if (error.status === 404) {
+          this.errorMessage = 'Cliente no encontrado';
+        } else {
+          this.errorMessage = 'Error al cargar el cliente';
         }
-      },
-      error: (error) => {
-        console.error('Error al cargar casos:', error);
+        this.loading = false;
       }
     });
   }
@@ -73,94 +60,61 @@ export class ClienteDetalleComponent implements OnInit {
   }
 
   eliminarCliente(): void {
-    if (this.cliente && confirm('¿Está seguro de eliminar este cliente? Esta acción no se puede deshacer.')) {
-      this.clientesService.deleteCliente(this.cliente.id).subscribe({
-        next: () => {
-          alert('Cliente eliminado exitosamente');
-          this.router.navigate(['/clientes']);
-        },
-        error: (error) => {
-          console.error('Error al eliminar cliente:', error);
-          alert('Error al eliminar el cliente');
-        }
-      });
-    }
-  }
-
-  cambiarEstado(): void {
     if (this.cliente) {
-      const nuevoEstado = this.cliente.estado === 'activo' ? 'inactivo' : 'activo';
-      const accion = nuevoEstado === 'activo' ? 'activar' : 'desactivar';
-
-      if (confirm(`¿Está seguro de ${accion} este cliente?`)) {
-        const operacion = nuevoEstado === 'activo'
-          ? this.clientesService.activarCliente(this.cliente.id)
-          : this.clientesService.desactivarCliente(this.cliente.id);
-
-        operacion.subscribe({
-          next: (clienteActualizado) => {
-            this.cliente = clienteActualizado;
-            alert(`Cliente ${accion}do exitosamente`);
+      const mensaje = `¿Está seguro de eliminar al cliente "${this.cliente.nombreCompleto}"?\n\nEsta acción no se puede deshacer.`;
+      
+      if (confirm(mensaje)) {
+        this.clientesService.deleteCliente(this.cliente.id).subscribe({
+          next: () => {
+            alert('Cliente eliminado exitosamente');
+            this.router.navigate(['/clientes']);
           },
           error: (error) => {
-            console.error('Error al cambiar estado:', error);
-            alert('Error al cambiar el estado del cliente');
+            console.error('Error al eliminar cliente:', error);
+            if (error.status === 400 && error.error?.message) {
+              alert(`No se puede eliminar el cliente: ${error.error.message}`);
+            } else {
+              alert('Error al eliminar el cliente. Puede que tenga citas asociadas.');
+            }
           }
         });
       }
     }
   }
 
-  verCaso(casoId: number): void {
-    this.router.navigate(['/casos', casoId]);
-  }
+  // Métodos auxiliares para el template
 
-  getNombreCompleto(): string {
-    if (this.cliente) {
-      return `${this.cliente.nombre} ${this.cliente.apellido}`;
-    }
-    return '';
-  }
-
-  getEstadoClass(estado: string): string {
-    return estado === 'activo' ? 'estado-activo' : 'estado-inactivo';
-  }
-
-  getEstadoTexto(estado: string): string {
-    return estado === 'activo' ? 'Activo' : 'Inactivo';
-  }
-
-  getTipoDocumentoTexto(tipo: string): string {
-    const tipos: any = {
-      'cedula': 'Cédula',
-      'pasaporte': 'Pasaporte',
-      'ruc': 'RUC'
+  getPlataformaIcon(plataforma?: string): string {
+    const iconos: any = {
+      'whatsapp': '📱',
+      'telegram': '✈️',
+      'panel_web': '💻'
     };
-    return tipos[tipo] || tipo;
+    return iconos[plataforma || ''] || '👤';
   }
 
-  getCasoEstadoClass(estado: string): string {
-    const classes: any = {
-      'pendiente': 'caso-pendiente',
-      'en_progreso': 'caso-progreso',
-      'suspendido': 'caso-suspendido',
-      'cerrado': 'caso-cerrado'
-    };
-    return classes[estado] || '';
-  }
-
-  getCasoEstadoTexto(estado: string): string {
+  getPlataformaTexto(plataforma?: string): string {
     const textos: any = {
-      'pendiente': 'Pendiente',
-      'en_progreso': 'En Progreso',
-      'suspendido': 'Suspendido',
-      'cerrado': 'Cerrado'
+      'whatsapp': 'WhatsApp',
+      'telegram': 'Telegram',
+      'panel_web': 'Panel Web'
     };
-    return textos[estado] || estado;
+    return textos[plataforma || ''] || 'Desconocido';
   }
 
-  formatearFecha(fecha: string): string {
-    const fechaObj = new Date(fecha + 'T00:00:00');
+  getPlataformaClass(plataforma?: string): string {
+    const clases: any = {
+      'whatsapp': 'badge-whatsapp',
+      'telegram': 'badge-telegram',
+      'panel_web': 'badge-panel'
+    };
+    return clases[plataforma || ''] || 'badge-default';
+  }
+
+  formatearFecha(fecha?: Date): string {
+    if (!fecha) return '-';
+    
+    const fechaObj = new Date(fecha);
     return fechaObj.toLocaleDateString('es-ES', {
       weekday: 'long',
       year: 'numeric',
@@ -169,8 +123,10 @@ export class ClienteDetalleComponent implements OnInit {
     });
   }
 
-  formatearFechaCorta(fecha: string): string {
-    const fechaObj = new Date(fecha + 'T00:00:00');
+  formatearFechaCorta(fecha?: Date): string {
+    if (!fecha) return '-';
+    
+    const fechaObj = new Date(fecha);
     return fechaObj.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'short',
@@ -178,20 +134,53 @@ export class ClienteDetalleComponent implements OnInit {
     });
   }
 
-  calcularEdad(): number | null {
-    if (this.cliente?.fecha_nacimiento) {
-      const hoy = new Date();
-      const nacimiento = new Date(this.cliente.fecha_nacimiento + 'T00:00:00');
-      let edad = hoy.getFullYear() - nacimiento.getFullYear();
-      const mes = hoy.getMonth() - nacimiento.getMonth();
-      if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
-        edad--;
-      }
-      return edad;
+  formatearTelefono(telefono: string): string {
+    // Formatear teléfono para mejor visualización
+    if (telefono.length === 8) {
+      return `${telefono.slice(0, 4)}-${telefono.slice(4)}`;
     }
-    return null;
+    return telefono;
   }
-  crearNuevoCaso(): void {
-    this.router.navigate(['/casos/nuevo']);
+
+  copiarAlPortapapeles(texto: string, campo: string): void {
+    navigator.clipboard.writeText(texto).then(() => {
+      alert(`${campo} copiado al portapapeles`);
+    }).catch(err => {
+      console.error('Error al copiar:', err);
+    });
+  }
+
+  enviarWhatsApp(): void {
+    if (this.cliente) {
+      const numero = this.cliente.telefono.replace(/\D/g, '');
+      const url = `https://wa.me/591${numero}`;
+      window.open(url, '_blank');
+    }
+  }
+
+  enviarEmail(): void {
+    if (this.cliente?.email) {
+      window.location.href = `mailto:${this.cliente.email}`;
+    }
+  }
+
+  // Mostrar primeras letras del nombre para el avatar
+  getIniciales(): string {
+    if (this.cliente) {
+      const palabras = this.cliente.nombreCompleto.trim().split(' ');
+      if (palabras.length >= 2) {
+        return palabras[0].charAt(0).toUpperCase() + palabras[1].charAt(0).toUpperCase();
+      }
+      return this.cliente.nombreCompleto.charAt(0).toUpperCase();
+    }
+    return '?';
+  }
+
+  // Formatear el ID del cliente (mostrar solo primeros 8 caracteres)
+  getClienteIdCorto(): string {
+    if (this.cliente?.id) {
+      return this.cliente.id.substring(0, 8);
+    }
+    return '';
   }
 }

@@ -7,9 +7,12 @@
 
   <!-- Error -->
   <div *ngIf="!loading && errorMessage" class="error-container">
-    <i-lucide name="alert-triangle" class="error-icon"></i-lucide>
+    <i-lucide name="alert-triangle" class="error-icon" [size]="64"></i-lucide>
     <h2>{{ errorMessage }}</h2>
-    <button class="btn-primary" (click)="volver()">Volver a Clientes</button>
+    <button class="btn-primary" (click)="volver()">
+      <i-lucide name="arrow-left" [size]="18"></i-lucide>
+      Volver a Clientes
+    </button>
   </div>
 
   <!-- Detalle del Cliente -->
@@ -25,29 +28,24 @@
       <div class="header-main">
         <div class="header-left">
           <div class="cliente-avatar-large">
-            {{ cliente.nombre.charAt(0) }}{{ cliente.apellido.charAt(0) }}
+            {{ getIniciales() }}
           </div>
           <div class="cliente-info-header">
-            <h1>{{ getNombreCompleto() }}</h1>
+            <h1>{{ cliente.nombreCompleto }}</h1>
             <div class="badges-row">
-              <span class="badge-estado" [ngClass]="getEstadoClass(cliente.estado)">
-                <i-lucide [name]="cliente.estado === 'activo' ? 'check-circle' : 'x-circle'" [size]="14"></i-lucide>
-                {{ getEstadoTexto(cliente.estado) }}
+              <span class="badge-plataforma" [ngClass]="getPlataformaClass(cliente.plataforma)">
+                <span class="plataforma-icon">{{ getPlataformaIcon(cliente.plataforma) }}</span>
+                {{ getPlataformaTexto(cliente.plataforma) }}
               </span>
-              <span class="badge-documento">
-                <i-lucide name="file-text" [size]="14"></i-lucide>
-                {{ getTipoDocumentoTexto(cliente.tipo_documento) }}: {{ cliente.documento_identidad }}
+              <span class="badge-id">
+                <i-lucide name="hash" [size]="14"></i-lucide>
+                ID: {{ getClienteIdCorto() }}
               </span>
             </div>
           </div>
         </div>
 
         <div class="header-right">
-          <button class="btn-action" (click)="cambiarEstado()"
-                  [title]="cliente.estado === 'activo' ? 'Desactivar' : 'Activar'">
-            <i-lucide [name]="cliente.estado === 'activo' ? 'pause-circle' : 'play-circle'" [size]="18"></i-lucide>
-            {{ cliente.estado === 'activo' ? 'Desactivar' : 'Activar' }}
-          </button>
           <button class="btn-action btn-edit" (click)="editarCliente()">
             <i-lucide name="edit" [size]="18"></i-lucide>
             Editar
@@ -63,8 +61,8 @@
     <!-- Content Grid -->
     <div class="content-grid">
 
-      <!-- Columna Izquierda -->
-      <div class="left-column">
+      <!-- Columna Principal -->
+      <div class="main-column">
 
         <!-- Información de Contacto -->
         <div class="info-card">
@@ -74,153 +72,170 @@
           </h2>
 
           <div class="info-grid">
+            <!-- Teléfono -->
             <div class="info-item">
-              <div class="info-label">Email</div>
+              <div class="info-label">
+                <i-lucide name="smartphone" [size]="16"></i-lucide>
+                Teléfono
+              </div>
               <div class="info-value">
-                <i-lucide name="mail" [size]="16" class="icon"></i-lucide>
-                <a [href]="'mailto:' + cliente.email">{{ cliente.email }}</a>
+                <span class="info-text">{{ formatearTelefono(cliente.telefono) }}</span>
+                <div class="info-actions">
+                  <button 
+                    class="btn-icon" 
+                    (click)="enviarWhatsApp()"
+                    title="Enviar WhatsApp">
+                    <i-lucide name="phone" [size]="16"></i-lucide>
+                  </button>
+                  <button 
+                    class="btn-icon" 
+                    (click)="copiarAlPortapapeles(cliente.telefono, 'Teléfono')"
+                    title="Copiar teléfono">
+                    <i-lucide name="file" [size]="16"></i-lucide>
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div class="info-item">
-              <div class="info-label">Teléfono</div>
+            <!-- Email -->
+            <div class="info-item" *ngIf="cliente.email">
+              <div class="info-label">
+                <i-lucide name="mail" [size]="16"></i-lucide>
+                Email
+              </div>
               <div class="info-value">
-                <i-lucide name="smartphone" [size]="16" class="icon"></i-lucide>
-                <a [href]="'tel:' + cliente.telefono">{{ cliente.telefono }}</a>
+                <span class="info-text">{{ cliente.email }}</span>
+                <div class="info-actions">
+                  <button 
+                    class="btn-icon" 
+                    (click)="enviarEmail()"
+                    title="Enviar email">
+                    <i-lucide name="mail" [size]="16"></i-lucide>
+                  </button>
+                  <button 
+                    class="btn-icon" 
+                    (click)="copiarAlPortapapeles(cliente.email, 'Email')"
+                    title="Copiar email">
+                    <i-lucide name="file" [size]="16"></i-lucide>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sin Email -->
+            <div class="info-item" *ngIf="!cliente.email">
+              <div class="info-label">
+                <i-lucide name="mail" [size]="16"></i-lucide>
+                Email
+              </div>
+              <div class="info-value">
+                <span class="sin-dato">No proporcionado</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Información Personal -->
+        <!-- Información de Plataforma -->
         <div class="info-card">
           <h2>
-            <i-lucide name="user" [size]="20"></i-lucide>
-            Información Personal
+            <i-lucide name="smartphone" [size]="20"></i-lucide>
+            Información de Plataforma
           </h2>
 
           <div class="info-grid">
-            <div class="info-item" *ngIf="cliente.fecha_nacimiento">
-              <div class="info-label">Fecha de Nacimiento</div>
-              <div class="info-value">
-                <i-lucide name="calendar" [size]="16" class="icon"></i-lucide>
-                {{ formatearFecha(cliente.fecha_nacimiento) }}
-              </div>
-            </div>
-
-            <div class="info-item" *ngIf="calcularEdad()">
-              <div class="info-label">Edad</div>
-              <div class="info-value">
-                <i-lucide name="calendar-days" [size]="16" class="icon"></i-lucide>
-                {{ calcularEdad() }} años
-              </div>
-            </div>
-
+            <!-- Plataforma -->
             <div class="info-item">
-              <div class="info-label">Fecha de Registro</div>
+              <div class="info-label">
+                <i-lucide name="globe" [size]="16"></i-lucide>
+                Plataforma de Contacto
+              </div>
               <div class="info-value">
-                <i-lucide name="clock" [size]="16" class="icon"></i-lucide>
-                {{ formatearFecha(cliente.fecha_registro) }}
+                <span class="badge-plataforma" [ngClass]="getPlataformaClass(cliente.plataforma)">
+                  <span class="plataforma-icon">{{ getPlataformaIcon(cliente.plataforma) }}</span>
+                  {{ getPlataformaTexto(cliente.plataforma) }}
+                </span>
+              </div>
+            </div>
+
+            <!-- ID en Plataforma -->
+            <div class="info-item" *ngIf="cliente.userIdPlataforma">
+              <div class="info-label">
+                <i-lucide name="hash" [size]="16"></i-lucide>
+                ID en {{ getPlataformaTexto(cliente.plataforma) }}
+              </div>
+              <div class="info-value">
+                <span class="info-text">{{ cliente.userIdPlataforma }}</span>
+                <button 
+                  class="btn-icon" 
+                  (click)="copiarAlPortapapeles(cliente.userIdPlataforma, 'ID de plataforma')"
+                  title="Copiar ID">
+                  <i-lucide name="file" [size]="16"></i-lucide>
+                </button>
+              </div>
+            </div>
+
+            <!-- Sin ID -->
+            <div class="info-item" *ngIf="!cliente.userIdPlataforma">
+              <div class="info-label">
+                <i-lucide name="hash" [size]="16"></i-lucide>
+                ID en Plataforma
+              </div>
+              <div class="info-value">
+                <span class="sin-dato">No proporcionado</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Ubicación -->
-        <div class="info-card" *ngIf="cliente.direccion || cliente.ciudad">
+        <!-- Información del Sistema -->
+        <div class="info-card">
           <h2>
-            <i-lucide name="map-pin" [size]="20"></i-lucide>
-            Ubicación
+            <i-lucide name="info" [size]="20"></i-lucide>
+            Información del Sistema
           </h2>
 
           <div class="info-grid">
-            <div class="info-item full-width" *ngIf="cliente.direccion">
-              <div class="info-label">Dirección</div>
-              <div class="info-value">{{ cliente.direccion }}</div>
-            </div>
-
-            <div class="info-item" *ngIf="cliente.ciudad">
-              <div class="info-label">Ciudad</div>
-              <div class="info-value">{{ cliente.ciudad }}</div>
-            </div>
-
-            <div class="info-item" *ngIf="cliente.provincia">
-              <div class="info-label">Provincia</div>
-              <div class="info-value">{{ cliente.provincia }}</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Notas -->
-        <div class="info-card" *ngIf="cliente.notas">
-          <h2>
-            <i-lucide name="file-text" [size]="20"></i-lucide>
-            Notas
-          </h2>
-          <p class="notas">{{ cliente.notas }}</p>
-        </div>
-
-      </div>
-
-      <!-- Columna Derecha - Casos -->
-      <div class="right-column">
-        <div class="casos-card">
-          <h2>
-            <i-lucide name="briefcase" [size]="20"></i-lucide>
-            Historial de Casos
-          </h2>
-
-          <!-- Estadísticas de Casos -->
-          <div class="casos-stats">
-            <div class="caso-stat activos">
-              <i-lucide name="folder-open" [size]="32" class="stat-icon"></i-lucide>
-              <div class="stat-numero">{{ cliente.casos_activos || 0 }}</div>
-              <div class="stat-texto">Casos Activos</div>
-            </div>
-            <div class="caso-stat totales">
-              <i-lucide name="briefcase" [size]="32" class="stat-icon"></i-lucide>
-              <div class="stat-numero">{{ cliente.casos_totales || 0 }}</div>
-              <div class="stat-texto">Total de Casos</div>
-            </div>
-          </div>
-
-          <!-- Lista de Casos -->
-          <div class="casos-lista" *ngIf="casosCliente.length > 0">
-            <div class="caso-item" *ngFor="let caso of casosCliente" (click)="verCaso(caso.id)">
-              <div class="caso-header">
-                <div class="caso-numero">
-                  <i-lucide name="hash" [size]="16"></i-lucide>
-                  {{ caso.numero_caso }}
-                </div>
-                <span class="caso-estado-badge" [ngClass]="getCasoEstadoClass(caso.estado)">
-                  <i-lucide name="circle" [size]="10"></i-lucide>
-                  {{ getCasoEstadoTexto(caso.estado) }}
-                </span>
+            <!-- ID Completo -->
+            <div class="info-item full-width">
+              <div class="info-label">
+                <i-lucide name="hash" [size]="16"></i-lucide>
+                ID del Cliente
               </div>
-              <div class="caso-titulo">{{ caso.titulo }}</div>
-              <div class="caso-info">
-                <span class="caso-fecha">
-                  <i-lucide name="calendar" [size]="14"></i-lucide>
-                  {{ formatearFechaCorta(caso.fecha_inicio) }}
-                </span>
-                <span class="caso-abogado" *ngIf="caso.abogado">
-                  <i-lucide name="scale" [size]="14"></i-lucide>
-                  {{ caso.abogado }}
-                </span>
+              <div class="info-value">
+                <span class="info-text id-completo">{{ cliente.id }}</span>
+                <button 
+                  class="btn-icon" 
+                  (click)="copiarAlPortapapeles(cliente.id, 'ID del cliente')"
+                  title="Copiar ID">
+                  <i-lucide name="file" [size]="16"></i-lucide>
+                </button>
+              </div>
+            </div>
+
+            <!-- Fecha de Creación -->
+            <div class="info-item">
+              <div class="info-label">
+                <i-lucide name="calendar" [size]="16"></i-lucide>
+                Fecha de Registro
+              </div>
+              <div class="info-value">
+                <span class="info-text">{{ formatearFechaCorta(cliente.createdAt) }}</span>
+              </div>
+            </div>
+
+            <!-- Última Actualización -->
+            <div class="info-item" *ngIf="cliente.updatedAt">
+              <div class="info-label">
+                <i-lucide name="calendar" [size]="16"></i-lucide>
+                Última Actualización
+              </div>
+              <div class="info-value">
+                <span class="info-text">{{ formatearFechaCorta(cliente.updatedAt) }}</span>
               </div>
             </div>
           </div>
-
-          <!-- Sin Casos -->
-          <div class="sin-casos" *ngIf="casosCliente.length === 0">
-            <i-lucide name="inbox" class="sin-casos-icon"></i-lucide>
-            <p>Este cliente no tiene casos registrados</p>
-            <button class="btn-nuevo-caso" (click)="crearNuevoCaso()">
-              <i-lucide name="plus" [size]="18"></i-lucide>
-              Crear Nuevo Caso
-            </button>
-          </div>
         </div>
+
       </div>
 
     </div>

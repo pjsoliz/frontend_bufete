@@ -36,44 +36,52 @@
 
       <div class="form-grid">
 
-        <div class="form-group">
-          <label for="nombre">
+        <!-- Nombre Completo -->
+        <div class="form-group full-width">
+          <label for="nombreCompleto">
             <i-lucide name="user" [size]="16"></i-lucide>
-              Nombre *
+            Nombre Completo *
           </label>
           <input
             type="text"
-            id="nombre"
-            formControlName="nombre"
-            placeholder="Ej: Juan"
-            [class.error]="clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched">
-          <div class="error-message" *ngIf="clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched">
+            id="nombreCompleto"
+            formControlName="nombreCompleto"
+            placeholder="Ej: Juan Pérez López"
+            [class.error]="clienteForm.get('nombreCompleto')?.invalid && clienteForm.get('nombreCompleto')?.touched">
+          <div class="error-message" *ngIf="clienteForm.get('nombreCompleto')?.invalid && clienteForm.get('nombreCompleto')?.touched">
             <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            {{ getErrorMessage('nombre') }}
+            {{ getErrorMessage('nombreCompleto') }}
           </div>
         </div>
 
+        <!-- Teléfono -->
         <div class="form-group">
-          <label for="apellido">
-            <i-lucide name="user" [size]="16"></i-lucide>
-              Apellido *
+          <label for="telefono">
+            <i-lucide name="phone" [size]="16"></i-lucide>
+            Teléfono *
           </label>
           <input
-            type="text"
-            id="apellido"
-            formControlName="apellido"
-            placeholder="Ej: Pérez"
-            [class.error]="clienteForm.get('apellido')?.invalid && clienteForm.get('apellido')?.touched">
-          <div class="error-message" *ngIf="clienteForm.get('apellido')?.invalid && clienteForm.get('apellido')?.touched">
+            type="tel"
+            id="telefono"
+            formControlName="telefono"
+            placeholder="71234567"
+            maxlength="8"
+            [class.error]="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">
+          <div class="campo-ayuda">
+            <i-lucide name="info" [size]="12"></i-lucide>
+            8 dígitos sin espacios ni guiones
+          </div>
+          <div class="error-message" *ngIf="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">
             <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            {{ getErrorMessage('apellido') }}
+            {{ getErrorMessage('telefono') }}
           </div>
         </div>
 
+        <!-- Email -->
         <div class="form-group">
           <label for="email">
             <i-lucide name="mail" [size]="16"></i-lucide>
-              Email *
+            Email
           </label>
           <input
             type="email"
@@ -81,105 +89,76 @@
             formControlName="email"
             placeholder="ejemplo@email.com"
             [class.error]="clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched">
+          <div class="campo-ayuda">
+            <i-lucide name="info" [size]="12"></i-lucide>
+            Opcional
+          </div>
           <div class="error-message" *ngIf="clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched">
             <i-lucide name="alert-circle" [size]="14"></i-lucide>
             {{ getErrorMessage('email') }}
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="telefono">
-            <i-lucide name="phone" [size]="16"></i-lucide>
-              Teléfono *
-          </label>
-          <input
-            type="tel"
-            id="telefono"
-            formControlName="telefono"
-            placeholder="+593-99-123-4567"
-            [class.error]="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">
-          <div class="error-message" *ngIf="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">
-            <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            {{ getErrorMessage('telefono') }}
-          </div>
-        </div> 
-
-        <div class="form-group">
-          <label for="documento_identidad">
-            <i-lucide name="credit-card" [size]="16"></i-lucide>
-              Carnet de Identidad *
-          </label>
-          <input
-            type="text"
-            id="documento_identidad"
-            formControlName="documento_identidad"
-            placeholder="Ej: 1234567890"
-            [class.error]="clienteForm.get('documento_identidad')?.invalid && clienteForm.get('documento_identidad')?.touched">
-          <div class="error-message" *ngIf="clienteForm.get('documento_identidad')?.invalid && clienteForm.get('documento_identidad')?.touched">
-            <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            {{ getErrorMessage('documento_identidad') }}
-          </div>
-        </div> 
-
-        <div class="form-group">
-          <label for="ciudad">
-            <i-lucide name="map-pin" [size]="16"></i-lucide>
-              Departamento
-          </label>
-          <input
-            type="text"
-            id="ciudad"
-            formControlName="ciudad"
-            placeholder="Ej: Quito">
-        </div>
-
-        <div class="form-group">
-          <label for="provincia">
-            <i-lucide name="map" [size]="16"></i-lucide>
-              Provincia
-          </label>
-          <select id="provincia" formControlName="provincia">
-            <option value="">Seleccione una provincia</option>
-            <option *ngFor="let provincia of provincias" [value]="provincia">
-              {{ provincia }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="direccion">
-            <i-lucide name="home" [size]="16"></i-lucide>
-              Dirección
-          </label>
-          <input
-            type="text"
-            id="direccion"
-            formControlName="direccion"
-            placeholder="Ej: Av. Principal 123">
-        </div>
-
-        <div class="form-group full-width">
-          <label for="notas">
-            <i-lucide name="file-text" [size]="16"></i-lucide>
-              Notas / Observaciones
-          </label>
-          <textarea
-            id="notas"
-            formControlName="notas"
-            rows="4"
-            placeholder="Agregue notas adicionales sobre el cliente..."></textarea>
-        </div>
-        
       </div>
     </div>
 
+    <!-- Sección: Información de Contacto -->
+    <div class="form-section">
+      <h2>
+        <i-lucide name="phone" [size]="24"></i-lucide>
+        Información de Contacto
+      </h2>
+
+      <div class="form-grid">
+
+        <!-- Plataforma -->
+        <div class="form-group">
+          <label for="plataforma">
+            <i-lucide name="smartphone" [size]="16"></i-lucide>
+            Plataforma de Origen *
+          </label>
+          <select 
+            id="plataforma" 
+            formControlName="plataforma"
+            [class.error]="clienteForm.get('plataforma')?.invalid && clienteForm.get('plataforma')?.touched">
+            <option *ngFor="let plat of plataformas" [value]="plat.value">
+              {{ plat.label }}
+            </option>
+          </select>
+          <div class="campo-ayuda">
+            <i-lucide name="info" [size]="12"></i-lucide>
+            ¿Cómo contactó al cliente por primera vez?
+          </div>
+        </div>
+
+        <!-- ID de Usuario en Plataforma -->
+        <div class="form-group">
+          <label for="userIdPlataforma">
+            <i-lucide name="hash" [size]="16"></i-lucide>
+            ID de Usuario en Plataforma
+          </label>
+          <input
+            type="text"
+            id="userIdPlataforma"
+            formControlName="userIdPlataforma"
+            placeholder="Opcional">
+          <div class="campo-ayuda">
+            <i-lucide name="info" [size]="12"></i-lucide>
+            {{ getMensajeAyudaPlataforma() }}
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- Botones -->
     <div class="form-actions">
       <button type="button" class="btn-secondary" (click)="cancelar()" [disabled]="loading">
+        <i-lucide name="x" [size]="18"></i-lucide>
         <span>Cancelar</span>
       </button>
       <button type="submit" class="btn-primary" [disabled]="clienteForm.invalid || loading">
+        <i-lucide [name]="isEditMode ? 'save' : 'check'" [size]="18"></i-lucide>
         <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Cliente' : 'Crear Cliente' }}</span>
         <span *ngIf="loading">Guardando...</span>
       </button>
