@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
@@ -9,62 +10,27 @@ import { AuthService } from '../../../../core/services/auth.service';
 export class SidebarComponent implements OnInit {
   @Input() isCollapsed = false;
   
+  currentUser: any = null;
   userRole: string = '';
-  
-  // Contadores para badges
-  clientesCount = 156;
-  casosActivos = 23;
-  citasHoy = 5;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.loadUserRole();
-    this.loadCounters();
+    this.cargarUsuarioActual();
   }
 
   /**
-   * Carga el rol del usuario actual
+   * Carga el usuario actual desde AuthService
    */
-  private loadUserRole(): void {
-    const currentUser = this.authService.getCurrentUser();
-
-    // Manejar valor directo, Observable o Promise
-    const userAny = currentUser as any;
-    if (!userAny) {
-      this.userRole = '';
-      return;
-    }
-
-    if (typeof userAny.subscribe === 'function') {
-      // Observable
-      userAny.subscribe((u: any) => {
-        this.userRole = u?.rol ?? '';
-      }, () => {
-        this.userRole = '';
-      });
-    } else if (typeof userAny.then === 'function') {
-      // Promise
-      userAny.then((u: any) => {
-        this.userRole = u?.rol ?? '';
-      }).catch(() => {
-        this.userRole = '';
-      });
-    } else {
-      // Valor directo
-      this.userRole = userAny?.rol ?? '';
-    }
-  }
-
-  /**
-   * Carga los contadores para los badges
-   */
-  private loadCounters(): void {
-    // TODO: Implementar llamadas reales al backend
-    // Por ahora usamos datos mock
-    this.clientesCount = 156;
-    this.casosActivos = 23;
-    this.citasHoy = 5;
+  private cargarUsuarioActual(): void {
+    this.currentUser = this.authService.getUser();
+    this.userRole = this.authService.getUserRole() || '';
+    
+    console.log('Usuario actual:', this.currentUser);
+    console.log('Rol:', this.userRole);
   }
 
   /**
@@ -73,6 +39,37 @@ export class SidebarComponent implements OnInit {
   toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
     localStorage.setItem('sidebarCollapsed', String(this.isCollapsed));
+  }
+
+  /**
+   * Obtiene el icono según el rol del usuario
+   */
+  getUserIcon(): string {
+    const icons: { [key: string]: string } = {
+      'admin': 'shield',
+      'asistente_legal': 'clipboard-list'
+    };
+    return icons[this.userRole] || 'user';
+  }
+
+  /**
+   * Obtiene el texto del rol
+   */
+  getRolTexto(): string {
+    const textos: { [key: string]: string } = {
+      'admin': 'Administrador',
+      'asistente_legal': 'Asistente Legal'
+    };
+    return textos[this.userRole] || 'Usuario';
+  }
+
+  /**
+   * Cerrar sesión
+   */
+  cerrarSesion(): void {
+    if (confirm('¿Está seguro de cerrar sesión?')) {
+      this.authService.logout();
+    }
   }
 
   /**

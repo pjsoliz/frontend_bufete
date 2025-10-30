@@ -1,0 +1,187 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>
+      <i-lucide name="settings" [size]="32" class="icon-title"></i-lucide>
+      Configuración
+    </h1>
+    <p>Administra la configuración del sistema</p>
+  </div>
+
+  <div class="config-grid">
+    <!-- Perfil de Usuario -->
+    <div class="config-card">
+      <div class="card-icon-wrapper">
+        <i-lucide name="user" [size]="40" class="card-icon"></i-lucide>
+      </div>
+      <h3>Perfil de Usuario</h3>
+      <p>Actualiza tu información personal y preferencias</p>
+      <button class="btn-primary" (click)="editarPerfil()">
+        <i-lucide name="edit" [size]="18"></i-lucide>
+        Editar Perfil
+      </button>
+    </div>
+
+    <!-- Seguridad -->
+    <div class="config-card">
+      <div class="card-icon-wrapper">
+        <i-lucide name="lock" [size]="40" class="card-icon"></i-lucide>
+      </div>
+      <h3>Seguridad</h3>
+      <p>Cambia tu contraseña y configuración de seguridad</p>
+      <button class="btn-primary" (click)="cambiarContrasena()">
+        <i-lucide name="key" [size]="18"></i-lucide>
+        Cambiar Contraseña
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Editar Perfil -->
+<div class="modal-overlay" *ngIf="mostrarModalPerfil" (click)="cerrarModalPerfil()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <i-lucide name="user" [size]="28"></i-lucide>
+        Editar Perfil
+      </h2>
+      <button class="btn-close" (click)="cerrarModalPerfil()">
+        <i-lucide name="x" [size]="24"></i-lucide>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Mensajes -->
+      <div class="alert alert-error" *ngIf="errorMessage">
+        <i-lucide name="alert-circle" [size]="20"></i-lucide>
+        {{ errorMessage }}
+      </div>
+      <div class="alert alert-success" *ngIf="successMessage">
+        <i-lucide name="check-circle" [size]="20"></i-lucide>
+        {{ successMessage }}
+      </div>
+
+      <!-- Formulario -->
+      <div class="form-group">
+        <label>
+          <i-lucide name="user" [size]="18"></i-lucide>
+          Nombre Completo
+        </label>
+        <input 
+          type="text" 
+          [(ngModel)]="perfilForm.nombreCompleto"
+          placeholder="Ej: Juan Pérez García"
+          [disabled]="loading">
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i-lucide name="mail" [size]="18"></i-lucide>
+          Email
+        </label>
+        <input 
+          type="email" 
+          [(ngModel)]="perfilForm.email"
+          placeholder="ejemplo@genesis.com"
+          [disabled]="loading">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="cerrarModalPerfil()" [disabled]="loading">
+        Cancelar
+      </button>
+      <button class="btn-primary" (click)="guardarPerfil()" [disabled]="loading">
+        <span *ngIf="!loading">Guardar Cambios</span>
+        <span *ngIf="loading">Guardando...</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Cambiar Contraseña -->
+<div class="modal-overlay" *ngIf="mostrarModalSeguridad" (click)="cerrarModalSeguridad()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <i-lucide name="lock" [size]="28"></i-lucide>
+        Cambiar Contraseña
+      </h2>
+      <button class="btn-close" (click)="cerrarModalSeguridad()">
+        <i-lucide name="x" [size]="24"></i-lucide>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Mensajes -->
+      <div class="alert alert-error" *ngIf="errorMessage">
+        <i-lucide name="alert-circle" [size]="20"></i-lucide>
+        {{ errorMessage }}
+      </div>
+      <div class="alert alert-success" *ngIf="successMessage">
+        <i-lucide name="check-circle" [size]="20"></i-lucide>
+        {{ successMessage }}
+      </div>
+
+      <!-- Formulario -->
+      <div class="form-group">
+        <label>
+          <i-lucide name="lock" [size]="18"></i-lucide>
+          Contraseña Actual
+        </label>
+        <input 
+          type="password" 
+          [(ngModel)]="seguridadForm.passwordActual"
+          placeholder="Ingresa tu contraseña actual"
+          [disabled]="loading">
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i-lucide name="key" [size]="18"></i-lucide>
+          Nueva Contraseña
+        </label>
+        <input 
+          type="password" 
+          [(ngModel)]="seguridadForm.passwordNuevo"
+          placeholder="Mínimo 6 caracteres"
+          [disabled]="loading">
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i-lucide name="check" [size]="18"></i-lucide>
+          Confirmar Nueva Contraseña
+        </label>
+        <input 
+          type="password" 
+          [(ngModel)]="seguridadForm.passwordConfirmar"
+          placeholder="Repite la nueva contraseña"
+          [disabled]="loading">
+      </div>
+
+      <div class="password-requirements">
+        <p><strong>Requisitos de contraseña:</strong></p>
+        <ul>
+          <li [class.valid]="seguridadForm.passwordNuevo.length >= 6">
+            <i-lucide [name]="seguridadForm.passwordNuevo.length >= 6 ? 'check' : 'x'" [size]="16"></i-lucide>
+            Mínimo 6 caracteres
+          </li>
+          <li [class.valid]="seguridadForm.passwordNuevo === seguridadForm.passwordConfirmar && seguridadForm.passwordNuevo.length > 0">
+            <i-lucide [name]="seguridadForm.passwordNuevo === seguridadForm.passwordConfirmar && seguridadForm.passwordNuevo.length > 0 ? 'check' : 'x'" [size]="16"></i-lucide>
+            Las contraseñas coinciden
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="cerrarModalSeguridad()" [disabled]="loading">
+        Cancelar
+      </button>
+      <button class="btn-primary" (click)="guardarContrasena()" [disabled]="loading">
+        <span *ngIf="!loading">Cambiar Contraseña</span>
+        <span *ngIf="loading">Cambiando...</span>
+      </button>
+    </div>
+  </div>
+</div>

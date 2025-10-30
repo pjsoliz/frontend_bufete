@@ -37,6 +37,7 @@ import {
   Calendar,
   FolderX,
   Folder,
+  Lock,
   Monitor,        // Fecha registro (para detalle)
   Clock,           // Último acceso (para detalle)
   FileText,        // Notas (para detalle)
@@ -45,7 +46,8 @@ import {
   Edit,            // Editar (para detalle)
   UserCheck,       // Usuario activo (para detalle)
   UserX,           // Usuario inactivo (para detalle)
-  Info             // Información adicional (para detalle)
+  Info,             // Información adicional (para detalle)
+  LucideProjector
 } from 'lucide-angular';
 
 @NgModule({
@@ -75,6 +77,7 @@ import {
       SearchX,
       Mail,
       AtSign,FolderX,
+      Lock,
   Folder,
   Monitor, 
       Shield,

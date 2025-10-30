@@ -9,7 +9,7 @@
     </div>
     <div class="brand-text">
       <span class="brand-title">Genesis Integrales</span>
-      <span class="brand-subtitle">Sistema Legal</span>
+      <span class="brand-subtitle">Sistema Gestion de Citas</span>
     </div>
   </div>
 
@@ -30,55 +30,6 @@
 
   <!-- Acciones del Navbar -->
   <div class="navbar-actions">
-    <!-- Notificaciones -->
-    <div class="navbar-item" (click)="toggleNotifications()">
-      <button class="icon-btn" [class.has-notifications]="unreadNotifications > 0">
-        <i-lucide name="bell" [size]="20"></i-lucide>
-        <span class="notification-badge" *ngIf="unreadNotifications > 0">
-          {{ unreadNotifications }}
-        </span>
-      </button>
-
-      <!-- Dropdown de Notificaciones -->
-      <div class="dropdown-menu notifications-menu" *ngIf="showNotifications">
-        <div class="dropdown-header">
-          <h4>Notificaciones</h4>
-          <button class="text-link" (click)="markAllAsRead()">
-            <i-lucide name="check-check" [size]="16"></i-lucide>
-            Marcar todas como leídas
-          </button>
-        </div>
-        <div class="notifications-list">
-          <div
-            class="notification-item"
-            *ngFor="let notif of notifications"
-            [class.unread]="!notif.read"
-            (click)="markAsRead(notif)"
-          >
-            <div class="notification-icon" [ngClass]="'icon-' + notif.type">
-              <i-lucide [name]="getNotificationIcon(notif.type)" [size]="18"></i-lucide>
-            </div>
-            <div class="notification-content">
-              <p class="notification-text">{{ notif.message }}</p>
-              <span class="notification-time">{{ notif.time }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="dropdown-footer">
-          <a routerLink="/notificaciones" class="view-all-link">
-            Ver todas las notificaciones
-            <i-lucide name="arrow-right" [size]="16"></i-lucide>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ayuda -->
-    <div class="navbar-item">
-      <button class="icon-btn" title="Centro de ayuda">
-        <i-lucide name="help-circle" [size]="20"></i-lucide>
-      </button>
-    </div>
 
     <!-- Perfil de Usuario -->
     <div class="navbar-item user-menu" (click)="toggleUserMenu()">

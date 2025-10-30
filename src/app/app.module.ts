@@ -1,9 +1,10 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,23 +33,47 @@ import {
   ShieldCheck,
   ChartNoAxesCombined,
   Briefcase,
+  Clock,
   Calendar,
   FileText,
   UserCog,
   Scale,
+  Edit,
   CheckCircle,
   AlertTriangle,
   XCircle,
+  Lock,
+  Key,
   Info,
-  BarChart3
+  BarChart3,
+  Book,
+  BookOpen,
+  Mail,
+  Phone,
+  Send,
+  AlertCircle,
+  X,
+  Video,
+  MessageCircle,
+  Shield,
+  Database,
+  BellRing,
+  Check
 } from 'lucide-angular';
+import { ConfiguracionComponent } from './modules/configuracion/configuracion.component';
+import { AyudaComponent } from './modules/ayuda/ayuda.component';
+
+// Registrar locale español
+registerLocaleData(localeEs);
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
-    NavbarComponent,      // ← Agregado
-    SidebarComponent      // ← Agregado
+    NavbarComponent,
+    SidebarComponent,
+    ConfiguracionComponent,
+    AyudaComponent
   ],
   imports: [
     BrowserModule,
@@ -64,14 +89,31 @@ import {
       Bell,
       User,
       LogOut,
+      Lock,
+      Key,
+      Check,
+      AlertCircle,
+      X,
       Settings,
       HelpCircle,
+      Database,
+      BellRing,
       ChevronDown,
       ChevronLeft,
+      BookOpen,
+      Mail,
+      Phone,
+      Clock,
       ChevronRight,
+      Edit,
       LayoutDashboard,
       Users,
       Briefcase,
+      Book,
+      Send,
+      Video,
+      MessageCircle,
+      Shield,
       Calendar,
       ChartNoAxesCombined,
       ShieldCheck,
@@ -81,7 +123,8 @@ import {
       CheckCircle,
       AlertTriangle,
       XCircle,
-      Info
+      Info,
+      BarChart3
     })
   ],
   providers: [
@@ -89,6 +132,10 @@ import {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'es'
     }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

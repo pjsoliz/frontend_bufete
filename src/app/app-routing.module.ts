@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import { ConfiguracionComponent } from './modules/configuracion/configuracion.component';
+import { AyudaComponent } from './modules/ayuda/ayuda.component';
 
 const routes: Routes = [
   {
@@ -24,7 +26,8 @@ const routes: Routes = [
       },
       {
         path: 'citas',
-        loadChildren: () => import('./modules/citas/citas.module').then(m => m.CitasModule),canActivate: [AuthGuard]
+        loadChildren: () => import('./modules/citas/citas.module').then(m => m.CitasModule),
+        canActivate: [AuthGuard]
       },
       {
         path: 'reportes',
@@ -33,10 +36,20 @@ const routes: Routes = [
         loadChildren: () => import('./modules/reportes/reportes.module').then(m => m.ReportesModule)
       },
       {
-    path: 'usuarios',
-    loadChildren: () => import('./modules/usuarios/usuarios.module').then(m => m.UsuariosModule),
-    canActivate: [AuthGuard]
-  },
+        path: 'usuarios',
+        loadChildren: () => import('./modules/usuarios/usuarios.module').then(m => m.UsuariosModule),
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'configuracion',
+        component: ConfiguracionComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'ayuda',
+        component: AyudaComponent,
+        canActivate: [AuthGuard]
+      },
       {
         path: '',
         redirectTo: 'dashboard',

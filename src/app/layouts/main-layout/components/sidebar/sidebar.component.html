@@ -65,9 +65,9 @@
       </a>
     </div>
     
-    <!-- Sección de Configuración -->
+    <!-- Sección de Configuración y Ayuda -->
     <div class="nav-section nav-section-bottom">
-      <div class="divider-dorado" *ngIf="!isCollapsed"></div>
+      <div class="divider-dorado"></div>
 
       <!-- Configuración -->
       <a 
@@ -95,12 +95,30 @@
 
   <!-- Footer del Sidebar -->
   <div class="sidebar-footer" *ngIf="!isCollapsed">
-    <div class="footer-card">
-      <div class="footer-icon">
-        <i-lucide name="shield-check" [size]="24"></i-lucide>
+    <!-- Perfil del Usuario -->
+    <div class="footer-user" *ngIf="currentUser">
+      <div class="user-avatar">
+        <i-lucide [name]="getUserIcon()" [size]="28"></i-lucide>
       </div>
-      <p class="footer-title">Sistema Seguro</p>
-      <p class="footer-text">Protegido con cifrado SSL</p>
+      <div class="user-info">
+        <div class="user-name">{{ currentUser.nombreCompleto || 'Usuario' }}</div>
+        <div class="user-role">{{ getRolTexto() }}</div>
+      </div>
+    </div>
+
+    <!-- Botón de Logout -->
+    <button 
+      class="btn-logout" 
+      (click)="cerrarSesion()"
+      title="Cerrar Sesión">
+      <i-lucide name="log-out" [size]="20"></i-lucide>
+      <span>Cerrar Sesión</span>
+    </button>
+
+    <!-- Sistema Seguro Badge -->
+    <div class="footer-badge">
+      <i-lucide name="shield-check" [size]="16"></i-lucide>
+      <span>Sistema Seguro SSL</span>
     </div>
   </div>
 </aside>

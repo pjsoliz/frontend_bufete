@@ -1,0 +1,69 @@
+
+<div class="page-container">
+  <div class="page-header">
+    <h1>
+      <i-lucide name="help-circle" [size]="32" class="icon-title"></i-lucide>
+      Centro de Ayuda
+    </h1>
+    <p>Encuentra respuestas a tus preguntas frecuentes</p>
+  </div>
+
+  <div class="help-layout">
+    <!-- FAQs -->
+    <div class="help-section">
+      <div class="section-header">
+        <i-lucide name="book-open" [size]="28" class="section-icon"></i-lucide>
+        <h2>Preguntas Frecuentes</h2>
+      </div>
+      
+      <div class="faq-list">
+        <div class="faq-item" *ngFor="let faq of faqs">
+          <div class="faq-question">
+            <i-lucide name="help-circle" [size]="20" class="faq-icon"></i-lucide>
+            <h3>{{ faq.pregunta }}</h3>
+          </div>
+          <p class="faq-answer">{{ faq.respuesta }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contacto -->
+    <div class="help-section contact-section">
+      <div class="section-header">
+        <i-lucide name="mail" [size]="28" class="section-icon"></i-lucide>
+        <h2>Contacto de Soporte</h2>
+      </div>
+      
+      <div class="contact-card">
+        <div class="contact-item">
+          <i-lucide name="mail" [size]="24" class="contact-icon"></i-lucide>
+          <div>
+            <strong>Email:</strong>
+            <p>soporte@genesis.com</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <i-lucide name="phone" [size]="24" class="contact-icon"></i-lucide>
+          <div>
+            <strong>Teléfono:</strong>
+            <p>+591 123 456 789</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <i-lucide name="clock" [size]="24" class="contact-icon"></i-lucide>
+          <div>
+            <strong>Horario de Atención:</strong>
+            <p>Lunes a Viernes<br>9:00 AM - 6:00 PM</p>
+          </div>
+        </div>
+
+        <button class="btn-contacto" (click)="contactarSoporte()">
+          <i-lucide name="send" [size]="20"></i-lucide>
+          Contactar Soporte
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
