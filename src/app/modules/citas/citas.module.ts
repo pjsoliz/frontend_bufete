@@ -21,12 +21,13 @@ import {
   Check, 
   Pencil, 
   XCircle, 
+  Filter,
   Trash2, 
   CalendarX, 
   AlertTriangle, 
-  ArrowLeft,
   Edit, 
   PlusCircle, 
+  Book,
   ClipboardList, 
   FileText, 
   AlignLeft,
@@ -38,19 +39,28 @@ import {
   Scale,
   Landmark, 
   Hash, 
+  Eye,
   FileEdit, 
   X, 
   Save, 
+  ChevronLeft,
   AlertCircle, 
+  ArrowLeft,
+  HelpCircle,
+  File,
+  Globe,
   MapPin,
+  Edit2,
   Phone,
   Timer,          // ⭐ FALTABA
   Bell,           // ⭐ FALTABA
   PauseCircle,    // ⭐ FALTABA
   StickyNote,     // ⭐ FALTABA
   Info,           // ⭐ FALTABA
-  Inbox           // ⭐ FALTABA (por si usas historial)
+  Inbox,           // ⭐ FALTABA (por si usas historial)
+  Building2,
 } from 'lucide-angular';
+import { filter } from 'rxjs';
 
 @NgModule({
   declarations: [
@@ -75,21 +85,27 @@ import {
       User,
       Briefcase,
       CheckCircle,
+      ArrowLeft,
       Check,
+      Building2,
       Pencil,
       XCircle,
       Trash2,
       CalendarX,
+      File,
+      Book,
       // Iconos para cita-form
       AlertTriangle,
-      ArrowLeft,
       Edit,
+      ChevronLeft,
       PlusCircle,
+      Globe,
       ClipboardList,
       FileText,
       AlignLeft,
       Folder,
       Flag,
+      HelpCircle,
       Users,
       CalendarCheck,
       DollarSign,
@@ -98,11 +114,14 @@ import {
       AlertCircle,
       // Iconos para cita-detalle
       Scale,
+      Eye,
+      Edit2,
       Landmark,
       Hash,
       FileEdit,
       MapPin,
       Phone,
+      Filter,
       Timer,          // ⭐ AGREGADO
       Bell,           // ⭐ AGREGADO
       PauseCircle,    // ⭐ AGREGADO

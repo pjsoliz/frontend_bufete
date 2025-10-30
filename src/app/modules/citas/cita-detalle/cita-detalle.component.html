@@ -30,16 +30,23 @@
             <i-lucide name="calendar" class="icon-calendar-large"></i-lucide>
           </div>
           <div class="cita-info-header">
-            <h1>{{ cita.titulo }}</h1>
+            <!-- ⭐ CAMBIADO: cita.titulo → cita.motivo (campo real del backend) -->
+            <h1>{{ cita.descripcion || 'Sin descripción' }}</h1>
             <div class="badges-row">
-              <span class="badge-tipo" [ngClass]="getTipoClass(cita.tipo)">
-                {{ getTipoTexto(cita.tipo) }}
+              <!-- ⭐ CAMBIADO: cita.tipo → cita.tipoCita.nombre (relación del backend) -->
+              <span class="badge-tipo">
+                {{ cita.tipoCita ? cita.tipoCita.nombre : 'Sin tipo' }}
               </span>
               <span class="badge-estado" [ngClass]="getEstadoClass(cita.estado)">
                 {{ getEstadoTexto(cita.estado) }}
               </span>
+              <!-- ⭐ NUEVO: Badge de urgencia (campo real del backend) -->
+              <span class="badge-urgente" *ngIf="cita.urgencia === 'alta'">
+                <i-lucide name="alert-triangle" class="icon-badge"></i-lucide>
+                URGENTE
+              </span>
               <span class="badge-urgente" *ngIf="esHoy()">
-                <i-lucide name="alert-circle" class="icon-badge"></i-lucide>
+                <i-lucide name="alert-triangle" class="icon-badge"></i-lucide>
                 HOY
               </span>
             </div>
@@ -51,7 +58,7 @@
                   (click)="confirmarCita()"
                   *ngIf="cita.estado === 'pendiente'"
                   title="Confirmar">
-            <i-lucide name="check-circle" class="icon-btn"></i-lucide>
+            <i-lucide name="check" class="icon-btn"></i-lucide>
             Confirmar
           </button>
           <button class="btn-action btn-completar" 
@@ -64,20 +71,20 @@
           <button class="btn-action btn-edit" 
                   (click)="editarCita()"
                   *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'">
-            <i-lucide name="pencil" class="icon-btn"></i-lucide>
+            <i-lucide name="edit-2" class="icon-btn"></i-lucide>
             Editar
           </button>
           <button class="btn-action btn-cancelar" 
                   (click)="cancelarCita()"
                   *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
                   title="Cancelar">
-            <i-lucide name="pause-circle" class="icon-btn"></i-lucide>
+            <i-lucide name="x-circle" class="icon-btn"></i-lucide>
             Cancelar
           </button>
-          <button class="btn-action btn-delete" (click)="eliminarCita()">
+          <!--<button class="btn-action btn-delete" (click)="eliminarCita()">
             <i-lucide name="trash-2" class="icon-btn"></i-lucide>
             Eliminar
-          </button>
+          </button>-->
         </div>
       </div>
     </div>
@@ -116,15 +123,7 @@
               </div>
             </div>
 
-            <div class="fecha-hora-item">
-              <div class="fecha-hora-icon">
-                <i-lucide name="timer" class="icon-fecha"></i-lucide>
-              </div>
-              <div class="fecha-hora-info">
-                <div class="fecha-hora-label">Duración</div>
-                <div class="fecha-hora-value">{{ cita.duracion }} minutos</div>
-              </div>
-            </div>
+            <!-- ⭐ ELIMINADO: Campo "duracion" no existe en tu backend -->
           </div>
 
           <div class="alerta-tiempo" *ngIf="esPasada() && cita.estado !== 'completada' && cita.estado !== 'cancelada'">
@@ -133,7 +132,7 @@
           </div>
 
           <div class="alerta-hoy" *ngIf="esHoy() && cita.estado !== 'completada' && cita.estado !== 'cancelada'">
-            <i-lucide name="bell" class="icon-alerta"></i-lucide>
+            <i-lucide name="alert-triangle" class="icon-alerta"></i-lucide>
             Esta cita es HOY. ¡No olvides confirmarla!
           </div>
         </div>
@@ -146,55 +145,39 @@
           </h2>
           
           <div class="info-grid">
+            <!-- ⭐ CAMBIADO: cita.cliente (string) → cita.cliente.nombreCompleto (objeto del backend) -->
             <div class="info-item">
               <div class="info-label">Cliente</div>
               <div class="info-value">
                 <i-lucide name="user" class="icon"></i-lucide>
-                {{ cita.cliente }}
+                {{ cita.cliente ? cita.cliente.nombreCompleto : 'Sin cliente' }}
               </div>
             </div>
 
+            <!-- ⭐ CAMBIADO: cita.abogado (string) → cita.abogado (objeto del backend) -->
             <div class="info-item" *ngIf="cita.abogado">
               <div class="info-label">Abogado Asignado</div>
               <div class="info-value">
                 <i-lucide name="briefcase" class="icon"></i-lucide>
-                {{ cita.abogado }}
+                {{ cita.abogado.nombreCompleto }}
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Ubicación - USAR EL MÉTODO HELPER -->
-<div class="info-card" *ngIf="tieneUbicacion()">
-  <h2>
-    <i-lucide name="map-pin" class="icon-section"></i-lucide>
-    Ubicación
-  </h2>
-  <div class="ubicacion-content">
-    <div class="ubicacion-icon">
-      <i-lucide name="map-pin" class="icon-ubicacion"></i-lucide>
-    </div>
-    <div class="ubicacion-texto">{{ cita!.ubicacion }}</div>
-  </div>
-</div>
+        <!-- ⭐ ELIMINADO: Sección "Ubicación" - No existe en tu backend -->
 
-<!-- Descripción - USAR EL MÉTODO HELPER -->
-<div class="info-card" *ngIf="tieneDescripcion()">
-  <h2>
-    <i-lucide name="file-text" class="icon-section"></i-lucide>
-    Descripción
-  </h2>
-  <p class="descripcion">{{ cita!.descripcion }}</p>
-</div>
+        <!-- ⭐ ELIMINADO: Sección "Descripción" - No existe en tu backend -->
 
-<!-- Notas - USAR EL MÉTODO HELPER -->
-<div class="info-card" *ngIf="tieneNotas()">
-  <h2>
-    <i-lucide name="sticky-note" class="icon-section"></i-lucide>
-    Notas Adicionales
-  </h2>
-  <p class="notas">{{ cita!.notas }}</p>
-</div>
+        <!-- Notas - CAMBIADO para usar notasAdicionales del backend -->
+        <div class="info-card" *ngIf="tieneNotas()">
+          <h2>
+            <i-lucide name="file-text" class="icon-section"></i-lucide>
+            Notas Adicionales
+          </h2>
+          <!-- ⭐ CAMBIADO: cita.notas → cita.notasAdicionales -->
+          <p class="notas">{{ cita.notasAdicionales }}</p>
+        </div>
 
       </div>
 
@@ -204,14 +187,14 @@
         <!-- Estado de la Cita -->
         <div class="estado-card">
           <h2>
-            <i-lucide name="activity" class="icon-section"></i-lucide>
+            <i-lucide name="briefcase" class="icon-section"></i-lucide>
             Estado de la Cita
           </h2>
           
           <div class="estado-visual">
             <div class="estado-icon-grande" [ngClass]="getEstadoClass(cita.estado)">
               <i-lucide *ngIf="cita.estado === 'pendiente'" name="clock" class="icon-estado"></i-lucide>
-              <i-lucide *ngIf="cita.estado === 'confirmada'" name="check-circle" class="icon-estado"></i-lucide>
+              <i-lucide *ngIf="cita.estado === 'confirmada'" name="check" class="icon-estado"></i-lucide>
               <i-lucide *ngIf="cita.estado === 'completada'" name="check" class="icon-estado"></i-lucide>
               <i-lucide *ngIf="cita.estado === 'cancelada'" name="x-circle" class="icon-estado"></i-lucide>
             </div>
@@ -225,7 +208,7 @@
             <button class="accion-rapida confirmar" 
                     (click)="confirmarCita()"
                     *ngIf="cita.estado === 'pendiente'">
-              <i-lucide name="check-circle" class="accion-icon"></i-lucide>
+              <i-lucide name="check" class="accion-icon"></i-lucide>
               <span class="accion-texto">Confirmar Cita</span>
             </button>
 
@@ -244,23 +227,57 @@
         <!-- Información Adicional -->
         <div class="info-adicional-card">
           <h2>
-            <i-lucide name="info" class="icon-section"></i-lucide>
+            <i-lucide name="folder" class="icon-section"></i-lucide>
             Información Adicional
           </h2>
           
+          <!-- ⭐ CAMBIADO: Mostrar tipoCita del backend -->
           <div class="info-item-simple">
             <div class="info-simple-label">Tipo de Cita</div>
             <div class="info-simple-value">
-              <span class="badge-tipo-small" [ngClass]="getTipoClass(cita.tipo)">
-                {{ getTipoTexto(cita.tipo) }}
+              {{ cita.tipoCita ? cita.tipoCita.nombre : 'Sin tipo' }}
+            </div>
+          </div>
+
+          <!-- ⭐ NUEVO: Mostrar areaDerecho del backend -->
+          <div class="info-item-simple">
+            <div class="info-simple-label">Área de Derecho</div>
+            <div class="info-simple-value">
+              {{ cita.areaDerecho ? cita.areaDerecho.nombre : 'Sin área' }}
+            </div>
+          </div>
+
+          <!-- ⭐ NUEVO: Mostrar tipoCaso del backend si existe -->
+          <div class="info-item-simple" *ngIf="cita.tipoCaso">
+            <div class="info-simple-label">Tipo de Caso</div>
+            <div class="info-simple-value">
+              {{ cita.tipoCaso.nombre }}
+            </div>
+          </div>
+
+          <!-- ⭐ NUEVO: Mostrar urgencia del backend -->
+          <div class="info-item-simple">
+            <div class="info-simple-label">Urgencia</div>
+            <div class="info-simple-value">
+              <span [ngClass]="{
+                'texto-rojo': cita.urgencia === 'alta',
+                'texto-naranja': cita.urgencia === 'media',
+                'texto-verde': cita.urgencia === 'baja'
+              }">
+                {{ cita.urgencia === 'alta' ? 'Alta' : cita.urgencia === 'media' ? 'Media' : 'Baja' }}
               </span>
             </div>
           </div>
 
+          <!-- ⭐ NUEVO: Mostrar origen del backend -->
           <div class="info-item-simple">
-            <div class="info-simple-label">Duración Estimada</div>
-            <div class="info-simple-value">{{ cita.duracion }} minutos</div>
+            <div class="info-simple-label">Origen</div>
+            <div class="info-simple-value">
+              {{ cita.origen === 'chatbot' ? 'Chatbot' : cita.origen === 'panel_web' ? 'Panel Web' : 'Presencial' }}
+            </div>
           </div>
+
+          <!-- ⭐ ELIMINADO: Campo "duracion" no existe en tu backend -->
 
           <div class="info-item-simple" *ngIf="esPasada()">
             <div class="info-simple-label">Estado</div>
@@ -273,7 +290,7 @@
           <div class="info-item-simple" *ngIf="esHoy()">
             <div class="info-simple-label">Importante</div>
             <div class="info-simple-value texto-naranja">
-              <i-lucide name="bell" class="icon-small"></i-lucide>
+              <i-lucide name="alert-triangle" class="icon-small"></i-lucide>
               Cita programada para HOY
             </div>
           </div>

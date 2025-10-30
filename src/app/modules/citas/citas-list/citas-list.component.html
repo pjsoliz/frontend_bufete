@@ -10,9 +10,52 @@
     </div>
     <div class="header-right">
       <button class="btn-primary" (click)="nuevaCita()">
-        <i-lucide name="plus"  [size]="20" class="icon-btn"></i-lucide>
+        <i-lucide name="plus" [size]="20" class="icon-btn"></i-lucide>
         Nueva Cita
       </button>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i-lucide name="calendar" [size]="24"></i-lucide>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Total Citas</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-pendiente">
+      <div class="stat-icon">
+        <i-lucide name="clock" [size]="24"></i-lucide>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.pendientes }}</div>
+        <div class="stat-label">Pendientes</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-confirmada">
+      <div class="stat-icon">
+        <i-lucide name="check-circle" [size]="24"></i-lucide>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.confirmadas }}</div>
+        <div class="stat-label">Confirmadas</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-completada">
+      <div class="stat-icon">
+        <i-lucide name="check" [size]="24"></i-lucide>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.completadas }}</div>
+        <div class="stat-label">Completadas</div>
+      </div>
     </div>
   </div>
 
@@ -26,19 +69,19 @@
         </label>
         <input
           type="text"
-          placeholder="Buscar por cliente, abogado o tipo..."
+          placeholder="Buscar por cliente, abogado o motivo..."
           [(ngModel)]="filtroBusqueda"
-          (input)="onFiltroBusquedaChange($event)">
+          (input)="onFiltroChange()">
       </div>
 
       <div class="filtro-item">
         <label>
-          <i-lucide name="activity" [size]="17"  class="icon-label"></i-lucide>
+          <i-lucide name="filter" [size]="17" class="icon-label"></i-lucide>
           Estado
         </label>
-        <select (change)="onFiltroEstadoChange($event)">
-          <option value="todas">Todas</option>
-          <option value="programada">Programada</option>
+        <select [(ngModel)]="filtroEstado" (change)="onFiltroChange()">
+          <option value="todos">Todas</option>
+          <option value="pendiente">Pendiente</option>
           <option value="confirmada">Confirmada</option>
           <option value="completada">Completada</option>
           <option value="cancelada">Cancelada</option>
@@ -53,7 +96,20 @@
         <input
           type="date"
           [(ngModel)]="filtroFecha"
-          (change)="onFiltroFechaChange($event)">
+          (change)="onFiltroChange()">
+      </div>
+
+      <div class="filtro-item">
+        <label>
+          <i-lucide name="alert-triangle" [size]="17" class="icon-label"></i-lucide>
+          Urgencia
+        </label>
+        <select [(ngModel)]="filtroUrgencia" (change)="onFiltroChange()">
+          <option value="todos">Todas</option>
+          <option value="alta">Alta</option>
+          <option value="media">Media</option>
+          <option value="baja">Baja</option>
+        </select>
       </div>
     </div>
   </div>
@@ -75,11 +131,12 @@
     <!-- Sin resultados -->
     <div *ngIf="citasFiltradas.length === 0" class="sin-resultados">
       <div class="sin-resultados-icon">
-        <i-lucide name="calendar-x" class="icon-empty"></i-lucide>
+        <i-lucide name="calendar" [size]="80"></i-lucide>
       </div>
       <h3>No se encontraron citas</h3>
       <p>Intenta ajustar los filtros o crea una nueva cita</p>
       <button class="btn-primary" (click)="nuevaCita()">
+        <i-lucide name="plus" [size]="20"></i-lucide>
         Nueva Cita
       </button>
     </div>
@@ -92,8 +149,9 @@
             <th>Fecha y Hora</th>
             <th>Cliente</th>
             <th>Abogado</th>
-            <th>Tipo</th>
-            <th>Duración</th>
+            <th>Tipo de Cita</th>
+            <th>Área de Derecho</th>
+            <th>Urgencia</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -101,8 +159,10 @@
         <tbody>
           <tr *ngFor="let cita of citasFiltradas"
               class="cita-row"
+              [class.cita-proxima]="esCitaProxima(cita.fecha, cita.hora)"
               (click)="verDetalle(cita.id)">
 
+            <!-- Fecha y Hora -->
             <td>
               <div class="fecha-info">
                 <div class="fecha">{{ formatearFecha(cita.fecha) }}</div>
@@ -113,48 +173,68 @@
               </div>
             </td>
 
+            <!-- Cliente -->
             <td>
               <div class="cliente-info">
                 <i-lucide name="user" [size]="16" class="icon-inline"></i-lucide>
-                <span>{{ cita.cliente }}</span>
+                <span>{{ cita.cliente.nombreCompleto }}</span>
               </div>
             </td>
 
+            <!-- Abogado -->
             <td>
               <div class="abogado-info">
                 <i-lucide name="briefcase" [size]="16" class="icon-inline"></i-lucide>
-                <span>{{ cita.abogado }}</span>
+                <span>{{ cita.abogado.nombreCompleto }}</span>
               </div>
             </td>
 
+            <!-- Tipo de Cita -->
             <td>
-              <span class="tipo-badge">{{ cita.tipo }}</span>
+              <span class="tipo-badge">{{ cita.tipoCita.nombre }}</span>
             </td>
 
+            <!-- Área de Derecho -->
             <td>
-              <div class="abogado-info">
-                <i-lucide name="clock" [size]="16" class="icon-inline"></i-lucide>
-                <span class="duracion">{{ cita.duracion }} min</span>
-              </div>
+              <span class="area-badge">{{ cita.areaDerecho.nombre }}</span>
             </td>
 
+            <!-- Urgencia -->
             <td>
-              <span class="estado-badge" [class]="getEstadoClass(cita.estado)">
+              <span class="urgencia-badge" [ngClass]="getUrgenciaClass(cita.urgencia)">
+                {{ getUrgenciaTexto(cita.urgencia) }}
+              </span>
+            </td>
+
+            <!-- Estado -->
+            <td>
+              <span class="estado-badge" [ngClass]="getEstadoClass(cita.estado)">
                 {{ getEstadoTexto(cita.estado) }}
               </span>
             </td>
 
-            <td class="acciones-cell">
+            <!-- Acciones -->
+            <td class="acciones-cell" (click)="$event.stopPropagation()">
               <div class="acciones-buttons">
 
+                <!-- Botón Ver -->
                 <button
-                  *ngIf="cita.estado === 'confirmada'"
+                  class="btn-accion btn-ver"
+                  (click)="verDetalle(cita.id)"
+                  title="Ver detalle">
+                  <i-lucide name="eye" [size]="16" class="icon-accion"></i-lucide>
+                </button>
+
+                <!-- Botón Confirmar (solo si está pendiente) -->
+                <button
+                  *ngIf="cita.estado === 'pendiente'"
                   class="btn-accion btn-confirmar"
                   (click)="confirmarCita(cita.id, $event)"
                   title="Confirmar">
                   <i-lucide name="check-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
+                <!-- Botón Completar (solo si está confirmada) -->
                 <button
                   *ngIf="cita.estado === 'confirmada'"
                   class="btn-accion btn-completar"
@@ -163,27 +243,31 @@
                   <i-lucide name="check" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
+                <!-- Botón Editar (solo si no está completada o cancelada) -->
                 <button
+                  *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
                   class="btn-accion btn-editar"
-                  (click)="editarCita(cita.id); $event.stopPropagation()"
+                  (click)="editarCita(cita.id, $event)"
                   title="Editar">
-                  <i-lucide name="pencil" [size]="16" class="icon-accion"></i-lucide>
+                  <i-lucide name="edit-2" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
+                <!-- Botón Cancelar (solo si no está completada o cancelada) -->
                 <button
-                  *ngIf="cita.estado !== 'cancelada' && cita.estado !== 'completada'"
+                  *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
                   class="btn-accion btn-cancelar"
                   (click)="cancelarCita(cita.id, $event)"
                   title="Cancelar">
                   <i-lucide name="x-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
+                <!-- Botón Eliminar
                 <button
                   class="btn-accion btn-eliminar"
                   (click)="eliminarCita(cita.id, $event)"
                   title="Eliminar">
                   <i-lucide name="trash-2" [size]="16" class="icon-accion"></i-lucide>
-                </button>
+                </button>-->
               </div>
             </td>
           </tr>

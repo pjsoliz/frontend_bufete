@@ -28,6 +28,123 @@
   --color-borde: #dee2e6;
 }
 
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-left: 4px solid;
+  transition: all 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-texto-principal);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--color-texto-principal);
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+/* Colores específicos por tipo */
+.stat-card:first-child .stat-icon {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.stat-card.stat-pendiente .stat-icon {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.stat-card.stat-confirmada .stat-icon {
+  background: #dbeafe;
+  color: #3b82f6;
+}
+
+.stat-card.stat-completada .stat-icon {
+  background: #d1fae5;
+  color: #10b981;
+}
+
+/* Badges de urgencia */
+.urgencia-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.urgencia-alta {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.urgencia-media {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.urgencia-baja {
+  background: #d1fae5;
+  color: #10b981;
+}
+
+/* Badges de área y tipo */
+.tipo-badge, .area-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* Cita próxima (resaltado) */
+.cita-row.cita-proxima {
+  background: #fffbeb !important;
+  border-left: 4px solid #f59e0b;
+}
+
 /* ============================================
    CONTENEDOR PRINCIPAL
    ============================================ */

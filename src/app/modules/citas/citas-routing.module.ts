@@ -10,25 +10,25 @@ const routes: Routes = [
     path: '',
     component: CitasListComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
+    data: { roles: ['admin', 'abogado', 'asistente_legal'] }
   },
   {
     path: 'nueva',
     component: CitaFormComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
+    data: { roles: ['admin', 'abogado', 'asistente_legal'] }
   },
   {
     path: 'editar/:id',
     component: CitaFormComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
+    data: { roles: ['admin', 'abogado', 'asistente_legal'] }
   },
   {
     path: ':id',
     component: CitaDetalleComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['administrador', 'abogado', 'asistente_legal'] }
+    data: { roles: ['admin', 'abogado', 'asistente_legal'] }
   }
 ];
 

@@ -109,31 +109,27 @@
 
 .btn-back {
   padding: 0.5rem 1rem;
-  background: var(--color-blanco);
-  border: 2px solid var(--color-borde);
-  border-radius: 8px;
+  background: #F8F9FA;
+  border: 2px solid #DEE2E6;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.95rem;
-  color: var(--color-azul-marino);
+  color: #003366;
   transition: all 0.3s;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.icon-back {
-  width: 18px;
-  height: 18px;
-}
-
 .btn-back:hover {
-  background: var(--color-azul-marino);
-  color: var(--color-blanco);
-  border-color: var(--color-azul-marino);
+  background: #003366;
+  color: #FFFFFF;
+  border-color: #003366;
   transform: translateX(-4px);
 }
+
 
 .header-main {
   background: var(--color-blanco);

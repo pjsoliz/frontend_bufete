@@ -1,162 +1,172 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+
+// Interfaces que coinciden con el backend
+export interface Cliente {
+  id: string;
+  nombreCompleto: string;
+}
+
+export interface Abogado {
+  id: string;
+  nombreCompleto: string;
+}
+
+export interface AreaDerecho {
+  id: string;
+  nombre: string;
+}
+
+export interface TipoCita {
+  id: string;
+  nombre: string;
+}
+
+export interface TipoCaso {
+  id: string;
+  nombre: string;
+}
+
+export interface Oficina {
+  id: string;
+  nombre: string;
+  direccion?: string;
+  telefono?: string;
+}
 
 export interface Cita {
-  id: number;
-  titulo: string;  // ← AGREGAR ESTA PROPIEDAD
+  id: string;
+  fecha: Date;
+  hora: string;
+  cliente: Cliente;
+  abogado: Abogado;
+  areaDerecho: AreaDerecho;
+  tipoCita: TipoCita;
+  tipoCaso: TipoCaso;
+  oficina: Oficina;
+  descripcion?: string;
+  notasAdicionales?: string;
+  estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada' | 'no_asistio';
+  urgencia: 'alta' | 'media' | 'baja';
+  origen: 'chatbot' | 'panel_web' | 'presencial';
+  telefonoContacto?: string;
+  recordatorioEnviado: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Interface para crear/actualizar citas
+export interface CitaCreate {
   fecha: string;
   hora: string;
-  duracion: number;
-  tipo: 'consulta' | 'audiencia' | 'reunion' | 'firma' | 'otro';
-  cliente: string;
-  abogado?: string;
-  estado: 'pendiente' | 'confirmada' | 'completada' |'cancelada';
-  ubicacion?: string;  // ← AGREGAR ESTA PROPIEDAD
+  clienteId: string;
+  abogadoId: string;
+  areaDerechoId: string;
+  tipoCitaId: string;
+  tipoCasoId: string;
+  oficinaId: string;
   descripcion?: string;
-  notas?: string;
+  notasAdicionales?: string;
+  urgencia: 'alta' | 'media' | 'baja';
+  origen: 'chatbot' | 'panel_web' | 'presencial';
+  telefonoContacto?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class CitasService {
+  private apiUrl = `${environment.apiUrl}/citas`;
 
-  // Datos mock
-  private citasMock: Cita[] = [
-    {
-      id: 1,
-      titulo: 'Consulta Inicial - Caso Laboral',
-      fecha: '2025-10-20',
-      hora: '09:00',
-      duracion: 60,
-      tipo: 'consulta',
-      cliente: 'Juan Pérez',
-      abogado: 'Dr. Carlos Méndez',
-      estado: 'confirmada',
-      ubicacion: 'Oficina Principal - Sala 1',
-      descripcion: 'Primera consulta sobre caso de despido injustificado',
-      notas: 'Cliente muy puntual, traer documentación laboral'
-    },
-    {
-      id: 2,
-      titulo: 'Audiencia de Divorcio',
-      fecha: '2025-10-22',
-      hora: '10:30',
-      duracion: 120,
-      tipo: 'audiencia',
-      cliente: 'María López',
-      abogado: 'Dra. Ana Torres',
-      estado: 'confirmada',
-      ubicacion: 'Juzgado de Familia N°5',
-      descripcion: 'Audiencia de divorcio contencioso',
-      notas: 'Llevar todos los documentos de bienes'
-    },
-    {
-      id: 3,
-      titulo: 'Reunión con Cliente - Caso Civil',
-      fecha: '2025-10-18',
-      hora: '14:00',
-      duracion: 45,
-      tipo: 'reunion',
-      cliente: 'Pedro González',
-      abogado: 'Dr. Luis Ramírez',
-      estado: 'cancelada',
-      ubicacion: 'Oficina Principal - Sala 2',
-      descripcion: 'Revisión de avances del caso de daños y perjuicios',
-      notas: 'Reunión completada exitosamente'
-    },
-    {
-      id: 4,
-      titulo: 'Firma de Documentos',
-      fecha: '2025-10-25',
-      hora: '11:00',
-      duracion: 30,
-      tipo: 'firma',
-      cliente: 'Laura Martínez',
-      abogado: 'Dra. María González',
-      estado: 'pendiente',
-      ubicacion: 'Oficina Principal - Sala 3',
-      descripcion: 'Firma de documentos de pensión alimenticia',
-      notas: 'Confirmar asistencia 24h antes'
-    },
-    {
-      id: 5,
-      titulo: 'Consulta Legal - Defensa Penal',
-      fecha: '2025-10-17',
-      hora: '15:30',
-      duracion: 90,
-      tipo: 'consulta',
-      cliente: 'Roberto Silva',
-      abogado: 'Dr. Luis Ramírez',
-      estado: 'completada',
-      ubicacion: 'Oficina Principal - Sala 1',
-      descripcion: 'Consulta sobre estrategia de defensa',
-      notas: 'Cliente satisfecho con la estrategia propuesta'
-    },
-    {
-      id: 6,
-      titulo: 'Audiencia Preliminar',
-      fecha: '2025-10-28',
-      hora: '09:30',
-      duracion: 60,
-      tipo: 'audiencia',
-      cliente: 'Carmen Ruiz',
-      abogado: 'Dr. Carlos Méndez',
-      estado: 'pendiente',
-      ubicacion: 'Juzgado Laboral N°3',
-      descripcion: 'Audiencia preliminar caso laboral',
-      notas: 'Preparar argumentos principales'
-    },
-  ];
+  constructor(private http: HttpClient) {}
 
-  constructor() {}
+  // ⭐ Helper para construir nombreCompleto
+  private construirNombreCompleto(obj: any): string {
+    if (!obj) return 'Sin nombre';
+    if (obj.nombreCompleto) return obj.nombreCompleto;
+    if (obj.nombre && obj.apellido) return `${obj.nombre} ${obj.apellido}`;
+    return obj.nombre || obj.apellido || 'Sin nombre';
+  }
+
+  // ⭐ Transformar cita para agregar nombreCompleto
+  private transformarCita(cita: any): Cita {
+    return {
+      ...cita,
+      abogado: cita.abogado ? {
+        ...cita.abogado,
+        nombreCompleto: this.construirNombreCompleto(cita.abogado)
+      } : { id: '', nombreCompleto: 'Sin abogado' },
+      cliente: cita.cliente ? {
+        ...cita.cliente,
+        nombreCompleto: this.construirNombreCompleto(cita.cliente)
+      } : { id: '', nombreCompleto: 'Sin cliente' }
+    };
+  }
 
   getCitas(): Observable<Cita[]> {
-    return of(this.citasMock).pipe(delay(500));
+    return this.http.get<any[]>(this.apiUrl).pipe(
+      map(citas => citas.map(cita => this.transformarCita(cita)))
+    );
   }
 
-  getCitaById(id: number): Observable<Cita | undefined> {
-    const cita = this.citasMock.find(c => c.id === id);
-    return of(cita).pipe(delay(300));
+  getCitaById(id: string): Observable<Cita> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map(cita => this.transformarCita(cita))
+    );
   }
 
-  createCita(cita: Omit<Cita, 'id'>): Observable<Cita> {
-    const newCita: Cita = {
-      ...cita,
-      id: Math.max(...this.citasMock.map(c => c.id)) + 1
-    };
-    this.citasMock.push(newCita);
-    return of(newCita).pipe(delay(500));
+  createCita(cita: CitaCreate): Observable<Cita> {
+    return this.http.post<any>(this.apiUrl, cita).pipe(
+      map(cita => this.transformarCita(cita))
+    );
   }
 
-  updateCita(id: number, cita: Partial<Cita>): Observable<Cita> {
-    const index = this.citasMock.findIndex(c => c.id === id);
-    if (index !== -1) {
-      this.citasMock[index] = { ...this.citasMock[index], ...cita };
-      return of(this.citasMock[index]).pipe(delay(500));
-    }
-    throw new Error('Cita no encontrada');
+  updateCita(id: string, cita: Partial<CitaCreate>): Observable<Cita> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, cita).pipe(
+      map(cita => this.transformarCita(cita))
+    );
   }
 
-  deleteCita(id: number): Observable<boolean> {
-    const index = this.citasMock.findIndex(c => c.id === id);
-    if (index !== -1) {
-      this.citasMock.splice(index, 1);
-      return of(true).pipe(delay(500));
-    }
-    return of(false).pipe(delay(500));
+  deleteCita(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  cancelarCita(id: number): Observable<Cita> {
-    return this.updateCita(id, { estado: 'cancelada' });
+  cambiarEstado(id: string, estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada' | 'no_asistio'): Observable<Cita> {
+    return this.http.patch<any>(`${this.apiUrl}/${id}/estado`, { estado }).pipe(
+      map(cita => this.transformarCita(cita))
+    );
   }
 
-  confirmarCita(id: number): Observable<Cita> {
-    return this.updateCita(id, { estado: 'confirmada' });
+  confirmarCita(id: string): Observable<Cita> {
+    return this.cambiarEstado(id, 'confirmada');
   }
 
-  completarCita(id: number): Observable<Cita> {
-    return this.updateCita(id, { estado: 'completada' });
+  cancelarCita(id: string): Observable<Cita> {
+    return this.cambiarEstado(id, 'cancelada');
+  }
+
+  completarCita(id: string): Observable<Cita> {
+    return this.cambiarEstado(id, 'completada');
+  }
+
+  getCitasPorCliente(clienteId: string): Observable<Cita[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/cliente/${clienteId}`).pipe(
+      map(citas => citas.map(cita => this.transformarCita(cita)))
+    );
+  }
+
+  getCitasPorAbogado(abogadoId: string): Observable<Cita[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/abogado/${abogadoId}`).pipe(
+      map(citas => citas.map(cita => this.transformarCita(cita)))
+    );
+  }
+
+  getCitasPorFecha(fecha: string): Observable<Cita[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/fecha/${fecha}`).pipe(
+      map(citas => citas.map(cita => this.transformarCita(cita)))
+    );
   }
 }

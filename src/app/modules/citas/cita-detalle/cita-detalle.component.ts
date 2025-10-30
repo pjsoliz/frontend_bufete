@@ -22,31 +22,26 @@ export class CitaDetalleComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.cargarCita(parseInt(id));
+      this.cargarCita(id); // ⭐ CAMBIADO: de parseInt(id) a solo id (es UUID string)
     }
   }
 
-  cargarCita(id: number): void {
+  cargarCita(id: string): void { // ⭐ CAMBIADO: de number a string
     this.loading = true;
     this.errorMessage = '';
     
     this.citasService.getCitaById(id).subscribe({
       next: (cita) => {
         if (cita) {
-          // ⭐ Asegurar que las propiedades existan con valores por defecto
-          this.cita = {
-            ...cita,
-            ubicacion: cita.ubicacion || 'No especificada',
-            descripcion: cita.descripcion || 'Sin descripción',
-            notas: cita.notas || 'Sin notas adicionales'
-          };
-          console.log('Cita cargada:', this.cita); // Para debug
+          // ⭐ CAMBIADO: Eliminar asignación de valores por defecto ficticios
+          // Solo asignar la cita tal como viene del backend
+          this.cita = cita;
+          console.log('Cita cargada:', this.cita);
         } else {
           this.errorMessage = 'Cita no encontrada';
         }
         this.loading = false;
         
-        // ⭐ CRÍTICO: Forzar detección de cambios con setTimeout
         setTimeout(() => {
           this.cdr.detectChanges();
         }, 0);
@@ -74,23 +69,24 @@ export class CitaDetalleComponent implements OnInit {
   }
 
   eliminarCita(): void {
-    if (this.cita && confirm('¿Está seguro de eliminar esta cita?')) {
-      this.citasService.deleteCita(this.cita.id).subscribe({
-        next: () => {
-          alert('Cita eliminada exitosamente');
-          this.router.navigate(['/citas']);
-        },
-        error: (error) => {
-          console.error('Error al eliminar cita:', error);
-          alert('Error al eliminar la cita');
-        }
-      });
-    }
+  if (this.cita && confirm('¿Está seguro de cancelar esta cita?')) {  // Cambiar texto
+    this.citasService.deleteCita(this.cita.id).subscribe({
+      next: () => {
+        alert('Cita cancelada exitosamente');  // Cambiar texto
+        this.router.navigate(['/citas']);
+      },
+      error: (error) => {
+        console.error('Error al cancelar cita:', error);  // Cambiar texto
+        alert('Error al cancelar la cita');  // Cambiar texto
+      }
+    });
   }
+}
 
   confirmarCita(): void {
     if (this.cita) {
-      this.citasService.updateCita(this.cita.id, { estado: 'confirmada' }).subscribe({
+      // Usar el método específico del service en lugar de updateCita
+      this.citasService.confirmarCita(this.cita.id).subscribe({
         next: (citaActualizada) => {
           this.cita = citaActualizada;
           setTimeout(() => {
@@ -108,7 +104,8 @@ export class CitaDetalleComponent implements OnInit {
 
   cancelarCita(): void {
     if (this.cita && confirm('¿Está seguro de cancelar esta cita?')) {
-      this.citasService.updateCita(this.cita.id, { estado: 'cancelada' }).subscribe({
+      // Usar el método específico del service
+      this.citasService.cancelarCita(this.cita.id).subscribe({
         next: (citaActualizada) => {
           this.cita = citaActualizada;
           setTimeout(() => {
@@ -126,7 +123,8 @@ export class CitaDetalleComponent implements OnInit {
 
   completarCita(): void {
     if (this.cita && confirm('¿Marcar esta cita como completada?')) {
-      this.citasService.updateCita(this.cita.id, { estado: 'completada' }).subscribe({
+      // Usar el método específico del service
+      this.citasService.completarCita(this.cita.id).subscribe({
         next: (citaActualizada) => {
           this.cita = citaActualizada;
           setTimeout(() => {
@@ -142,17 +140,20 @@ export class CitaDetalleComponent implements OnInit {
     }
   }
 
-  // ⭐ MÉTODOS HELPER PARA VERIFICAR EXISTENCIA DE DATOS
+  // ⭐ MÉTODOS HELPER - ADAPTADOS A TU BACKEND REAL
   tieneUbicacion(): boolean {
-    return !!(this.cita?.ubicacion && this.cita.ubicacion.trim() !== '' && this.cita.ubicacion !== 'No especificada');
+    // ⭐ Tu backend NO tiene campo "ubicacion", siempre retornar false
+    return false;
   }
 
   tieneDescripcion(): boolean {
-    return !!(this.cita?.descripcion && this.cita.descripcion.trim() !== '' && this.cita.descripcion !== 'Sin descripción');
+    // ⭐ Tu backend NO tiene campo "descripcion", siempre retornar false
+    return false;
   }
 
   tieneNotas(): boolean {
-    return !!(this.cita?.notas && this.cita.notas.trim() !== '' && this.cita.notas !== 'Sin notas adicionales');
+    // ⭐ CAMBIADO: Tu backend usa "notasAdicionales" no "notas"
+    return !!(this.cita?.notasAdicionales && this.cita.notasAdicionales.trim() !== '');
   }
 
   getEstadoClass(estado: string): string {
@@ -197,8 +198,9 @@ export class CitaDetalleComponent implements OnInit {
     return textos[tipo] || tipo;
   }
 
-  formatearFecha(fecha: string): string {
-    const fechaObj = new Date(fecha + 'T00:00:00');
+  formatearFecha(fecha: Date): string {
+    // El backend envía Date, convertir a objeto Date de JS
+    const fechaObj = new Date(fecha);
     return fechaObj.toLocaleDateString('es-ES', {
       weekday: 'long',
       year: 'numeric',
@@ -214,14 +216,17 @@ export class CitaDetalleComponent implements OnInit {
   esPasada(): boolean {
     if (!this.cita) return false;
     const ahora = new Date();
-    const fechaCita = new Date(this.cita.fecha + 'T' + this.cita.hora);
+    // El backend envía Date, combinarlo con la hora
+    const fechaCita = new Date(this.cita.fecha);
+    const [horas, minutos] = this.cita.hora.split(':');
+    fechaCita.setHours(parseInt(horas), parseInt(minutos), 0, 0);
     return fechaCita < ahora;
   }
 
   esHoy(): boolean {
     if (!this.cita) return false;
     const hoy = new Date();
-    const fechaCita = new Date(this.cita.fecha + 'T00:00:00');
+    const fechaCita = new Date(this.cita.fecha);
     return hoy.toDateString() === fechaCita.toDateString();
   }
 }
