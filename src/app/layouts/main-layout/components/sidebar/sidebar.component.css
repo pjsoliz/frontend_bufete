@@ -640,3 +640,17 @@
     padding: 8px;
   }
 }
+
+/* ===== FIX: Espacio para el botón de colapsar ===== */
+.sidebar-nav {
+  padding-top: 4.5rem; /* ✅ Espacio para que el botón no tape el Dashboard */
+}
+
+.sidebar.collapsed .sidebar-nav {
+  padding-top: 1rem; /* ✅ Menos espacio cuando está colapsado */
+}
+
+/* ===== ELIMINAR estilos de nav-section-title (ya no se usa) ===== */
+.nav-section-title {
+  display: none; /* ✅ Por si acaso quedó en el CSS */
+}

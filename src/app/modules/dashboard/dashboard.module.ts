@@ -13,13 +13,11 @@ import {
 
 // Componentes
 import { DashboardAdminComponent } from './admin-dashboard/admin-dashboard.component';
-import { AbogadoDashboardComponent } from './abogado-dashboard/abogado-dashboard.component';
 import { AsistenteDashboardComponent } from './asistente-dashboard/asistente-dashboard.component';
 
 @NgModule({
   declarations: [
     DashboardAdminComponent,
-    AbogadoDashboardComponent,
     AsistenteDashboardComponent
   ],
   imports: [

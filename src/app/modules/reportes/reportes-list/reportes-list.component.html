@@ -1,53 +1,294 @@
-<div class="reportes-container">
-  <div class="reportes-header">
-    <h1>📊 Centro de Reportes</h1>
-    <p>Visualiza estadísticas y análisis del sistema</p>
-  </div>
+<div class="reportes-dashboard">
+  <!-- ========================================
+       HEADER CON FILTROS
+       ======================================== -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <i-lucide name="bar-chart-3" [size]="32"></i-lucide>
+      </div>
+      <div class="header-text">
+        <h1>Centro de Reportes y Analíticas</h1>
+        <p>Análisis completo del sistema de gestión de citas</p>
+      </div>
+    </div>
 
-  <div class="reportes-grid">
-    <div *ngFor="let reporte of reportes"
-         class="reporte-card"
-         [class]="'reporte-card-' + reporte.color"
-         (click)="navegarReporte(reporte.ruta)">
-
-      <div class="reporte-icon">{{ reporte.icon }}</div>
-
-      <div class="reporte-content">
-        <h3>{{ reporte.titulo }}</h3>
-        <p>{{ reporte.descripcion }}</p>
+    <div class="header-filters">
+      <div class="filter-group">
+        <label>
+          <i-lucide name="calendar" [size]="18"></i-lucide>
+          Mes
+        </label>
+        <select [(ngModel)]="mesSeleccionado" (change)="cargarDatos()">
+          <option *ngFor="let mes of meses" [value]="mes.valor">
+            {{ mes.nombre }}
+          </option>
+        </select>
       </div>
 
-      <div class="reporte-action">
-        <button class="btn-ver-reporte">
-          Ver Reporte →
-        </button>
+      <div class="filter-group">
+        <label>
+          <i-lucide name="calendar" [size]="18"></i-lucide>
+          Año
+        </label>
+        <select [(ngModel)]="anioSeleccionado" (change)="cargarDatos()">
+          <option *ngFor="let anio of anios" [value]="anio">
+            {{ anio }}
+          </option>
+        </select>
       </div>
+
+      <button class="btn-refresh" (click)="cargarDatos()" [disabled]="loading">
+        <i-lucide name="refresh-cw" [size]="18" [class.spinning]="loading"></i-lucide>
+        Actualizar
+      </button>
     </div>
   </div>
 
-  <div class="quick-stats">
-    <h2>Estadísticas Rápidas</h2>
-    <div class="stats-grid">
-      <div class="stat-item">
-        <span class="stat-icon">📁</span>
-        <span class="stat-value">128</span>
-        <span class="stat-label">Casos Activos</span>
+  <!-- ========================================
+       LOADING STATE
+       ======================================== -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando reportes...</p>
+  </div>
+
+  <!-- ========================================
+       DASHBOARD CONTENT
+       ======================================== -->
+  <div *ngIf="!loading" class="dashboard-content">
+
+    <!-- MÉTRICAS RÁPIDAS -->
+    <div class="metrics-grid">
+      <div class="metric-card metric-primary">
+        <div class="metric-icon">
+          <i-lucide name="calendar-check" [size]="32"></i-lucide>
+        </div>
+        <div class="metric-data">
+          <span class="metric-value">{{ estadisticas?.totalCitas || 0 }}</span>
+          <span class="metric-label">Total de Citas</span>
+        </div>
       </div>
-      <div class="stat-item">
-        <span class="stat-icon">📅</span>
-        <span class="stat-value">245</span>
-        <span class="stat-label">Citas Este Mes</span>
+
+      <div class="metric-card metric-success">
+        <div class="metric-icon">
+          <i-lucide name="briefcase" [size]="32"></i-lucide>
+        </div>
+        <div class="metric-data">
+          <span class="metric-value">{{ casosSolicitados.length }}</span>
+          <span class="metric-label">Tipos de Caso</span>
+        </div>
       </div>
-      <div class="stat-item">
-        <span class="stat-icon">👥</span>
-        <span class="stat-value">95</span>
-        <span class="stat-label">Clientes</span>
+
+      <div class="metric-card metric-info">
+        <div class="metric-icon">
+          <i-lucide name="users" [size]="32"></i-lucide>
+        </div>
+        <div class="metric-data">
+          <span class="metric-value">{{ abogadosSolicitados.length }}</span>
+          <span class="metric-label">Abogados Activos</span>
+        </div>
       </div>
-      <div class="stat-item">
-        <span class="stat-icon">⚖️</span>
-        <span class="stat-value">88.4%</span>
-        <span class="stat-label">Tasa de Éxito</span>
+
+      <div class="metric-card metric-warning">
+        <div class="metric-icon">
+          <i-lucide name="scale" [size]="32"></i-lucide>
+        </div>
+        <div class="metric-data">
+          <span class="metric-value">{{ areasDerecho.length }}</span>
+          <span class="metric-label">Áreas de Derecho</span>
+        </div>
       </div>
     </div>
+
+    <!-- SECCIÓN: ANÁLISIS DE CITAS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <i-lucide name="calendar" [size]="24"></i-lucide>
+          <h2>Análisis de Citas</h2>
+        </div>
+        <span class="section-subtitle">{{ nombreMes }} {{ anioSeleccionado }}</span>
+      </div>
+
+      <div class="charts-grid charts-grid-3">
+        <!-- Gráfico: Citas por Estado -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Citas por Estado</h3>
+            <span class="chart-total">Total: {{ estadisticas?.totalCitas || 0 }}</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="chartEstadoCitas"></canvas>
+          </div>
+        </div>
+
+        <!-- Gráfico: Citas por Origen -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Origen de las Citas</h3>
+            <span class="chart-total">{{ estadisticas?.citasPorOrigen?.length || 0 }} canales</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="chartOrigenCitas"></canvas>
+          </div>
+        </div>
+
+        <!-- Gráfico: Citas por Urgencia -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Nivel de Urgencia</h3>
+            <span class="chart-total">Clasificación</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="chartUrgenciaCitas"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN: TIPOS DE CASO Y ÁREAS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <i-lucide name="briefcase" [size]="24"></i-lucide>
+          <h2>Casos y Áreas de Derecho</h2>
+        </div>
+        <span class="section-subtitle">Más solicitados del período</span>
+      </div>
+
+      <div class="charts-grid charts-grid-2">
+        <!-- Gráfico: Tipos de Caso -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Tipos de Caso más Solicitados</h3>
+            <span class="chart-total">Top {{ casosSolicitados.length }}</span>
+          </div>
+          <div class="chart-container chart-large">
+            <canvas id="chartTiposCaso"></canvas>
+          </div>
+        </div>
+
+        <!-- Gráfico: Áreas de Derecho -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Áreas de Derecho</h3>
+            <span class="chart-total">Top {{ areasDerecho.length }}</span>
+          </div>
+          <div class="chart-container chart-large">
+            <canvas id="chartAreasDerecho"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN: ABOGADOS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <i-lucide name="user-check" [size]="24"></i-lucide>
+          <h2>Desempeño de Abogados</h2>
+        </div>
+        <span class="section-subtitle">Ranking de productividad</span>
+      </div>
+
+      <div class="chart-card chart-full">
+        <div class="chart-header">
+          <h3>Abogados más Solicitados</h3>
+          <span class="chart-total">{{ abogadosSolicitados.length }} profesionales</span>
+        </div>
+        <div class="chart-container chart-large">
+          <canvas id="chartAbogados"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN: RESUMEN DETALLADO -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <i-lucide name="list" [size]="24"></i-lucide>
+          <h2>Resumen Detallado</h2>
+        </div>
+        <span class="section-subtitle">Vista completa de datos</span>
+      </div>
+
+      <div class="summary-grid">
+        <!-- Tabla: Estados de Citas -->
+        <div class="summary-card">
+          <h3>
+            <i-lucide name="pie-chart" [size]="20"></i-lucide>
+            Estados de Citas
+          </h3>
+          <div class="summary-table">
+            <div *ngFor="let estado of estadisticas?.citasPorEstado" class="summary-row">
+              <span class="summary-label">{{ estado.estado | titlecase }}</span>
+              <span class="summary-value">{{ estado.total }}</span>
+              <div class="summary-bar">
+                <div class="summary-bar-fill" 
+                     [style.width.%]="(estado.total / estadisticas.totalCitas) * 100"
+                     [ngClass]="getClaseEstado(estado.estado)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla: Orígenes -->
+        <div class="summary-card">
+          <h3>
+            <i-lucide name="map-pin" [size]="20"></i-lucide>
+            Canales de Origen
+          </h3>
+          <div class="summary-table">
+            <div *ngFor="let origen of estadisticas?.citasPorOrigen" class="summary-row">
+              <span class="summary-label">{{ origen.origen | titlecase }}</span>
+              <span class="summary-value">{{ origen.total }}</span>
+              <div class="summary-bar">
+                <div class="summary-bar-fill bar-info" 
+                     [style.width.%]="(origen.total / estadisticas.totalCitas) * 100"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla: Top 5 Casos -->
+        <div class="summary-card">
+          <h3>
+            <i-lucide name="trophy" [size]="20"></i-lucide>
+            Top 5 Casos
+          </h3>
+          <div class="summary-list">
+            <div *ngFor="let caso of casosSolicitados.slice(0, 5); let i = index" class="summary-list-item">
+              <span class="summary-rank">{{ i + 1 }}</span>
+              <span class="summary-name">{{ caso.tipoCaso || 'Sin especificar' }}</span>
+              <span class="summary-badge">{{ caso.total }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla: Top 5 Abogados -->
+        <div class="summary-card">
+          <h3>
+            <i-lucide name="award" [size]="20"></i-lucide>
+            Top 5 Abogados
+          </h3>
+          <div class="summary-list">
+            <div *ngFor="let abogado of abogadosSolicitados.slice(0, 5); let i = index" class="summary-list-item">
+              <span class="summary-rank">{{ i + 1 }}</span>
+              <span class="summary-name">{{ abogado.abogado || 'Sin asignar' }}</span>
+              <span class="summary-badge">{{ abogado.total }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENSAJE SI NO HAY DATOS -->
+    <div *ngIf="!estadisticas?.totalCitas" class="no-data-message">
+      <i-lucide name="inbox" [size]="64"></i-lucide>
+      <h3>No hay datos para este período</h3>
+      <p>Selecciona un mes y año diferente para ver estadísticas</p>
+    </div>
+
   </div>
 </div>

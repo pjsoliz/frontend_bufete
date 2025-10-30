@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardAdminComponent } from './admin-dashboard/admin-dashboard.component';
-import { AbogadoDashboardComponent } from './abogado-dashboard/abogado-dashboard.component';
 import { AsistenteDashboardComponent } from './asistente-dashboard/asistente-dashboard.component';
 import { RoleGuard } from '../../core/guards/role.guard';
 

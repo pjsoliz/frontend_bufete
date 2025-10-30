@@ -13,21 +13,6 @@
     </div>
   </div>
 
-  <!-- Barra de búsqueda -->
-  <div class="navbar-search">
-    <i-lucide name="search" class="search-icon" [size]="18"></i-lucide>
-    <input
-      type="text"
-      class="search-input"
-      placeholder="Buscar casos, clientes, citas..."
-      [(ngModel)]="searchQuery"
-      (keyup.enter)="onSearch()"
-    />
-    <button class="search-btn" (click)="onSearch()" *ngIf="searchQuery">
-      <i-lucide name="arrow-right" [size]="18"></i-lucide>
-    </button>
-  </div>
-
   <!-- Acciones del Navbar -->
   <div class="navbar-actions">
 

@@ -1,90 +1,49 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportesService {
+  private apiUrl = `${environment.apiUrl}/reportes`;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  // ==================== REPORTES DE CASOS ====================
-  getReporteCasos(): Observable<any> {
-    // Datos mock - después conectarás con el backend
-    const data = {
-      total: 128,
-      por_estado: {
-        pendiente: 32,
-        en_progreso: 45,
-        suspendido: 8,
-        cerrado: 43
-      },
-      por_tipo: {
-        laboral: 38,
-        civil: 25,
-        penal: 20,
-        familia: 30,
-        comercial: 15
-      },
-      por_prioridad: {
-        baja: 40,
-        media: 58,
-        alta: 30
-      },
-      casos_por_mes: [
-        { mes: 'Ene', cantidad: 8 },
-        { mes: 'Feb', cantidad: 12 },
-        { mes: 'Mar', cantidad: 15 },
-        { mes: 'Abr', cantidad: 18 },
-        { mes: 'May', cantidad: 22 },
-        { mes: 'Jun', cantidad: 25 },
-        { mes: 'Jul', cantidad: 20 },
-        { mes: 'Ago', cantidad: 17 },
-        { mes: 'Sep', cantidad: 19 },
-        { mes: 'Oct', cantidad: 23 }
-      ]
-    };
-
-    return of(data).pipe(delay(500));
+  // ==================== MÉTODOS REALES DEL BACKEND ====================
+  
+  getCasosMasSolicitados(mes?: number, anio?: number): Observable<any[]> {
+    let params = new HttpParams();
+    if (mes) params = params.set('mes', mes.toString());
+    if (anio) params = params.set('anio', anio.toString());
+    return this.http.get<any[]>(`${this.apiUrl}/casos-mas-solicitados`, { params });
   }
 
-  // ==================== REPORTES DE CITAS ====================
-  getReporteCitas(): Observable<any> {
-    const data = {
-      total: 245,
-      por_estado: {
-        programada: 85,
-        confirmada: 95,
-        completada: 50,
-        cancelada: 15
-      },
-      citas_por_mes: [
-        { mes: 'Ene', cantidad: 18 },
-        { mes: 'Feb', cantidad: 22 },
-        { mes: 'Mar', cantidad: 25 },
-        { mes: 'Abr', cantidad: 28 },
-        { mes: 'May', cantidad: 30 },
-        { mes: 'Jun', cantidad: 32 },
-        { mes: 'Jul', cantidad: 28 },
-        { mes: 'Ago', cantidad: 24 },
-        { mes: 'Sep', cantidad: 26 },
-        { mes: 'Oct', cantidad: 32 }
-      ],
-      por_abogado: [
-        { nombre: 'Dr. Juan Pérez', cantidad: 45 },
-        { nombre: 'Dra. María López', cantidad: 38 },
-        { nombre: 'Dr. Carlos Ruiz', cantidad: 42 },
-        { nombre: 'Dra. Ana Torres', cantidad: 35 },
-        { nombre: 'Dr. Luis Gómez', cantidad: 40 }
-      ],
-      tasa_asistencia: 85.5
-    };
-
-    return of(data).pipe(delay(500));
+  getAbogadosMasSolicitados(mes?: number, anio?: number): Observable<any[]> {
+    let params = new HttpParams();
+    if (mes) params = params.set('mes', mes.toString());
+    if (anio) params = params.set('anio', anio.toString());
+    return this.http.get<any[]>(`${this.apiUrl}/abogados-mas-solicitados`, { params });
   }
 
-  // ==================== REPORTES DE CLIENTES ====================
+  getEstadisticasMes(mes: number, anio: number): Observable<any> {
+    const params = new HttpParams()
+      .set('mes', mes.toString())
+      .set('anio', anio.toString());
+    return this.http.get<any>(`${this.apiUrl}/estadisticas-mes`, { params });
+  }
+
+  getAreasMasSolicitadas(mes?: number, anio?: number): Observable<any[]> {
+    let params = new HttpParams();
+    if (mes) params = params.set('mes', mes.toString());
+    if (anio) params = params.set('anio', anio.toString());
+    return this.http.get<any[]>(`${this.apiUrl}/areas-mas-solicitadas`, { params });
+  }
+
+  // ==================== MÉTODOS MOCK (Temporal - hasta conectar con backend) ====================
+
   getReporteClientes(): Observable<any> {
     const data = {
       total: 95,
@@ -116,7 +75,6 @@ export class ReportesService {
     return of(data).pipe(delay(500));
   }
 
-  // ==================== REPORTE GENERAL ====================
   getReporteGeneral(): Observable<any> {
     const data = {
       resumen: {
