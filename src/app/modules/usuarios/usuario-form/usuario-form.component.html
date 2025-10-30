@@ -27,79 +27,28 @@
       {{ errorMessage }}
     </div>
 
-    <!-- Sección: Información Personal -->
+    <!-- Sección: Información del Usuario -->
     <div class="form-section">
       <h2>
         <i-lucide name="user"  [size]="25" class="icon-section"></i-lucide>
-        Información Personal
+        Información del Usuario
       </h2>
 
       <div class="form-grid">
-        <div class="form-group">
-          <label for="nombre">
+        <div class="form-group full-width">
+          <label for="nombreCompleto">
             <i-lucide name="user" [size]="18" class="icon-label"></i-lucide>
-            Nombre *
+            Nombre Completo *
           </label>
           <input
             type="text"
-            id="nombre"
-            formControlName="nombre"
-            placeholder="Ej: Juan"
-            [class.error]="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
-          <div class="error-message" *ngIf="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
+            id="nombreCompleto"
+            formControlName="nombreCompleto"
+            placeholder="Ej: Juan Pérez García"
+            [class.error]="usuarioForm.get('nombreCompleto')?.invalid && usuarioForm.get('nombreCompleto')?.touched">
+          <div class="error-message" *ngIf="usuarioForm.get('nombreCompleto')?.invalid && usuarioForm.get('nombreCompleto')?.touched">
             <i-lucide name="alert-circle" [size]="18" class="icon-error"></i-lucide>
-            {{ getErrorMessage('nombre') }}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="apellido">
-            <i-lucide name="user" [size]="18" class="icon-label"></i-lucide>
-            Apellido *
-          </label>
-          <input
-            type="text"
-            id="apellido"
-            formControlName="apellido"
-            placeholder="Ej: Pérez"
-            [class.error]="usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched">
-          <div class="error-message" *ngIf="usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched">
-            <i-lucide name="alert-circle" [size]="18" class="icon-error"></i-lucide>
-            {{ getErrorMessage('apellido') }}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="telefono">
-            <i-lucide name="phone" [size]="18" class="icon-label"></i-lucide>
-            Teléfono
-          </label>
-          <input
-            type="tel"
-            id="telefono"
-            formControlName="telefono"
-            placeholder="+593-99-123-4567"
-            [class.error]="usuarioForm.get('telefono')?.invalid && usuarioForm.get('telefono')?.touched">
-          <div class="error-message" *ngIf="usuarioForm.get('telefono')?.invalid && usuarioForm.get('telefono')?.touched">
-            <i-lucide name="alert-circle" [size]="18" class="icon-error"></i-lucide>
-            {{ getErrorMessage('telefono') }}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="username">
-            <i-lucide name="at-sign" [size]="18" class="icon-label"></i-lucide>
-            Usuario *
-          </label>
-          <input
-            type="text"
-            id="username"
-            formControlName="username"
-            placeholder="Ej: jperez"
-            [class.error]="usuarioForm.get('username')?.invalid && usuarioForm.get('username')?.touched">
-          <div class="error-message" *ngIf="usuarioForm.get('username')?.invalid && usuarioForm.get('username')?.touched">
-            <i-lucide name="alert-circle" [size]="18" class="icon-error"></i-lucide>
-            {{ getErrorMessage('username') }}
+            {{ getFieldErrorMessage('nombreCompleto') }}
           </div>
         </div>
 
@@ -116,13 +65,13 @@
             [class.error]="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched">
           <div class="error-message" *ngIf="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched">
             <i-lucide name="alert-circle" [size]="18" class="icon-error"></i-lucide>
-            {{ getErrorMessage('email') }}
+            {{ getFieldErrorMessage('email') }}
           </div>
         </div>
 
         <div class="form-group">
           <label for="password">
-            <i-lucide name="Shield" [size]="18" class="icon-label"></i-lucide>
+            <i-lucide name="lock" [size]="18" class="icon-label"></i-lucide>
             {{ isEditMode ? 'Nueva Contraseña (dejar vacío para no cambiar)' : 'Contraseña *' }}
           </label>
           <input
@@ -133,7 +82,7 @@
             [class.error]="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched">
           <div class="error-message" *ngIf="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched">
             <i-lucide name="alert-circle" [size]="18" class="icon-error"></i-lucide>
-            {{ getErrorMessage('password') }}
+            {{ getFieldErrorMessage('password') }}
           </div>
         </div>
 
@@ -144,71 +93,32 @@
           </label>
           <select
             id="rol"
-            formControlName="rol"
-            (change)="onRolChange()">
+            formControlName="rol">
             <option *ngFor="let rol of roles" [value]="rol.value">
               {{ rol.icon }} {{ rol.label }}
             </option>
           </select>
         </div>
+      </div>
+    </div>
 
-        <div class="form-group" *ngIf="isEditMode">
-          <label for="estado">
-            <i-lucide name="activity" [size]="18" class="icon-label"></i-lucide>
-            Estado
-          </label>
-          <select id="estado" formControlName="estado">
-            <option value="activo">✅ Activo</option>
-            <option value="inactivo">⏸️ Inactivo</option>
-          </select>
+    <!-- Permisos Info -->
+    <div class="permisos-info">
+      <h4>
+        <i-lucide name="info" [size]="18" class="icon-info"></i-lucide>
+        Permisos por Rol:
+      </h4>
+      <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'admin'">
+        <i-lucide name="shield" [size]="18" class="permiso-icon"></i-lucide>
+        <div class="permiso-texto">
+          <strong>Administrador:</strong> Acceso completo al sistema. Puede gestionar usuarios, citas, clientes y configurar el sistema.
         </div>
-
-
-        <div class="form-group full-width" *ngIf="usuarioForm.get('rol')?.value === 'abogado'">
-          <label for="especialidad">
-            <i-lucide name="briefcase" [size]="18" class="icon-label"></i-lucide>
-            Especialidad *
-          </label>
-          <select
-            id="especialidad"
-            formControlName="especialidad"
-            [class.error]="usuarioForm.get('especialidad')?.invalid && usuarioForm.get('especialidad')?.touched">
-            <option value="">Seleccione una especialidad</option>
-            <option *ngFor="let esp of especialidades" [value]="esp">
-              {{ esp }}
-            </option>
-          </select>
-          <div class="error-message" *ngIf="usuarioForm.get('especialidad')?.invalid && usuarioForm.get('especialidad')?.touched">
-            <i-lucide name="alert-circle" [size]="18" class="icon-error"></i-lucide>
-            La especialidad es requerida para abogados
-          </div>
-
-          <div class="permisos-info" >
-            <h4>
-              <i-lucide name="info" [size]="18" class="icon-info"></i-lucide>
-              Permisos por Rol:
-            </h4>
-            <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'administrador'">
-              <i-lucide name="crown" [size]="18" class="permiso-icon"></i-lucide>
-              <div class="permiso-texto">
-                <strong>Administrador:</strong> Acceso completo al sistema. Puede gestionar usuarios, ver todos los casos, generar reportes y configurar el sistema.
-              </div>
-            </div>
-            <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'abogado'">
-              <i-lucide name="scale" [size]="18" class="permiso-icon"></i-lucide>
-              <div class="permiso-texto">
-                <strong>Abogado:</strong> Puede gestionar casos asignados, crear citas, ver clientes y generar reportes de sus casos.
-              </div>
-            </div>
-            <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'asistente_legal'">
-              <i-lucide name="clipboard-list" [size]="18" class="permiso-icon"></i-lucide>
-              <div class="permiso-texto">
-                <strong>Asistente Legal:</strong> Puede ver casos, gestionar citas, administrar clientes y dar soporte general.
-              </div>
-            </div>
-        </div>  
+      </div>
+      <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'asistente_legal'">
+        <i-lucide name="clipboard-list" [size]="18" class="permiso-icon"></i-lucide>
+        <div class="permiso-texto">
+          <strong>Asistente Legal:</strong> Puede gestionar citas, administrar clientes y dar soporte general del bufete.
         </div>
-
       </div>
     </div>
 
@@ -218,7 +128,6 @@
         Cancelar
       </button>
       <button type="submit" class="btn-primary" [disabled]="usuarioForm.invalid || loading">
-
         <span *ngIf="!loading">{{ isEditMode ? 'Actualizar Usuario' : 'Crear Usuario' }}</span>
         <span *ngIf="loading">Guardando...</span>
       </button>

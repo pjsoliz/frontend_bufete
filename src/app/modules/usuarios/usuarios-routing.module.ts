@@ -10,25 +10,25 @@ const routes: Routes = [
     path: '',
     component: UsuariosListComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['administrador'] }
+    data: { roles: ['admin'] }
   },
   {
     path: 'nuevo',
     component: UsuarioFormComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['administrador'] }
+    data: { roles: ['admin'] }
   },
   {
     path: 'editar/:id',
     component: UsuarioFormComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['administrador'] }
+    data: { roles: ['admin'] }
   },
   {
     path: ':id',
     component: UsuarioDetalleComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['administrador'] }
+    data: { roles: ['admin'] }
   }
 ];
 

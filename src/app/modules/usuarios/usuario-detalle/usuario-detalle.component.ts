@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsuariosService, Usuario } from '../../../core/services/usuarios.service';
-import { CasosService, Caso } from '../../../core/services/casos.service';
 
 @Component({
   selector: 'app-usuario-detalle',
@@ -10,26 +9,23 @@ import { CasosService, Caso } from '../../../core/services/casos.service';
 })
 export class UsuarioDetalleComponent implements OnInit {
   usuario: Usuario | null = null;
-  casosAsignados: Caso[] = [];
   loading = true;
   errorMessage = '';
 
   constructor(
     private route: ActivatedRoute,
     public router: Router,
-    private usuariosService: UsuariosService,
-    private casosService: CasosService
+    private usuariosService: UsuariosService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.cargarUsuario(parseInt(id));
-      this.cargarCasosAsignados(parseInt(id));
+      this.cargarUsuario(id);
     }
   }
 
-  cargarUsuario(id: number): void {
+  cargarUsuario(id: string): void {
     this.loading = true;
     this.usuariosService.getUsuarioById(id).subscribe({
       next: (usuario) => {
@@ -46,19 +42,6 @@ export class UsuarioDetalleComponent implements OnInit {
         this.loading = false;
       }
     });
-  }
-
-  cargarCasosAsignados(usuarioId: number): void {
-    if (this.usuario?.rol === 'abogado') {
-      this.casosService.getCasos().subscribe({
-        next: (casos) => {
-          this.casosAsignados = casos.filter(c => c.abogado === this.getNombreCompleto());
-        },
-        error: (error) => {
-          console.error('Error al cargar casos:', error);
-        }
-      });
-    }
   }
 
   volver(): void {
@@ -88,15 +71,11 @@ export class UsuarioDetalleComponent implements OnInit {
 
   cambiarEstado(): void {
     if (this.usuario) {
-      const nuevoEstado = this.usuario.estado === 'activo' ? 'inactivo' : 'activo';
-      const accion = nuevoEstado === 'activo' ? 'activar' : 'desactivar';
+      const nuevoEstado = !this.usuario.activo;
+      const accion = nuevoEstado ? 'activar' : 'desactivar';
 
       if (confirm(`¿Está seguro de ${accion} este usuario?`)) {
-        const operacion = nuevoEstado === 'activo'
-          ? this.usuariosService.activarUsuario(this.usuario.id)
-          : this.usuariosService.desactivarUsuario(this.usuario.id);
-
-        operacion.subscribe({
+        this.usuariosService.cambiarEstadoUsuario(this.usuario.id, nuevoEstado).subscribe({
           next: (usuarioActualizado) => {
             this.usuario = usuarioActualizado;
             alert(`Usuario ${accion}do exitosamente`);
@@ -110,21 +89,9 @@ export class UsuarioDetalleComponent implements OnInit {
     }
   }
 
-  verCaso(casoId: number): void {
-    this.router.navigate(['/casos', casoId]);
-  }
-
-  getNombreCompleto(): string {
-    if (this.usuario) {
-      return `${this.usuario.nombre} ${this.usuario.apellido}`;
-    }
-    return '';
-  }
-
   getRolClass(rol: string): string {
     const classes: any = {
-      'administrador': 'rol-admin',
-      'abogado': 'rol-abogado',
+      'admin': 'rol-admin',
       'asistente_legal': 'rol-asistente'
     };
     return classes[rol] || '';
@@ -132,52 +99,30 @@ export class UsuarioDetalleComponent implements OnInit {
 
   getRolTexto(rol: string): string {
     const textos: any = {
-      'administrador': 'Administrador',
-      'abogado': 'Abogado',
+      'admin': 'Administrador',
       'asistente_legal': 'Asistente Legal'
     };
     return textos[rol] || rol;
   }
 
   getRolIconName(rol: string): string {
-  const icons: any = {
-    'administrador': 'shield',
-    'abogado': 'scale',
-    'asistente_legal': 'clipboard-list'
-  };
-  return icons[rol] || 'user';
-} 
-
-  getEstadoClass(estado: string): string {
-    return estado === 'activo' ? 'estado-activo' : 'estado-inactivo';
-  }
-
-  getEstadoTexto(estado: string): string {
-    return estado === 'activo' ? 'Activo' : 'Inactivo';
-  }
-
-  getCasoEstadoClass(estado: string): string {
-    const classes: any = {
-      'pendiente': 'caso-pendiente',
-      'en_progreso': 'caso-progreso',
-      'suspendido': 'caso-suspendido',
-      'cerrado': 'caso-cerrado'
+    const icons: any = {
+      'admin': 'shield',
+      'asistente_legal': 'clipboard-list'
     };
-    return classes[estado] || '';
+    return icons[rol] || 'user';
+  } 
+
+  getEstadoClass(activo: boolean): string {
+    return activo ? 'estado-activo' : 'estado-inactivo';
   }
 
-  getCasoEstadoTexto(estado: string): string {
-    const textos: any = {
-      'pendiente': 'Pendiente',
-      'en_progreso': 'En Progreso',
-      'suspendido': 'Suspendido',
-      'cerrado': 'Cerrado'
-    };
-    return textos[estado] || estado;
+  getEstadoTexto(activo: boolean): string {
+    return activo ? 'Activo' : 'Inactivo';
   }
 
-  formatearFecha(fecha: string): string {
-    const fechaObj = new Date(fecha + 'T00:00:00');
+  formatearFecha(fecha: Date | string): string {
+    const fechaObj = new Date(fecha);
     return fechaObj.toLocaleDateString('es-ES', {
       weekday: 'long',
       year: 'numeric',
@@ -186,8 +131,8 @@ export class UsuarioDetalleComponent implements OnInit {
     });
   }
 
-  formatearFechaCorta(fecha: string): string {
-    const fechaObj = new Date(fecha + 'T00:00:00');
+  formatearFechaCorta(fecha: Date | string): string {
+    const fechaObj = new Date(fecha);
     return fechaObj.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'short',
@@ -196,9 +141,9 @@ export class UsuarioDetalleComponent implements OnInit {
   }
 
   calcularDiasDesdeAcceso(): number | null {
-    if (this.usuario?.ultimo_acceso) {
+    if (this.usuario?.ultimoAcceso) {
       const hoy = new Date();
-      const ultimoAcceso = new Date(this.usuario.ultimo_acceso + 'T00:00:00');
+      const ultimoAcceso = new Date(this.usuario.ultimoAcceso);
       const diff = Math.floor((hoy.getTime() - ultimoAcceso.getTime()) / (1000 * 60 * 60 * 24));
       return diff;
     }

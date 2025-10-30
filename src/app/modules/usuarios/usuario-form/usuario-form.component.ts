@@ -12,24 +12,12 @@ export class UsuarioFormComponent implements OnInit {
   usuarioForm: FormGroup;
   loading = false;
   isEditMode = false;
-  usuarioId: number | null = null;
+  usuarioId: string | null = null;
   errorMessage = '';
 
   roles = [
-    { value: 'administrador', label: 'Administrador', icon: '👑' },
-    { value: 'abogado', label: 'Abogado', icon: '⚖️' },
+    { value: 'admin', label: 'Administrador', icon: '👑' },
     { value: 'asistente_legal', label: 'Asistente Legal', icon: '📋' }
-  ];
-
-  especialidades = [
-    'Derecho Laboral',
-    'Derecho Civil',
-    'Derecho Penal',
-    'Derecho de Familia',
-    'Derecho Comercial',
-    'Derecho Tributario',
-    'Derecho Administrativo',
-    'Derecho Constitucional'
   ];
 
   constructor(
@@ -39,15 +27,10 @@ export class UsuarioFormComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.usuarioForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(2)]],
-      apellido: ['', [Validators.required, Validators.minLength(2)]],
+      nombreCompleto: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
       email: ['', [Validators.required, Validators.email]],
-      username: ['', [Validators.required, Validators.minLength(4)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      rol: ['abogado', Validators.required],
-      estado: ['activo', Validators.required],
-      telefono: ['', [Validators.pattern(/^\+?[0-9\-\s]+$/)]],
-      especialidad: ['']
+      rol: ['asistente_legal', Validators.required]
     });
   }
 
@@ -55,27 +38,22 @@ export class UsuarioFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
-      this.usuarioId = parseInt(id);
+      this.usuarioId = id;
       this.usuarioForm.get('password')?.clearValidators();
       this.usuarioForm.get('password')?.updateValueAndValidity();
       this.cargarUsuario(this.usuarioId);
     }
   }
 
-  cargarUsuario(id: number): void {
+  cargarUsuario(id: string): void {
     this.loading = true;
     this.usuariosService.getUsuarioById(id).subscribe({
       next: (usuario) => {
         if (usuario) {
           this.usuarioForm.patchValue({
-            nombre: usuario.nombre,
-            apellido: usuario.apellido,
+            nombreCompleto: usuario.nombreCompleto,
             email: usuario.email,
-            username: usuario.username,
-            rol: usuario.rol,
-            estado: usuario.estado,
-            telefono: usuario.telefono || '',
-            especialidad: usuario.especialidad || ''
+            rol: usuario.rol
           });
         }
         this.loading = false;
@@ -109,7 +87,7 @@ export class UsuarioFormComponent implements OnInit {
           },
           error: (error) => {
             console.error('Error al actualizar usuario:', error);
-            this.errorMessage = 'Error al actualizar el usuario';
+            this.errorMessage = this.getErrorMessage(error);
             this.loading = false;
           }
         });
@@ -122,7 +100,7 @@ export class UsuarioFormComponent implements OnInit {
           },
           error: (error) => {
             console.error('Error al crear usuario:', error);
-            this.errorMessage = 'Error al crear el usuario';
+            this.errorMessage = this.getErrorMessage(error);
             this.loading = false;
           }
         });
@@ -133,6 +111,23 @@ export class UsuarioFormComponent implements OnInit {
     }
   }
 
+  getErrorMessage(error: any): string {
+    if (error.status === 400) {
+      if (error.error?.message) {
+        if (Array.isArray(error.error.message)) {
+          return error.error.message.join(', ');
+        }
+        return error.error.message;
+      }
+      return 'Datos inválidos. Verifica los campos del formulario.';
+    } else if (error.status === 409) {
+      return 'El email ya está registrado.';
+    } else if (error.status === 0) {
+      return 'No se pudo conectar con el servidor.';
+    }
+    return 'Error al guardar el usuario. Intenta de nuevo.';
+  }
+
   marcarCamposComoTocados(): void {
     Object.keys(this.usuarioForm.controls).forEach(key => {
       this.usuarioForm.get(key)?.markAsTouched();
@@ -140,12 +135,16 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   cancelar(): void {
-    if (confirm('¿Está seguro de cancelar? Se perderán los cambios no guardados.')) {
+    if (this.usuarioForm.dirty) {
+      if (confirm('¿Está seguro de cancelar? Se perderán los cambios no guardados.')) {
+        this.router.navigate(['/usuarios']);
+      }
+    } else {
       this.router.navigate(['/usuarios']);
     }
   }
 
-  getErrorMessage(fieldName: string): string {
+  getFieldErrorMessage(fieldName: string): string {
     const control = this.usuarioForm.get(fieldName);
     if (control?.hasError('required')) {
       return 'Este campo es requerido';
@@ -154,25 +153,13 @@ export class UsuarioFormComponent implements OnInit {
       const minLength = control.errors?.['minlength'].requiredLength;
       return `Mínimo ${minLength} caracteres`;
     }
+    if (control?.hasError('maxlength')) {
+      const maxLength = control.errors?.['maxlength'].requiredLength;
+      return `Máximo ${maxLength} caracteres`;
+    }
     if (control?.hasError('email')) {
       return 'Email inválido';
     }
-    if (control?.hasError('pattern')) {
-      return 'Formato inválido';
-    }
     return '';
-  }
-
-  onRolChange(): void {
-    const rol = this.usuarioForm.get('rol')?.value;
-    const especialidadControl = this.usuarioForm.get('especialidad');
-
-    if (rol === 'abogado') {
-      especialidadControl?.setValidators([Validators.required]);
-    } else {
-      especialidadControl?.clearValidators();
-      especialidadControl?.setValue('');
-    }
-    especialidadControl?.updateValueAndValidity();
   }
 }

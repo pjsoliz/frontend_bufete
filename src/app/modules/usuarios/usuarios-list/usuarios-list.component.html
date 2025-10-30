@@ -26,7 +26,7 @@
         </label>
         <input
           type="text"
-          placeholder="Buscar por nombre, email o usuario..."
+          placeholder="Buscar por nombre o email..."
           [(ngModel)]="filtroBusqueda"
           (input)="onFiltroChange()">
       </div>
@@ -38,8 +38,7 @@
         </label>
         <select [(ngModel)]="filtroRol" (change)="onFiltroChange()">
           <option value="todos">Todos</option>
-          <option value="administrador">Administrador</option>
-          <option value="abogado">Abogado</option>
+          <option value="admin">Administrador</option>
           <option value="asistente_legal">Asistente Legal</option>
         </select>
       </div>
@@ -89,11 +88,9 @@
         <thead>
           <tr>
             <th>Usuario</th>
-            <th>Email / Username</th>
+            <th>Email</th>
             <th>Rol</th>
             <th>Estado</th>
-            <th>Teléfono</th>
-            <th>Casos Asignados</th>
             <th>Último Acceso</th>
             <th>Acciones</th>
           </tr>
@@ -109,10 +106,7 @@
                   <i-lucide [name]="getRolIconName(usuario.rol)" [size]="30" class="avatar-icon"></i-lucide>
                 </div>
                 <div class="usuario-datos">
-                  <div class="nombre">{{ getNombreCompleto(usuario) }}</div>
-                  <div class="especialidad" *ngIf="usuario.especialidad">
-                    {{ usuario.especialidad }}
-                  </div>
+                  <div class="nombre">{{ usuario.nombreCompleto }}</div>
                 </div>
               </div>
             </td>
@@ -122,10 +116,6 @@
                 <div class="email">
                   <i-lucide name="mail" [size]="16" class="icon-small"></i-lucide>
                   {{ usuario.email }}
-                </div>
-                <div class="username">
-                  <i-lucide name="at-sign" [size]="16" class="icon-small"></i-lucide>
-                  {{ usuario.username }}
                 </div>
               </div>
             </td>
@@ -138,33 +128,17 @@
             </td>
 
             <td>
-              <span class="estado-badge" [ngClass]="getEstadoClass(usuario.estado)">
-                {{ getEstadoTexto(usuario.estado) }}
+              <span class="estado-badge" [ngClass]="getEstadoClass(usuario.activo)">
+                {{ getEstadoTexto(usuario.activo) }}
               </span>
             </td>
 
             <td>
-              <div class="telefono" *ngIf="usuario.telefono">
-                <i-lucide name="phone" [size]="16" class="icon-small"></i-lucide>
-                {{ usuario.telefono }}
-              </div>
-              <div *ngIf="!usuario.telefono" class="sin-dato">-</div>
-            </td>
-
-            <td>
-              <div class="casos-asignados" *ngIf="usuario.rol === 'abogado'">
-                <span class="casos-numero">{{ usuario.casos_asignados || 0 }}</span>
-                <span class="casos-texto">casos</span>
-              </div>
-              <div *ngIf="usuario.rol !== 'abogado'" class="sin-dato">-</div>
-            </td>
-
-            <td>
-              <div class="ultimo-acceso" *ngIf="usuario.ultimo_acceso">
+              <div class="ultimo-acceso" *ngIf="usuario.ultimoAcceso">
                 <i-lucide name="calendar" [size]="16" class="icon-accion"></i-lucide>
-                {{ formatearFecha(usuario.ultimo_acceso) }}
+                {{ formatearFecha(usuario.ultimoAcceso) }}
               </div>
-              <div *ngIf="!usuario.ultimo_acceso" class="sin-dato">-</div>
+              <div *ngIf="!usuario.ultimoAcceso" class="sin-dato">-</div>
             </td>
 
             <td class="acciones-cell" (click)="$event.stopPropagation()">
@@ -177,17 +151,17 @@
                 </button>
 
                 <button
-                  *ngIf="usuario.estado === 'activo'"
+                  *ngIf="usuario.activo"
                   class="btn-accion btn-desactivar"
-                  (click)="cambiarEstado(usuario.id, 'inactivo', $event)"
+                  (click)="cambiarEstado(usuario.id, false, $event)"
                   title="Desactivar">
                   <i-lucide name="pause-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <button
-                  *ngIf="usuario.estado === 'inactivo'"
+                  *ngIf="!usuario.activo"
                   class="btn-accion btn-activar"
-                  (click)="cambiarEstado(usuario.id, 'activo', $event)"
+                  (click)="cambiarEstado(usuario.id, true, $event)"
                   title="Activar">
                   <i-lucide name="play-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>

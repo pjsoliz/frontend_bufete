@@ -28,21 +28,17 @@
             <i-lucide [name]="getRolIconName(usuario.rol)" [size]="60" class="avatar-icon-large"></i-lucide>
           </div>
           <div class="usuario-info-header">
-            <h1>{{ getNombreCompleto() }}</h1>
+            <h1>{{ usuario.nombreCompleto }}</h1>
             <div class="badges-row">
               <span class="badge-rol" [ngClass]="getRolClass(usuario.rol)">
                 <i-lucide [name]="getRolIconName(usuario.rol)" [size]="16" class="icon-badge"></i-lucide>
                 {{ getRolTexto(usuario.rol) }}
               </span>
-              <span class="badge-estado" [ngClass]="getEstadoClass(usuario.estado)">
-                {{ getEstadoTexto(usuario.estado) }}
+              <span class="badge-estado" [ngClass]="getEstadoClass(usuario.activo)">
+                {{ getEstadoTexto(usuario.activo) }}
               </span>
             </div>
             <div class="username-email">
-              <span class="username">
-                <i-lucide name="at-sign" [size]="16" class="icon-small"></i-lucide>
-                {{ usuario.username }}
-              </span>
               <span class="email">
                 <i-lucide name="mail" [size]="16" class="icon-small"></i-lucide>
                 {{ usuario.email }}
@@ -53,9 +49,9 @@
 
         <div class="header-right">
           <button class="btn-action" (click)="cambiarEstado()"
-                  [title]="usuario.estado === 'activo' ? 'Desactivar' : 'Activar'">
-            <i-lucide [name]="usuario.estado === 'activo' ? 'pause-circle' : 'play-circle'" [size]="20" class="icon-btn"></i-lucide>
-            {{ usuario.estado === 'activo' ? 'Desactivar' : 'Activar' }}
+                  [title]="usuario.activo ? 'Desactivar' : 'Activar'">
+            <i-lucide [name]="usuario.activo ? 'pause-circle' : 'play-circle'" [size]="20" class="icon-btn"></i-lucide>
+            {{ usuario.activo ? 'Desactivar' : 'Activar' }}
           </button>
           <button class="btn-action btn-edit" (click)="editarUsuario()">
             <i-lucide name="pencil" [size]="20"  class="icon-btn"></i-lucide>
@@ -78,7 +74,7 @@
         <!-- Información de Contacto -->
         <div class="info-card">
           <h2>
-            <i-lucide name="phone" class="icon-section"></i-lucide>
+            <i-lucide name="mail" class="icon-section"></i-lucide>
             Información de Contacto
           </h2>
 
@@ -88,48 +84,6 @@
               <div class="info-value">
                 <i-lucide name="mail" [size]="16"  class="icon"></i-lucide>
                 <a [href]="'mailto:' + usuario.email">{{ usuario.email }}</a>
-              </div>
-            </div>
-
-            <div class="info-item" *ngIf="usuario.telefono">
-              <div class="info-label">Teléfono</div>
-              <div class="info-value">
-                <i-lucide name="phone" [size]="16" class="icon"></i-lucide>
-                <a [href]="'tel:' + usuario.telefono">{{ usuario.telefono }}</a>
-              </div>
-            </div>
-
-            <div class="info-item">
-              <div class="info-label">Usuario del Sistema</div>
-              <div class="info-value">
-                <i-lucide name="at-sign" [size]="16" class="icon"></i-lucide>
-                {{ usuario.username }}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Información Profesional -->
-        <div class="info-card" *ngIf="usuario.rol === 'abogado' && usuario.especialidad">
-          <h2>
-            <i-lucide name="scale" class="icon-section"></i-lucide>
-            Información Profesional
-          </h2>
-
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="info-label">Especialidad</div>
-              <div class="info-value especialidad-destacada">
-                <i-lucide name="briefcase" [size]="16" class="icon"></i-lucide>
-                {{ usuario.especialidad }}
-              </div>
-            </div>
-
-            <div class="info-item">
-              <div class="info-label">Casos Asignados</div>
-              <div class="info-value">
-                <span class="casos-numero-grande">{{ usuario.casos_asignados || 0 }}</span>
-                <span class="casos-texto">casos activos</span>
               </div>
             </div>
           </div>
@@ -147,15 +101,16 @@
               <div class="info-label">Fecha de Registro</div>
               <div class="info-value">
                 <i-lucide name="calendar" [size]="16" class="icon"></i-lucide>
-                {{ formatearFecha(usuario.fecha_registro) }}
+                <span *ngIf="usuario.createdAt">{{ formatearFecha(usuario.createdAt) }}</span>
+                <span *ngIf="!usuario.createdAt" class="sin-dato">No registrado</span>
               </div>
             </div>
 
-            <div class="info-item" *ngIf="usuario.ultimo_acceso">
+            <div class="info-item" *ngIf="usuario.ultimoAcceso">
               <div class="info-label">Último Acceso</div>
               <div class="info-value">
                 <i-lucide name="clock" [size]="16" class="icon"></i-lucide>
-                {{ formatearFecha(usuario.ultimo_acceso) }}
+                {{ formatearFecha(usuario.ultimoAcceso) }}
               </div>
             </div>
 
@@ -183,27 +138,11 @@
           </h2>
 
           <div class="permisos-lista">
-            <div class="permiso-item" *ngIf="usuario.rol === 'administrador'">
+            <div class="permiso-item" *ngIf="usuario.rol === 'admin'">
               <i-lucide name="check-circle" [size]="16" class="permiso-check"></i-lucide>
               <div class="permiso-texto">
                 <strong>Acceso Total al Sistema</strong>
-                <p>Gestión completa de usuarios, casos, clientes y configuración del sistema.</p>
-              </div>
-            </div>
-
-            <div class="permiso-item" *ngIf="usuario.rol === 'abogado'">
-              <i-lucide name="check-circle" [size]="16" class="permiso-check"></i-lucide>
-              <div class="permiso-texto">
-                <strong>Gestión de Casos</strong>
-                <p>Crear, editar y gestionar casos asignados.</p>
-              </div>
-            </div>
-
-            <div class="permiso-item" *ngIf="usuario.rol === 'abogado'">
-              <i-lucide name="check-circle" [size]="16" class="permiso-check"></i-lucide>
-              <div class="permiso-texto">
-                <strong>Gestión de Citas</strong>
-                <p>Agendar y administrar citas con clientes.</p>
+                <p>Gestión completa de usuarios, citas, clientes y configuración del sistema.</p>
               </div>
             </div>
 
@@ -218,8 +157,8 @@
             <div class="permiso-item" *ngIf="usuario.rol === 'asistente_legal'">
               <i-lucide name="check-circle" [size]="16" class="permiso-check"></i-lucide>
               <div class="permiso-texto">
-                <strong>Visualización de Casos</strong>
-                <p>Ver información de casos sin poder editarlos.</p>
+                <strong>Gestión de Agenda</strong>
+                <p>Administrar calendario y citas del bufete.</p>
               </div>
             </div>
           </div>
@@ -227,62 +166,19 @@
 
       </div>
 
-      <!-- Columna Derecha - Casos Asignados -->
+      <!-- Columna Derecha -->
       <div class="right-column">
-        <div class="casos-card" *ngIf="usuario.rol === 'abogado'">
-          <h2>
-            <i-lucide name="folder" class="icon-section"></i-lucide>
-            Casos Asignados
-          </h2>
-
-          <!-- Estadística -->
-          <div class="casos-stat">
-            <div class="stat-numero">{{ casosAsignados.length }}</div>
-            <div class="stat-texto">Casos Asignados</div>
-          </div>
-
-          <!-- Lista de Casos -->
-          <div class="casos-lista" *ngIf="casosAsignados.length > 0">
-            <div class="caso-item" *ngFor="let caso of casosAsignados" (click)="verCaso(caso.id)">
-              <div class="caso-header">
-                <div class="caso-numero">{{ caso.numero_caso }}</div>
-                <span class="caso-estado-badge" [ngClass]="getCasoEstadoClass(caso.estado)">
-                  {{ getCasoEstadoTexto(caso.estado) }}
-                </span>
-              </div>
-              <div class="caso-titulo">{{ caso.titulo }}</div>
-              <div class="caso-info">
-                <span class="caso-cliente">
-                  <i-lucide name="user" class="icon-caso"></i-lucide>
-                  {{ caso.cliente }}
-                </span>
-                <span class="caso-fecha">
-                  <i-lucide name="calendar" class="icon-caso"></i-lucide>
-                  {{ formatearFechaCorta(caso.fecha_inicio) }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Sin Casos -->
-          <div class="sin-casos" *ngIf="casosAsignados.length === 0">
-            <i-lucide name="folder-x" [size]="50" class="sin-casos-icon"></i-lucide>
-            <p>Este abogado no tiene casos asignados actualmente</p>
-          </div>
-        </div>
-
-        <!-- Info adicional para otros roles -->
-        <div class="info-adicional-card" *ngIf="usuario.rol !== 'abogado'">
+        <div class="info-adicional-card">
           <h2>
             <i-lucide name="info" class="icon-section"></i-lucide>
             Información Adicional
           </h2>
 
           <div class="info-box">
-            <i-lucide [name]="getRolIconName(usuario.rol)" class="info-box-icon"></i-lucide>
+            <i-lucide [name]="getRolIconName(usuario.rol)" [size]="48" class="info-box-icon"></i-lucide>
             <div class="info-box-content">
               <h3>{{ getRolTexto(usuario.rol) }}</h3>
-              <p *ngIf="usuario.rol === 'administrador'">
+              <p *ngIf="usuario.rol === 'admin'">
                 Este usuario tiene permisos de administrador con acceso completo al sistema.
               </p>
               <p *ngIf="usuario.rol === 'asistente_legal'">

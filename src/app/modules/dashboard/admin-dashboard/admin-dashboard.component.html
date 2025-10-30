@@ -1,254 +1,271 @@
 <div class="dashboard-admin">
 
-  <!-- Header -->
-  <div class="dashboard-header">
-    <div class="header-content">
-      <h1>Panel de Administración</h1>
-      <p>Bienvenido al sistema de gestión legal</p>
-    </div>
-    <div class="header-date">
-      <div class="date-icon">
-        <i-lucide name="calendar" [size]="28"></i-lucide>
-      </div>
-      <div class="date-text">
-        <div class="date-day">Viernes, 18 Octubre</div>
-        <div class="date-year">2025</div>
-      </div>
-    </div>
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando dashboard...</p>
   </div>
 
-  <!-- Estadísticas Principales -->
-  <div class="estadisticas-grid">
-    <div class="stat-card" *ngFor="let stat of estadisticas" [attr.data-color]="stat.color">
-      <div class="stat-icon">
-        <i-lucide [name]="getIconName(stat.icon)" [size]="32"></i-lucide>
+  <div *ngIf="!loading">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div class="header-content">
+        <h1>Panel de Administración</h1>
+        <p>Bienvenido al sistema de gestión legal</p>
       </div>
-      <div class="stat-content">
-        <div class="stat-label">{{ stat.titulo }}</div>
-        <div class="stat-value">{{ stat.valor }}</div>
-        <div class="stat-cambio" [class.positivo]="stat.tendencia === 'up'" [class.negativo]="stat.tendencia === 'down'">
-          <i-lucide [name]="stat.tendencia === 'up' ? 'trending-up' : 'trending-down'" [size]="16"></i-lucide>
-          <span class="cambio-texto">{{ stat.cambio > 0 ? '+' : '' }}{{ stat.cambio }}% vs mes anterior</span>
+      <div class="header-date">
+        <div class="date-icon">
+          <i-lucide name="calendar" [size]="28"></i-lucide>
+        </div>
+        <div class="date-text">
+          <div class="date-day">{{ fechaActual | date:'EEEE, dd MMMM':'':'es' }}</div>
+          <div class="date-year">{{ fechaActual | date:'yyyy' }}</div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Grid Principal -->
-  <div class="main-grid">
+    <!-- Estadísticas Principales -->
+    <div class="estadisticas-grid">
+      <div class="stat-card" *ngFor="let stat of estadisticas" [attr.data-color]="stat.color">
+        <div class="stat-icon">
+          <i-lucide [name]="getIconName(stat.icon)" [size]="32"></i-lucide>
+        </div>
+        <div class="stat-content">
+          <div class="stat-label">{{ stat.titulo }}</div>
+          <div class="stat-value">{{ stat.valor }}</div>
+          <div class="stat-cambio positivo">
+            <i-lucide name="trending-up" [size]="16"></i-lucide>
+            <span class="cambio-texto">En tiempo real</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Columna Izquierda -->
-    <div class="left-column">
+    <!-- Grid Principal -->
+    <div class="main-grid">
 
-      <!-- Gráfica de Casos por Mes -->
-      <div class="chart-card">
-        <div class="card-header">
-          <div>
+      <!-- Columna Izquierda -->
+      <div class="left-column">
+
+        <!-- Gráfica de Citas por Mes -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div>
+              <h2>
+                <i-lucide name="bar-chart-2" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
+                Citas por Mes
+              </h2>
+              <span class="card-subtitle">Últimos 10 meses</span>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div class="bar-chart" *ngIf="citasPorMes.length > 0">
+              <div class="bar-item" *ngFor="let item of citasPorMes">
+                <div class="bar-column">
+                  <div class="bar-fill" [style.height.%]="(item.citas / getMaxCitas()) * 100"></div>
+                </div>
+                <div class="bar-value">{{ item.citas }}</div>
+                <div class="bar-label">{{ item.mes }}</div>
+              </div>
+            </div>
+            <div *ngIf="citasPorMes.length === 0" class="sin-datos">
+              <p>No hay datos disponibles</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Citas por Estado -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div>
+              <h2>
+                <i-lucide name="folder-open" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
+                Distribución de Citas
+              </h2>
+              <span class="card-subtitle">Por estado</span>
+            </div>
+          </div>
+          <div class="tipo-casos-list" *ngIf="getCitasTotal() > 0">
+            <div class="tipo-item" *ngFor="let estado of citasPorEstado">
+              <div class="tipo-info">
+                <div class="tipo-dot" [style.background]="estado.color"></div>
+                <div class="tipo-nombre">{{ estado.tipo }}</div>
+              </div>
+              <div class="tipo-stats">
+                <div class="tipo-barra-container">
+                  <div class="tipo-barra-fill" [style.width.%]="getPorcentaje(estado.cantidad)"
+                       [style.background]="estado.color"></div>
+                </div>
+                <div class="tipo-cantidad">{{ estado.cantidad }}</div>
+                <div class="tipo-porcentaje">{{ getPorcentaje(estado.cantidad) }}%</div>
+              </div>
+            </div>
+          </div>
+          <div class="tipo-total">
+            Total de citas: <strong>{{ getCitasTotal() }}</strong>
+          </div>
+        </div>
+
+        <!-- Actividad Reciente -->
+        <div class="actividad-card">
+          <div class="card-header">
             <h2>
-              <i-lucide name="bar-chart-2" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
-              Casos por Mes
+              <i-lucide name="activity" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
+              Actividad Reciente
             </h2>
-            <span class="card-subtitle">Últimos 10 meses</span>
+            <button class="ver-todo-btn" (click)="navegarA('/citas')">
+              Ver todo
+              <i-lucide name="arrow-right" [size]="16" style="display: inline; margin-left: 4px;"></i-lucide>
+            </button>
           </div>
-        </div>
-        <div class="chart-container">
-          <div class="bar-chart">
-            <div class="bar-item" *ngFor="let item of casosPorMes">
-              <div class="bar-column">
-                <div class="bar-fill" [style.height.%]="(item.casos / getMaxCasos()) * 100"></div>
+          <div class="actividad-lista" *ngIf="actividadesRecientes.length > 0">
+            <div class="actividad-item" *ngFor="let actividad of actividadesRecientes">
+              <div class="actividad-icon" [attr.data-color]="actividad.color">
+                <i-lucide [name]="getActivityIcon(actividad.tipo)" [size]="20"></i-lucide>
               </div>
-              <div class="bar-value">{{ item.casos }}</div>
-              <div class="bar-label">{{ item.mes }}</div>
+              <div class="actividad-content">
+                <div class="actividad-titulo">{{ actividad.titulo }}</div>
+                <div class="actividad-descripcion">{{ actividad.descripcion }}</div>
+                <div class="actividad-fecha">{{ actividad.fecha }}</div>
+              </div>
             </div>
           </div>
+          <div *ngIf="actividadesRecientes.length === 0" class="sin-datos">
+            <p>No hay actividad reciente</p>
+          </div>
         </div>
+
       </div>
 
-      <!-- Casos por Tipo -->
-      <div class="chart-card">
-        <div class="card-header">
-          <div>
+      <!-- Columna Derecha -->
+      <div class="right-column">
+
+        <!-- Próximas Citas -->
+        <div class="citas-card">
+          <div class="card-header">
             <h2>
-              <i-lucide name="folder-open" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
-              Distribución de Casos
+              <i-lucide name="calendar-days" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
+              Próximas Citas
             </h2>
-            <span class="card-subtitle">Por tipo de caso</span>
+            <button class="ver-todo-btn" (click)="navegarA('/citas')">
+              Ver todas
+              <i-lucide name="arrow-right" [size]="16" style="display: inline; margin-left: 4px;"></i-lucide>
+            </button>
           </div>
-        </div>
-        <div class="tipo-casos-list">
-          <div class="tipo-item" *ngFor="let tipo of casosPorTipo">
-            <div class="tipo-info">
-              <div class="tipo-dot" [style.background]="tipo.color"></div>
-              <div class="tipo-nombre">{{ tipo.tipo }}</div>
-            </div>
-            <div class="tipo-stats">
-              <div class="tipo-barra-container">
-                <div class="tipo-barra-fill" [style.width.%]="getPorcentaje(tipo.cantidad)"
-                     [style.background]="tipo.color"></div>
+          <div class="citas-lista" *ngIf="citasProximas.length > 0">
+            <div class="cita-item" *ngFor="let cita of citasProximas" (click)="verCita(cita.id)"
+                 [class.hoy]="esHoy(cita.fecha)">
+              <div class="cita-fecha">
+                <div class="fecha-dia">{{ cita.fecha | date:'dd' }}</div>
+                <div class="fecha-mes">{{ cita.fecha | date:'MMM' }}</div>
               </div>
-              <div class="tipo-cantidad">{{ tipo.cantidad }}</div>
-              <div class="tipo-porcentaje">{{ getPorcentaje(tipo.cantidad) }}%</div>
+              <div class="cita-info">
+                <div class="cita-titulo">{{ cita.titulo }}</div>
+                <div class="cita-cliente">
+                  <i-lucide name="user-check" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
+                  {{ cita.cliente }}
+                </div>
+                <div class="cita-detalles">
+                  <span class="cita-hora">
+                    <i-lucide name="clock" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
+                    {{ cita.hora }}
+                  </span>
+                  <span class="cita-tipo">{{ cita.tipo }}</span>
+                </div>
+              </div>
+              <div class="cita-estado" [class.confirmada]="cita.estado === 'confirmada'"
+                   [class.pendiente]="cita.estado === 'programada'">
+                <i-lucide [name]="cita.estado === 'confirmada' ? 'check-circle' : 'clock'" [size]="24"></i-lucide>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="tipo-total">
-          Total de casos: <strong>{{ getCasosTotal() }}</strong>
-        </div>
-      </div>
-
-      <!-- Actividad Reciente -->
-      <div class="actividad-card">
-        <div class="card-header">
-          <h2>
-            <i-lucide name="activity" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
-            Actividad Reciente
-          </h2>
-          <button class="ver-todo-btn" (click)="navegarA('/dashboard')">
-            Ver todo
-            <i-lucide name="arrow-right" [size]="16" style="display: inline; margin-left: 4px;"></i-lucide>
+          <div *ngIf="citasProximas.length === 0" class="sin-datos">
+            <p>No hay citas próximas</p>
+          </div>
+          <button class="btn-nueva-cita" (click)="navegarA('/citas/nueva')">
+            <i-lucide name="calendar" [size]="20"></i-lucide>
+            <span>Nueva Cita</span>
           </button>
         </div>
-        <div class="actividad-lista">
-          <div class="actividad-item" *ngFor="let actividad of actividadesRecientes">
-            <div class="actividad-icon" [attr.data-color]="actividad.color">
-              <i-lucide [name]="getActivityIcon(actividad.tipo)" [size]="20"></i-lucide>
+
+        <!-- Acciones Rápidas -->
+        <div class="acciones-card">
+          <div class="card-header">
+            <h2>
+              <i-lucide name="layout-dashboard" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
+              Acciones Rápidas
+            </h2>
+          </div>
+          <div class="acciones-grid">
+            <button class="accion-btn" (click)="navegarA('/usuarios')">
+              <div class="accion-icon">
+                <i-lucide name="users" [size]="28"></i-lucide>
+              </div>
+              <div class="accion-texto">Gestionar Usuarios</div>
+            </button>
+            <button class="accion-btn" (click)="navegarA('/clientes')">
+              <div class="accion-icon">
+                <i-lucide name="user-check" [size]="28"></i-lucide>
+              </div>
+              <div class="accion-texto">Ver Clientes</div>
+            </button>
+            <button class="accion-btn" (click)="navegarA('/citas')">
+              <div class="accion-icon">
+                <i-lucide name="calendar" [size]="28"></i-lucide>
+              </div>
+              <div class="accion-texto">Gestionar Citas</div>
+            </button>
+            <button class="accion-btn" (click)="navegarA('/reportes')">
+              <div class="accion-icon">
+                <i-lucide name="bar-chart-2" [size]="28"></i-lucide>
+              </div>
+              <div class="accion-texto">Ver Reportes</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Resumen Equipo -->
+        <div class="equipo-card">
+          <div class="card-header">
+            <h2>
+              <i-lucide name="users" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
+              Resumen del Equipo
+            </h2>
+          </div>
+          <div class="equipo-stats">
+            <div class="equipo-stat">
+              <div class="equipo-stat-icon">
+                <i-lucide name="scale" [size]="24"></i-lucide>
+              </div>
+              <div class="equipo-stat-info">
+                <div class="equipo-stat-label">Abogados</div>
+                <div class="equipo-stat-value">{{ totalAbogados }} activos</div>
+              </div>
             </div>
-            <div class="actividad-content">
-              <div class="actividad-titulo">{{ actividad.titulo }}</div>
-              <div class="actividad-descripcion">{{ actividad.descripcion }}</div>
-              <div class="actividad-fecha">{{ actividad.fecha }}</div>
+            <div class="equipo-stat">
+              <div class="equipo-stat-icon">
+                <i-lucide name="clipboard-list" [size]="24"></i-lucide>
+              </div>
+              <div class="equipo-stat-info">
+                <div class="equipo-stat-label">Asistentes</div>
+                <div class="equipo-stat-value">{{ totalAsistentes }} activos</div>
+              </div>
+            </div>
+            <div class="equipo-stat">
+              <div class="equipo-stat-icon">
+                <i-lucide name="user-check" [size]="24"></i-lucide>
+              </div>
+              <div class="equipo-stat-info">
+                <div class="equipo-stat-label">Administradores</div>
+                <div class="equipo-stat-value">{{ totalAdmins }} activos</div>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
 
     </div>
-
-    <!-- Columna Derecha -->
-    <div class="right-column">
-
-      <!-- Próximas Citas -->
-      <div class="citas-card">
-        <div class="card-header">
-          <h2>
-            <i-lucide name="calendar-days" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
-            Próximas Citas
-          </h2>
-          <button class="ver-todo-btn" (click)="navegarA('/citas')">
-            Ver todas
-            <i-lucide name="arrow-right" [size]="16" style="display: inline; margin-left: 4px;"></i-lucide>
-          </button>
-        </div>
-        <div class="citas-lista">
-          <div class="cita-item" *ngFor="let cita of citasProximas" (click)="verCita(cita.id)"
-               [class.hoy]="esHoy(cita.fecha)">
-            <div class="cita-fecha">
-              <div class="fecha-dia">{{ cita.fecha | date:'dd' }}</div>
-              <div class="fecha-mes">{{ cita.fecha | date:'MMM' }}</div>
-            </div>
-            <div class="cita-info">
-              <div class="cita-titulo">{{ cita.titulo }}</div>
-              <div class="cita-cliente">
-                <i-lucide name="user-check" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
-                {{ cita.cliente }}
-              </div>
-              <div class="cita-detalles">
-                <span class="cita-hora">
-                  <i-lucide name="clock" [size]="14" style="display: inline; margin-right: 4px;"></i-lucide>
-                  {{ cita.hora }}
-                </span>
-                <span class="cita-tipo">{{ cita.tipo }}</span>
-              </div>
-            </div>
-            <div class="cita-estado" [class.confirmada]="cita.estado === 'confirmada'"
-                 [class.pendiente]="cita.estado === 'pendiente'">
-              <i-lucide [name]="cita.estado === 'confirmada' ? 'check-circle' : 'clock'" [size]="24"></i-lucide>
-            </div>
-          </div>
-        </div>
-        <button class="btn-nueva-cita" (click)="navegarA('/citas/nueva')">
-          <i-lucide name="calendar" [size]="20"></i-lucide>
-          <span>Nueva Cita</span>
-        </button>
-      </div>
-
-      <!-- Acciones Rápidas -->
-      <div class="acciones-card">
-        <div class="card-header">
-          <h2>
-            <i-lucide name="layout-dashboard" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
-            Acciones Rápidas
-          </h2>
-        </div>
-        <div class="acciones-grid">
-          <button class="accion-btn" (click)="navegarA('/usuarios')">
-            <div class="accion-icon">
-              <i-lucide name="users" [size]="28"></i-lucide>
-            </div>
-            <div class="accion-texto">Gestionar Usuarios</div>
-          </button>
-          <button class="accion-btn" (click)="navegarA('/casos')">
-            <div class="accion-icon">
-              <i-lucide name="briefcase" [size]="28"></i-lucide>
-            </div>
-            <div class="accion-texto">Ver Casos</div>
-          </button>
-          <button class="accion-btn" (click)="navegarA('/citas')">
-            <div class="accion-icon">
-              <i-lucide name="calendar" [size]="28"></i-lucide>
-            </div>
-            <div class="accion-texto">Gestionar Citas</div>
-          </button>
-          <button class="accion-btn" (click)="navegarA('/reportes')">
-            <div class="accion-icon">
-              <i-lucide name="bar-chart-2" [size]="28"></i-lucide>
-            </div>
-            <div class="accion-texto">Ver Reportes</div>
-          </button>
-        </div>
-      </div>
-
-      <!-- Resumen Equipo -->
-      <div class="equipo-card">
-        <div class="card-header">
-          <h2>
-            <i-lucide name="users" [size]="20" style="display: inline; margin-right: 8px;"></i-lucide>
-            Resumen del Equipo
-          </h2>
-        </div>
-        <div class="equipo-stats">
-          <div class="equipo-stat">
-            <div class="equipo-stat-icon">
-              <i-lucide name="scale" [size]="24"></i-lucide>
-            </div>
-            <div class="equipo-stat-info">
-              <div class="equipo-stat-label">Abogados</div>
-              <div class="equipo-stat-value">5 activos</div>
-            </div>
-          </div>
-          <div class="equipo-stat">
-            <div class="equipo-stat-icon">
-              <i-lucide name="clipboard-list" [size]="24"></i-lucide>
-            </div>
-            <div class="equipo-stat-info">
-              <div class="equipo-stat-label">Asistentes</div>
-              <div class="equipo-stat-value">4 activos</div>
-            </div>
-          </div>
-          <div class="equipo-stat">
-            <div class="equipo-stat-icon">
-              <i-lucide name="folder-open" [size]="24"></i-lucide>
-            </div>
-            <div class="equipo-stat-info">
-              <div class="equipo-stat-label">Casos Asignados</div>
-              <div class="equipo-stat-value">26 casos</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
   </div>
 
 </div>

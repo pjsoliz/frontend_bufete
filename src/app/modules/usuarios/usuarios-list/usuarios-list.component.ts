@@ -19,7 +19,6 @@ export class UsuariosListComponent implements OnInit {
   stats = {
     total: 0,
     administradores: 0,
-    abogados: 0,
     asistentes: 0,
     activos: 0
   };
@@ -46,28 +45,32 @@ export class UsuariosListComponent implements OnInit {
       error: (error) => {
         console.error('Error al cargar usuarios:', error);
         this.loading = false;
+        alert('Error al cargar los usuarios. Verifica la conexión con el servidor.');
       }
     });
   }
 
   calcularEstadisticas(): void {
     this.stats.total = this.usuarios.length;
-    this.stats.administradores = this.usuarios.filter(u => u.rol === 'administrador').length;
-    this.stats.abogados = this.usuarios.filter(u => u.rol === 'abogado').length;
+    this.stats.administradores = this.usuarios.filter(u => u.rol === 'admin').length;
     this.stats.asistentes = this.usuarios.filter(u => u.rol === 'asistente_legal').length;
-    this.stats.activos = this.usuarios.filter(u => u.estado === 'activo').length;
+    this.stats.activos = this.usuarios.filter(u => u.activo).length;
   }
 
   aplicarFiltros(): void {
     this.usuariosFiltrados = this.usuarios.filter(usuario => {
       const cumpleRol = this.filtroRol === 'todos' || usuario.rol === this.filtroRol;
-      const cumpleEstado = this.filtroEstado === 'todos' || usuario.estado === this.filtroEstado;
+      
+      let cumpleEstado = true;
+      if (this.filtroEstado === 'activo') {
+        cumpleEstado = usuario.activo === true;
+      } else if (this.filtroEstado === 'inactivo') {
+        cumpleEstado = usuario.activo === false;
+      }
 
       const cumpleBusqueda = !this.filtroBusqueda ||
-        usuario.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        usuario.apellido.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        usuario.email.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        usuario.username.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
+        usuario.nombreCompleto.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
+        usuario.email.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
 
       return cumpleRol && cumpleEstado && cumpleBusqueda;
     });
@@ -81,20 +84,21 @@ export class UsuariosListComponent implements OnInit {
     this.router.navigate(['/usuarios/nuevo']);
   }
 
-  verDetalle(id: number): void {
+  verDetalle(id: string): void {
     this.router.navigate(['/usuarios', id]);
   }
 
-  editarUsuario(id: number, event: Event): void {
+  editarUsuario(id: string, event: Event): void {
     event.stopPropagation();
     this.router.navigate(['/usuarios/editar', id]);
   }
 
-  eliminarUsuario(id: number, event: Event): void {
+  eliminarUsuario(id: string, event: Event): void {
     event.stopPropagation();
     if (confirm('¿Está seguro de eliminar este usuario?')) {
       this.usuariosService.deleteUsuario(id).subscribe({
         next: () => {
+          alert('Usuario eliminado exitosamente');
           this.cargarUsuarios();
         },
         error: (error) => {
@@ -105,27 +109,27 @@ export class UsuariosListComponent implements OnInit {
     }
   }
 
-  cambiarEstado(id: number, nuevoEstado: 'activo' | 'inactivo', event: Event): void {
+  cambiarEstado(id: string, activar: boolean, event: Event): void {
     event.stopPropagation();
-    const operacion = nuevoEstado === 'activo'
-      ? this.usuariosService.activarUsuario(id)
-      : this.usuariosService.desactivarUsuario(id);
-
-    operacion.subscribe({
-      next: () => {
-        this.cargarUsuarios();
-      },
-      error: (error) => {
-        console.error('Error al cambiar estado:', error);
-        alert('Error al cambiar el estado');
-      }
-    });
+    const accion = activar ? 'activar' : 'desactivar';
+    
+    if (confirm(`¿Está seguro de ${accion} este usuario?`)) {
+      this.usuariosService.cambiarEstadoUsuario(id, activar).subscribe({
+        next: () => {
+          this.cargarUsuarios();
+          alert(`Usuario ${accion}do exitosamente`);
+        },
+        error: (error) => {
+          console.error('Error al cambiar estado:', error);
+          alert('Error al cambiar el estado del usuario');
+        }
+      });
+    }
   }
 
   getRolClass(rol: string): string {
     const classes: any = {
-      'administrador': 'rol-admin',
-      'abogado': 'rol-abogado',
+      'admin': 'rol-admin',
       'asistente_legal': 'rol-asistente'
     };
     return classes[rol] || '';
@@ -133,36 +137,30 @@ export class UsuariosListComponent implements OnInit {
 
   getRolTexto(rol: string): string {
     const textos: any = {
-      'administrador': 'Administrador',
-      'abogado': 'Abogado',
+      'admin': 'Administrador',
       'asistente_legal': 'Asistente Legal'
     };
     return textos[rol] || rol;
   }
 
-
   getRolIconName(rol: string): string {
-  const icons: any = {
-    'administrador': 'shield',
-    'abogado': 'scale',
-    'asistente_legal': 'clipboard-list'
-  };
-  return icons[rol] || 'user';
-} 
-  getEstadoClass(estado: string): string {
-    return estado === 'activo' ? 'estado-activo' : 'estado-inactivo';
+    const icons: any = {
+      'admin': 'shield',
+      'asistente_legal': 'clipboard-list'
+    };
+    return icons[rol] || 'user';
+  } 
+
+  getEstadoClass(activo: boolean): string {
+    return activo ? 'estado-activo' : 'estado-inactivo';
   }
 
-  getEstadoTexto(estado: string): string {
-    return estado === 'activo' ? 'Activo' : 'Inactivo';
+  getEstadoTexto(activo: boolean): string {
+    return activo ? 'Activo' : 'Inactivo';
   }
 
-  getNombreCompleto(usuario: Usuario): string {
-    return `${usuario.nombre} ${usuario.apellido}`;
-  }
-
-  formatearFecha(fecha: string): string {
-    const fechaObj = new Date(fecha + 'T00:00:00');
+  formatearFecha(fecha: Date | string): string {
+    const fechaObj = new Date(fecha);
     return fechaObj.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'short',

@@ -23,10 +23,6 @@ const routes: Routes = [
         loadChildren: () => import('./modules/clientes/clientes.module').then(m => m.ClientesModule)
       },
       {
-        path: 'casos',
-        loadChildren: () => import('./modules/casos/casos.module').then(m => m.CasosModule)
-      },
-      {
         path: 'citas',
         loadChildren: () => import('./modules/citas/citas.module').then(m => m.CitasModule),canActivate: [AuthGuard]
       },

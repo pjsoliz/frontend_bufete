@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { CitasService } from '../../../core/services/citas.service';
+import { UsuariosService } from '../../../core/services/usuarios.service';
+import { ClientesService } from '../../../core/services/clientes.service';
+import { AbogadosService } from '../../../core/services/abogados.service';
 
 interface Estadistica {
   titulo: string;
@@ -11,8 +16,8 @@ interface Estadistica {
 }
 
 interface ActividadReciente {
-  id: number;
-  tipo: 'caso' | 'cita' | 'cliente' | 'usuario';
+  id: string;
+  tipo: 'cita' | 'cliente' | 'usuario';
   titulo: string;
   descripcion: string;
   fecha: string;
@@ -21,10 +26,10 @@ interface ActividadReciente {
 }
 
 interface CitaProxima {
-  id: number;
+  id: string;
   titulo: string;
   cliente: string;
-  fecha: string;
+  fecha: Date;
   hora: string;
   tipo: string;
   estado: string;
@@ -37,191 +42,267 @@ interface CitaProxima {
 })
 export class DashboardAdminComponent implements OnInit {
 
+  loading = true;
+  
   estadisticas: Estadistica[] = [
     {
-      titulo: 'Casos Activos',
-      valor: 128,
-      icon: '📁',
+      titulo: 'Total Citas',
+      valor: 0,
+      icon: '📅',
       color: 'blue',
-      cambio: 12,
+      cambio: 0,
       tendencia: 'up'
     },
     {
       titulo: 'Citas Hoy',
-      valor: 8,
+      valor: 0,
       icon: '📅',
       color: 'orange',
-      cambio: -2,
-      tendencia: 'down'
+      cambio: 0,
+      tendencia: 'up'
     },
     {
-      titulo: 'Clientes Activos',
-      valor: 45,
+      titulo: 'Total Clientes',
+      valor: 0,
       icon: '👥',
       color: 'green',
-      cambio: 5,
+      cambio: 0,
       tendencia: 'up'
     },
     {
       titulo: 'Usuarios Sistema',
-      valor: 12,
+      valor: 0,
       icon: '👤',
       color: 'purple',
-      cambio: 1,
+      cambio: 0,
       tendencia: 'up'
     }
   ];
 
-  actividadesRecientes: ActividadReciente[] = [
-    {
-      id: 1,
-      tipo: 'caso',
-      titulo: 'Nuevo Caso Creado',
-      descripcion: 'Demanda Laboral - Despido Injustificado',
-      fecha: 'Hace 2 horas',
-      icon: '📁',
-      color: 'blue'
-    },
-    {
-      id: 2,
-      tipo: 'cita',
-      titulo: 'Cita Confirmada',
-      descripcion: 'Consulta con Juan Pérez - 10:00 AM',
-      fecha: 'Hace 3 horas',
-      icon: '✅',
-      color: 'green'
-    },
-    {
-      id: 3,
-      tipo: 'cliente',
-      titulo: 'Nuevo Cliente Registrado',
-      descripcion: 'Sandra Morales - Caso Comercial',
-      fecha: 'Hace 5 horas',
-      icon: '👤',
-      color: 'purple'
-    },
-    {
-      id: 4,
-      tipo: 'usuario',
-      titulo: 'Usuario Actualizado',
-      descripcion: 'Dr. Carlos Méndez - Perfil actualizado',
-      fecha: 'Hace 1 día',
-      icon: '✏️',
-      color: 'orange'
-    },
-    {
-      id: 5,
-      tipo: 'caso',
-      titulo: 'Caso Cerrado',
-      descripcion: 'Reclamo Laboral - Salarios Impagos',
-      fecha: 'Hace 1 día',
-      icon: '✔️',
-      color: 'green'
-    }
-  ];
-
-  citasProximas: CitaProxima[] = [
-    {
-      id: 1,
-      titulo: 'Consulta Inicial',
-      cliente: 'Juan Pérez',
-      fecha: '2025-10-20',
-      hora: '09:00',
-      tipo: 'Consulta',
-      estado: 'confirmada'
-    },
-    {
-      id: 2,
-      titulo: 'Audiencia de Divorcio',
-      cliente: 'María López',
-      fecha: '2025-10-22',
-      hora: '10:30',
-      tipo: 'Audiencia',
-      estado: 'confirmada'
-    },
-    {
-      id: 3,
-      titulo: 'Firma de Documentos',
-      cliente: 'Laura Martínez',
-      fecha: '2025-10-25',
-      hora: '11:00',
-      tipo: 'Firma',
-      estado: 'pendiente'
-    },
-    {
-      id: 4,
-      titulo: 'Audiencia Preliminar',
-      cliente: 'Carmen Ruiz',
-      fecha: '2025-10-28',
-      hora: '09:30',
-      tipo: 'Audiencia',
-      estado: 'pendiente'
-    }
-  ];
+  actividadesRecientes: ActividadReciente[] = [];
+  citasProximas: CitaProxima[] = [];
 
   // Datos para gráficas
-  casosPorMes = [
-    { mes: 'Ene', casos: 45 },
-    { mes: 'Feb', casos: 52 },
-    { mes: 'Mar', casos: 48 },
-    { mes: 'Abr', casos: 61 },
-    { mes: 'May', casos: 55 },
-    { mes: 'Jun', casos: 67 },
-    { mes: 'Jul', casos: 71 },
-    { mes: 'Ago', casos: 69 },
-    { mes: 'Sep', casos: 75 },
-    { mes: 'Oct', casos: 82 }
-  ];
-
-  casosPorTipo = [
-    { tipo: 'Civil', cantidad: 32, color: '#003366' },
-    { tipo: 'Penal', cantidad: 18, color: '#003366'},
-    { tipo: 'Familia', cantidad: 25, color: '#003366' },
-  ];
-
+  citasPorMes: any[] = [];
+  citasPorEstado: any[] = [];
   
+  // Resumen del equipo
+  totalAdmins = 0;
+  totalAsistentes = 0;
+  totalAbogados = 0;
 
-  constructor(private router: Router) {}
+  fechaActual = new Date();
+
+  constructor(
+    private router: Router,
+    private citasService: CitasService,
+    private usuariosService: UsuariosService,
+    private clientesService: ClientesService,
+    private abogadosService: AbogadosService
+  ) {}
 
   ngOnInit(): void {
-    // Componente inicializado
+    this.cargarDatos();
+  }
+
+  cargarDatos(): void {
+    this.loading = true;
+
+    forkJoin({
+      citas: this.citasService.getCitas(),
+      usuarios: this.usuariosService.getUsuarios(),
+      clientes: this.clientesService.getClientes(),
+      abogados: this.abogadosService.getAbogados()
+    }).subscribe({
+      next: (data) => {
+        // Procesar citas
+        const citas = data.citas;
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        // Estadística: Total de citas
+        this.estadisticas[0].valor = citas.length;
+
+        // Estadística: Citas de hoy
+        const citasHoy = citas.filter(cita => {
+          const fechaCita = new Date(cita.fecha);
+          fechaCita.setHours(0, 0, 0, 0);
+          return fechaCita.getTime() === hoy.getTime();
+        });
+        this.estadisticas[1].valor = citasHoy.length;
+
+        // Estadística: Total de clientes
+        this.estadisticas[2].valor = data.clientes.length;
+
+        // Estadística: Usuarios del sistema (activos)
+        this.estadisticas[3].valor = data.usuarios.filter(u => u.activo).length;
+
+        // Procesar próximas citas (solo futuras, ordenadas por fecha)
+        const ahora = new Date();
+        this.citasProximas = citas
+          .filter(cita => new Date(cita.fecha) >= ahora && cita.estado !== 'cancelada')
+          .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+          .slice(0, 4)
+          .map(cita => ({
+            id: cita.id,
+            titulo: cita.tipoCita?.nombre || 'Consulta',
+            cliente: cita.cliente?.nombreCompleto || 'Cliente no especificado',
+            fecha: new Date(cita.fecha),
+            hora: cita.hora || '00:00',
+            tipo: cita.tipoCita?.nombre || 'Consulta',
+            estado: cita.estado
+          }));
+
+        // Actividad reciente (últimas 5 citas)
+        this.actividadesRecientes = citas
+          .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+          .slice(0, 5)
+          .map(cita => ({
+            id: cita.id,
+            tipo: 'cita',
+            titulo: `Cita ${this.getEstadoTexto(cita.estado)}`,
+            descripcion: `${cita.cliente?.nombreCompleto || 'Cliente'} - ${cita.descripcion || 'Sin descripción'}`,
+            fecha: this.calcularTiempoTranscurrido(cita.createdAt),
+            icon: 'calendar',
+            color: this.getColorPorEstado(cita.estado)
+          }));
+
+        // Citas por mes (últimos 10 meses)
+        this.calcularCitasPorMes(citas);
+
+        // Citas por estado
+        this.calcularCitasPorEstado(citas);
+
+        // Resumen del equipo
+        this.totalAdmins = data.usuarios.filter(u => u.rol === 'admin' && u.activo).length;
+        this.totalAsistentes = data.usuarios.filter(u => u.rol === 'asistente_legal' && u.activo).length;
+        this.totalAbogados = data.abogados.filter(a => a.activo).length;
+
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar datos del dashboard:', error);
+        this.loading = false;
+      }
+    });
+  }
+
+  calcularCitasPorMes(citas: any[]): void {
+    const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const ahora = new Date();
+    const citasPorMesMap: { [key: string]: number } = {};
+
+    // Inicializar últimos 10 meses
+    for (let i = 9; i >= 0; i--) {
+      const fecha = new Date(ahora.getFullYear(), ahora.getMonth() - i, 1);
+      const key = `${fecha.getFullYear()}-${fecha.getMonth()}`;
+      citasPorMesMap[key] = 0;
+    }
+
+    // Contar citas por mes
+    citas.forEach(cita => {
+      const fecha = new Date(cita.fecha);
+      const key = `${fecha.getFullYear()}-${fecha.getMonth()}`;
+      if (citasPorMesMap[key] !== undefined) {
+        citasPorMesMap[key]++;
+      }
+    });
+
+    // Convertir a array
+    this.citasPorMes = Object.keys(citasPorMesMap).map(key => {
+      const [year, month] = key.split('-').map(Number);
+      return {
+        mes: meses[month],
+        citas: citasPorMesMap[key]
+      };
+    });
+  }
+
+  calcularCitasPorEstado(citas: any[]): void {
+    const estados = ['pendiente', 'confirmada', 'completada', 'cancelada', 'no_asistio'];
+    const colores = ['#FFA500', '#007BFF', '#28A745', '#DC3545', '#6C757D'];
+
+    this.citasPorEstado = estados.map((estado, index) => ({
+      tipo: this.getEstadoTexto(estado),
+      cantidad: citas.filter(c => c.estado === estado).length,
+      color: colores[index]
+    })).filter(item => item.cantidad > 0); // Solo mostrar estados con citas
+  }
+
+  getEstadoTexto(estado: string): string {
+    const textos: any = {
+      'pendiente': 'Pendiente',
+      'confirmada': 'Confirmada',
+      'completada': 'Completada',
+      'cancelada': 'Cancelada',
+      'no_asistio': 'No Asistió'
+    };
+    return textos[estado] || estado;
+  }
+
+  getColorPorEstado(estado: string): string {
+    const colores: any = {
+      'pendiente': 'orange',
+      'confirmada': 'blue',
+      'completada': 'green',
+      'cancelada': 'red',
+      'no_asistio': 'gray'
+    };
+    return colores[estado] || 'blue';
+  }
+
+  calcularTiempoTranscurrido(fecha: any): string {
+    if (!fecha) return 'Hace un momento';
+    
+    const ahora = new Date();
+    const fechaObj = new Date(fecha);
+    const diff = ahora.getTime() - fechaObj.getTime();
+    
+    const minutos = Math.floor(diff / 60000);
+    const horas = Math.floor(minutos / 60);
+    const dias = Math.floor(horas / 24);
+    
+    if (dias > 0) return `Hace ${dias} día${dias > 1 ? 's' : ''}`;
+    if (horas > 0) return `Hace ${horas} hora${horas > 1 ? 's' : ''}`;
+    if (minutos > 0) return `Hace ${minutos} minuto${minutos > 1 ? 's' : ''}`;
+    return 'Hace un momento';
   }
 
   navegarA(ruta: string): void {
     this.router.navigate([ruta]);
   }
 
-  verCita(id: number): void {
+  verCita(id: string): void {
     this.router.navigate(['/citas', id]);
   }
 
-  getMaxCasos(): number {
-    return Math.max(...this.casosPorMes.map(c => c.casos));
+  getMaxCitas(): number {
+    return Math.max(...this.citasPorMes.map(c => c.citas), 1);
   }
 
-  getCasosTotal(): number {
-    return this.casosPorTipo.reduce((sum, item) => sum + item.cantidad, 0);
+  getCitasTotal(): number {
+    return this.citasPorEstado.reduce((sum, item) => sum + item.cantidad, 0);
   }
 
   getPorcentaje(cantidad: number): number {
-    const total = this.getCasosTotal();
+    const total = this.getCitasTotal();
+    if (total === 0) return 0;
     return Math.round((cantidad / total) * 100);
   }
 
-  formatearFecha(fecha: string): string {
-    const fechaObj = new Date(fecha + 'T00:00:00');
-    return fechaObj.toLocaleDateString('es-ES', {
+  formatearFecha(fecha: Date): string {
+    return fecha.toLocaleDateString('es-ES', {
       weekday: 'short',
       month: 'short',
       day: 'numeric'
     });
   }
 
-  esHoy(fecha: string): boolean {
+  esHoy(fecha: Date): boolean {
     const hoy = new Date();
-    const fechaCita = new Date(fecha + 'T00:00:00');
-    return hoy.toDateString() === fechaCita.toDateString();
+    return hoy.toDateString() === fecha.toDateString();
   }
+
   getIconName(emoji: string): string {
     const iconMap: { [key: string]: string } = {
       '📁': 'briefcase',
@@ -229,27 +310,11 @@ export class DashboardAdminComponent implements OnInit {
       '👥': 'users',
       '👤': 'user-check'
     };
-    return iconMap[emoji] || 'briefcase';
+    return iconMap[emoji] || 'calendar';
   }
 
-  /**
-   * Obtiene el icono según el tipo de alerta
-   */
-  getAlertIcon(tipo: string): string {
-    const iconMap: { [key: string]: string } = {
-      'urgente': 'alert-triangle',
-      'info': 'info',
-      'exito': 'check-circle'
-    };
-    return iconMap[tipo] || 'info';
-  }
-
-  /**
-   * Obtiene el icono según el tipo de actividad
-   */
   getActivityIcon(tipo: string): string {
     const iconMap: { [key: string]: string } = {
-      'caso': 'briefcase',
       'cita': 'calendar',
       'cliente': 'user-plus',
       'usuario': 'edit-3'
