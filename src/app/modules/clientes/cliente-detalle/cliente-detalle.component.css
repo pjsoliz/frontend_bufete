@@ -91,7 +91,7 @@
   align-items: center;
   gap: 2rem;
   flex-wrap: wrap;
-    border: 2px solid #C7B47C;
+  border: 2px solid #C7B47C;
 }
 
 .header-left {
@@ -223,8 +223,15 @@
 
 /* Content Grid */
 .content-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Fila de 2 cards */
+.info-cards-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 }
 
@@ -234,7 +241,6 @@
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  margin-bottom: 2rem;
   border: 2px solid #C7B47C;
 }
 
@@ -270,6 +276,9 @@
   color: #003366;
   font-size: 0.9rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .info-value {
@@ -303,235 +312,6 @@
   padding: 1rem;
   border-radius: 8px;
   border-left: 4px solid #C7B47C;
-}
-
-/* Casos Card */
-.casos-card {
-  background: #FFFFFF;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  position: sticky;
-  top: 2rem;
-    border: 2px solid #C7B47C;
-}
-
-.casos-card h2 {
-  color: #003366;
-  font-size: 1.3rem;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #C7B47C;
-}
-
-/* Estadísticas de Casos */
-.casos-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.caso-stat {
-  padding: 1.5rem;
-  border-radius: 12px;
-  text-align: center;
-  border: 2px solid transparent;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-
-.caso-stat::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-}
-
-.caso-stat.activos {
-  background: rgba(0, 51, 102, 0.05);
-  border-color: #003366;
-}
-
-.caso-stat.activos::before {
-  background: #003366;
-}
-
-.caso-stat.totales {
-  background: rgba(199, 180, 124, 0.1);
-  border-color: #C7B47C;
-}
-
-.caso-stat.totales::before {
-  background: #C7B47C;
-}
-
-.caso-stat:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.stat-icon {
-  color: #003366;
-  margin-bottom: 0.5rem;
-}
-
-.stat-numero {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #003366;
-  margin-bottom: 0.5rem;
-}
-
-.stat-texto {
-  color: #212529;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-/* Lista de Casos */
-.casos-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-height: 600px;
-  overflow-y: auto;
-}
-
-.caso-item {
-  background: #F8F9FA;
-  border-radius: 10px;
-  padding: 1.25rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  border-left: 4px solid #C7B47C;
-  border: 2px solid transparent;
-}
-
-.caso-item:hover {
-  background: #FFFFFF;
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border-color: #C7B47C;
-}
-
-.caso-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.caso-numero {
-  font-weight: 700;
-  color: #003366;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.caso-estado-badge {
-  padding: 0.4rem 0.75rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.caso-pendiente { 
-  background: rgba(199, 180, 124, 0.2); 
-  color: #212529; 
-}
-
-.caso-progreso { 
-  background: rgba(0, 51, 102, 0.1); 
-  color: #003366; 
-}
-
-.caso-suspendido { 
-  background: rgba(199, 180, 124, 0.15); 
-  color: #212529; 
-}
-
-.caso-cerrado { 
-  background: rgba(0, 51, 102, 0.15); 
-  color: #003366; 
-}
-
-.caso-titulo {
-  color: #212529;
-  font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 0.75rem;
-  line-height: 1.4;
-}
-
-.caso-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.caso-fecha,
-.caso-abogado {
-  color: #212529;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-/* Sin Casos */
-.sin-casos {
-  text-align: center;
-  padding: 3rem 1rem;
-}
-
-.sin-casos-icon {
-  width: 80px !important;
-  height: 80px !important;
-  color: #003366;
-  margin: 0 auto 1rem;
-  display: block;
-  opacity: 0.3;
-}
-
-.sin-casos p {
-  color: #212529;
-  margin-bottom: 1.5rem;
-}
-
-.btn-nuevo-caso {
-  padding: 0.75rem 1.5rem;
-  background: #003366;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-nuevo-caso:hover {
-  background: #004d99;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
 }
 
 /* Badges de plataforma */
@@ -637,12 +417,8 @@
 
 /* Responsive */
 @media (max-width: 1200px) {
-  .content-grid {
+  .info-cards-row {
     grid-template-columns: 1fr;
-  }
-
-  .casos-card {
-    position: static;
   }
 }
 
@@ -680,10 +456,6 @@
   }
 
   .info-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .casos-stats {
     grid-template-columns: 1fr;
   }
 }

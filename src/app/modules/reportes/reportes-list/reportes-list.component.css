@@ -104,24 +104,26 @@
 }
 
 .btn-refresh {
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #003366 0%, #002447 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.65rem 1.5rem;
-  background: var(--color-azul-marino);
-  color: var(--color-blanco);
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
   transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
 }
 
 .btn-refresh:hover:not(:disabled) {
-  background: var(--color-azul-acento);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 51, 102, 0.4);
+  background: linear-gradient(135deg, #C7B47C 0%, #B5A36A 100%);
+  color: #003366;
 }
 
 .btn-refresh:disabled {

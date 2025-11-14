@@ -27,7 +27,7 @@
       <div class="header-main">
         <div class="header-left">
           <div class="cita-icon-large">
-            <i-lucide name="calendar" class="icon-calendar-large"></i-lucide>
+            <i-lucide name="calendar" size="55" class="icon-calendar-large"></i-lucide>
           </div>
           <div class="cita-info-header">
             <!-- ⭐ CAMBIADO: cita.titulo → cita.motivo (campo real del backend) -->
@@ -193,10 +193,10 @@
           
           <div class="estado-visual">
             <div class="estado-icon-grande" [ngClass]="getEstadoClass(cita.estado)">
-              <i-lucide *ngIf="cita.estado === 'pendiente'" name="clock" class="icon-estado"></i-lucide>
-              <i-lucide *ngIf="cita.estado === 'confirmada'" name="check" class="icon-estado"></i-lucide>
-              <i-lucide *ngIf="cita.estado === 'completada'" name="check" class="icon-estado"></i-lucide>
-              <i-lucide *ngIf="cita.estado === 'cancelada'" name="x-circle" class="icon-estado"></i-lucide>
+              <i-lucide *ngIf="cita.estado === 'pendiente'" size="95" name="clock" class="icon-estado"></i-lucide>
+              <i-lucide *ngIf="cita.estado === 'confirmada'" size="95" name="check" class="icon-estado"></i-lucide>
+              <i-lucide *ngIf="cita.estado === 'completada'" size="95" name="check" class="icon-estado"></i-lucide>
+              <i-lucide *ngIf="cita.estado === 'cancelada'" size="95" name="x-circle" class="icon-estado"></i-lucide>
             </div>
             <div class="estado-texto-grande">{{ getEstadoTexto(cita.estado) }}</div>
           </div>

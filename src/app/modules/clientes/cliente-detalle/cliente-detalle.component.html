@@ -61,9 +61,9 @@
     <!-- Content Grid -->
     <div class="content-grid">
 
-      <!-- Columna Principal -->
-      <div class="main-column">
-
+      <!-- Fila con 2 cards arriba -->
+      <div class="info-cards-row">
+        
         <!-- Información de Contacto -->
         <div class="info-card">
           <h2>
@@ -187,55 +187,55 @@
           </div>
         </div>
 
-        <!-- Información del Sistema -->
-        <div class="info-card">
-          <h2>
-            <i-lucide name="info" [size]="20"></i-lucide>
-            Información del Sistema
-          </h2>
+      </div>
 
-          <div class="info-grid">
-            <!-- ID Completo -->
-            <div class="info-item full-width">
-              <div class="info-label">
-                <i-lucide name="hash" [size]="16"></i-lucide>
-                ID del Cliente
-              </div>
-              <div class="info-value">
-                <span class="info-text id-completo">{{ cliente.id }}</span>
-                <button 
-                  class="btn-icon" 
-                  (click)="copiarAlPortapapeles(cliente.id, 'ID del cliente')"
-                  title="Copiar ID">
-                  <i-lucide name="file" [size]="16"></i-lucide>
-                </button>
-              </div>
+      <!-- Card completa abajo -->
+      <div class="info-card">
+        <h2>
+          <i-lucide name="info" [size]="20"></i-lucide>
+          Información del Sistema
+        </h2>
+
+        <div class="info-grid">
+          <!-- ID Completo -->
+          <div class="info-item full-width">
+            <div class="info-label">
+              <i-lucide name="hash" [size]="16"></i-lucide>
+              ID del Cliente
             </div>
-
-            <!-- Fecha de Creación -->
-            <div class="info-item">
-              <div class="info-label">
-                <i-lucide name="calendar" [size]="16"></i-lucide>
-                Fecha de Registro
-              </div>
-              <div class="info-value">
-                <span class="info-text">{{ formatearFechaCorta(cliente.createdAt) }}</span>
-              </div>
+            <div class="info-value">
+              <span class="info-text id-completo">{{ cliente.id }}</span>
+              <button 
+                class="btn-icon" 
+                (click)="copiarAlPortapapeles(cliente.id, 'ID del cliente')"
+                title="Copiar ID">
+                <i-lucide name="file" [size]="16"></i-lucide>
+              </button>
             </div>
+          </div>
 
-            <!-- Última Actualización -->
-            <div class="info-item" *ngIf="cliente.updatedAt">
-              <div class="info-label">
-                <i-lucide name="calendar" [size]="16"></i-lucide>
-                Última Actualización
-              </div>
-              <div class="info-value">
-                <span class="info-text">{{ formatearFechaCorta(cliente.updatedAt) }}</span>
-              </div>
+          <!-- Fecha de Creación -->
+          <div class="info-item">
+            <div class="info-label">
+              <i-lucide name="calendar" [size]="16"></i-lucide>
+              Fecha de Registro
+            </div>
+            <div class="info-value">
+              <span class="info-text">{{ formatearFechaCorta(cliente.createdAt) }}</span>
+            </div>
+          </div>
+
+          <!-- Última Actualización -->
+          <div class="info-item" *ngIf="cliente.updatedAt">
+            <div class="info-label">
+              <i-lucide name="calendar" [size]="16"></i-lucide>
+              Última Actualización
+            </div>
+            <div class="info-value">
+              <span class="info-text">{{ formatearFechaCorta(cliente.updatedAt) }}</span>
             </div>
           </div>
         </div>
-
       </div>
 
     </div>
