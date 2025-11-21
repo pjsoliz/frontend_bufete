@@ -106,6 +106,29 @@ export class CitasService {
     };
   }
 
+  // ✅ Helper para asegurar que fecha es string YYYY-MM-DD
+  private normalizarFecha(fecha: string | Date): string {
+    if (typeof fecha === 'string') {
+      // Si ya es string, verificar formato
+      if (/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+        return fecha;
+      }
+      // Si es string pero no formato correcto, convertir
+      const d = new Date(fecha);
+      return this.dateToString(d);
+    }
+    // Si es Date, convertir
+    return this.dateToString(fecha);
+  }
+
+  // ✅ Convertir Date a string YYYY-MM-DD sin zona horaria
+  private dateToString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   getCitas(): Observable<Cita[]> {
     return this.http.get<any[]>(this.apiUrl).pipe(
       map(citas => citas.map(cita => this.transformarCita(cita)))
@@ -119,13 +142,29 @@ export class CitasService {
   }
 
   createCita(cita: CitaCreate): Observable<Cita> {
-    return this.http.post<any>(this.apiUrl, cita).pipe(
+    // ✅ ASEGURAR que fecha es string YYYY-MM-DD
+    const citaNormalizada = {
+      ...cita,
+      fecha: this.normalizarFecha(cita.fecha)
+    };
+    
+    console.log('📤 Enviando cita al backend:', citaNormalizada);
+    
+    return this.http.post<any>(this.apiUrl, citaNormalizada).pipe(
       map(cita => this.transformarCita(cita))
     );
   }
 
   updateCita(id: string, cita: Partial<CitaCreate>): Observable<Cita> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, cita).pipe(
+    // ✅ ASEGURAR que fecha es string si existe
+    const citaNormalizada = {
+      ...cita,
+      ...(cita.fecha && { fecha: this.normalizarFecha(cita.fecha) })
+    };
+    
+    console.log('📤 Actualizando cita en backend:', citaNormalizada);
+    
+    return this.http.put<any>(`${this.apiUrl}/${id}`, citaNormalizada).pipe(
       map(cita => this.transformarCita(cita))
     );
   }

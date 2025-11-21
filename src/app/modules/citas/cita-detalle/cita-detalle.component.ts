@@ -198,16 +198,26 @@ export class CitaDetalleComponent implements OnInit {
     return textos[tipo] || tipo;
   }
 
-  formatearFecha(fecha: Date): string {
-    // El backend envía Date, convertir a objeto Date de JS
-    const fechaObj = new Date(fecha);
-    return fechaObj.toLocaleDateString('es-ES', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+  formatearFecha(fecha: Date | string): string {
+  // ✅ Si es string, convertir correctamente sin zona horaria
+  let fechaObj: Date;
+  
+  if (typeof fecha === 'string') {
+    // Separar la fecha en partes
+    const [year, month, day] = fecha.split('-').map(Number);
+    // Crear Date con valores locales (sin conversión UTC)
+    fechaObj = new Date(year, month - 1, day);
+  } else {
+    fechaObj = new Date(fecha);
   }
+  
+  return fechaObj.toLocaleDateString('es-ES', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
 
   formatearHora(hora: string): string {
     return hora;
