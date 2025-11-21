@@ -169,4 +169,13 @@ export class CitasService {
       map(citas => citas.map(cita => this.transformarCita(cita)))
     );
   }
+
+  // 🆕 NUEVO: Notificar cambio de estado a n8n
+  notificarCambioEstado(citaId: string, estadoAnterior: string, usuarioNombre: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/notificar-cambio-estado`, {
+      citaId: citaId,
+      estadoAnterior: estadoAnterior,
+      usuarioNombre: usuarioNombre
+    });
+  }
 }

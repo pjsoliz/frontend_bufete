@@ -126,11 +126,32 @@ export class CitasListComponent implements OnInit {
     this.router.navigate(['/citas', id]);
   }
 
+  // 🆕 MÉTODO CONFIRMAR ACTUALIZADO CON NOTIFICACIONES
   confirmarCita(id: string, event: Event): void {
     event.stopPropagation();
     if (confirm('¿Confirmar esta cita?')) {
+      // 1. Cambiar estado a confirmada
       this.citasService.confirmarCita(id).subscribe({
         next: () => {
+          console.log('✅ Cita confirmada en BD');
+          
+          // 2. Enviar notificaciones a cliente y abogado
+          this.citasService.notificarCambioEstado(
+            id,
+            'pendiente',
+            'Asistente Legal'
+          ).subscribe({
+            next: () => {
+              console.log('✅ Notificaciones enviadas correctamente');
+              alert('Cita confirmada y notificaciones enviadas');
+            },
+            error: (err) => {
+              console.error('⚠️ Error al enviar notificaciones:', err);
+              alert('Cita confirmada pero hubo error al enviar notificaciones');
+            }
+          });
+          
+          // 3. Recargar lista
           this.cargarCitas();
         },
         error: (error) => {
@@ -141,11 +162,34 @@ export class CitasListComponent implements OnInit {
     }
   }
 
+  // 🆕 MÉTODO CANCELAR ACTUALIZADO CON NOTIFICACIONES
   cancelarCita(id: string, event: Event): void {
     event.stopPropagation();
-    if (confirm('¿Está seguro de cancelar esta cita?')) {
+    
+    const motivo = prompt('Ingrese el motivo de la cancelación:');
+    if (motivo && motivo.trim() !== '') {
+      // 1. Cambiar estado a cancelada
       this.citasService.cancelarCita(id).subscribe({
         next: () => {
+          console.log('✅ Cita cancelada en BD');
+          
+          // 2. Enviar notificaciones a cliente y abogado
+          this.citasService.notificarCambioEstado(
+            id,
+            'pendiente', // o 'confirmada' dependiendo del estado anterior
+            'Asistente Legal'
+          ).subscribe({
+            next: () => {
+              console.log('✅ Notificaciones de cancelación enviadas');
+              alert('Cita cancelada y notificaciones enviadas');
+            },
+            error: (err) => {
+              console.error('⚠️ Error al enviar notificaciones:', err);
+              alert('Cita cancelada pero hubo error al enviar notificaciones');
+            }
+          });
+          
+          // 3. Recargar lista
           this.cargarCitas();
         },
         error: (error) => {
@@ -172,20 +216,20 @@ export class CitasListComponent implements OnInit {
   }
 
   eliminarCita(id: string, event: Event): void {
-  event.stopPropagation();
-  if (confirm('¿Está seguro de cancelar esta cita?')) {  // Cambiar texto
-    this.citasService.deleteCita(id).subscribe({
-      next: () => {
-        alert('Cita cancelada exitosamente');  // ⭐ AGREGAR ESTO
-        this.cargarCitas();
-      },
-      error: (error) => {
-        console.error('Error al cancelar cita:', error);
-        alert('Error al cancelar la cita');
-      }
-    });
+    event.stopPropagation();
+    if (confirm('¿Está seguro de cancelar esta cita?')) {
+      this.citasService.deleteCita(id).subscribe({
+        next: () => {
+          alert('Cita cancelada exitosamente');
+          this.cargarCitas();
+        },
+        error: (error) => {
+          console.error('Error al cancelar cita:', error);
+          alert('Error al cancelar la cita');
+        }
+      });
+    }
   }
-}
 
   // Métodos auxiliares para el template
 
