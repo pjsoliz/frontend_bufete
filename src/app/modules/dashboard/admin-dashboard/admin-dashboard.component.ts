@@ -43,6 +43,7 @@ interface CitaProxima {
 export class DashboardAdminComponent implements OnInit {
 
   loading = true;
+  isAdmin = false; // ⭐ NUEVO
   
   estadisticas: Estadistica[] = [
     {
@@ -102,89 +103,173 @@ export class DashboardAdminComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // ⭐ Detectar si es admin
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.isAdmin = user.rol === 'admin' || user.rol === 'administrador';
+    
     this.cargarDatos();
   }
 
   cargarDatos(): void {
     this.loading = true;
 
-    forkJoin({
-      citas: this.citasService.getCitas(),
-      usuarios: this.usuariosService.getUsuarios(),
-      clientes: this.clientesService.getClientes(),
-      abogados: this.abogadosService.getAbogados()
-    }).subscribe({
-      next: (data) => {
-        // Procesar citas
-        const citas = data.citas;
-        const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0);
+    // ⭐ Si es admin, cargar TODO
+    if (this.isAdmin) {
+      forkJoin({
+        citas: this.citasService.getCitas(),
+        usuarios: this.usuariosService.getUsuarios(),
+        clientes: this.clientesService.getClientes(),
+        abogados: this.abogadosService.getAbogados()
+      }).subscribe({
+        next: (data) => {
+          this.procesarDatosCompletos(data);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error al cargar datos del dashboard:', error);
+          this.loading = false;
+        }
+      });
+    } else {
+      // ⭐ Si es asistente, cargar SOLO citas y clientes
+      forkJoin({
+        citas: this.citasService.getCitas(),
+        clientes: this.clientesService.getClientes()
+      }).subscribe({
+        next: (data) => {
+          this.procesarDatosAsistente(data);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error al cargar datos del dashboard:', error);
+          this.loading = false;
+        }
+      });
+    }
+  }
 
-        // Estadística: Total de citas
-        this.estadisticas[0].valor = citas.length;
+  // ⭐ Procesar datos completos (ADMIN)
+  private procesarDatosCompletos(data: any): void {
+    // Procesar citas
+    const citas = data.citas;
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
 
-        // Estadística: Citas de hoy
-        const citasHoy = citas.filter(cita => {
-          const fechaCita = new Date(cita.fecha);
-          fechaCita.setHours(0, 0, 0, 0);
-          return fechaCita.getTime() === hoy.getTime();
-        });
-        this.estadisticas[1].valor = citasHoy.length;
+    // Estadística: Total de citas
+    this.estadisticas[0].valor = citas.length;
 
-        // Estadística: Total de clientes
-        this.estadisticas[2].valor = data.clientes.length;
-
-        // Estadística: Usuarios del sistema (activos)
-        this.estadisticas[3].valor = data.usuarios.filter(u => u.activo).length;
-
-        // Procesar próximas citas (solo futuras, ordenadas por fecha)
-        const ahora = new Date();
-        this.citasProximas = citas
-          .filter(cita => new Date(cita.fecha) >= ahora && cita.estado !== 'cancelada')
-          .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
-          .slice(0, 4)
-          .map(cita => ({
-            id: cita.id,
-            titulo: cita.tipoCita?.nombre || 'Consulta',
-            cliente: cita.cliente?.nombreCompleto || 'Cliente no especificado',
-            fecha: new Date(cita.fecha),
-            hora: cita.hora || '00:00',
-            tipo: cita.tipoCita?.nombre || 'Consulta',
-            estado: cita.estado
-          }));
-
-        // Actividad reciente (últimas 5 citas)
-        this.actividadesRecientes = citas
-          .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
-          .slice(0, 5)
-          .map(cita => ({
-            id: cita.id,
-            tipo: 'cita',
-            titulo: `Cita ${this.getEstadoTexto(cita.estado)}`,
-            descripcion: `${cita.cliente?.nombreCompleto || 'Cliente'} - ${cita.descripcion || 'Sin descripción'}`,
-            fecha: this.calcularTiempoTranscurrido(cita.createdAt),
-            icon: 'calendar',
-            color: this.getColorPorEstado(cita.estado)
-          }));
-
-        // Citas por mes (últimos 10 meses)
-        this.calcularCitasPorMes(citas);
-
-        // Citas por estado
-        this.calcularCitasPorEstado(citas);
-
-        // Resumen del equipo
-        this.totalAdmins = data.usuarios.filter(u => u.rol === 'admin' && u.activo).length;
-        this.totalAsistentes = data.usuarios.filter(u => u.rol === 'asistente_legal' && u.activo).length;
-        this.totalAbogados = data.abogados.filter(a => a.activo).length;
-
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error al cargar datos del dashboard:', error);
-        this.loading = false;
-      }
+    // Estadística: Citas de hoy
+    const citasHoy = citas.filter((cita: any) => {
+      const fechaCita = new Date(cita.fecha);
+      fechaCita.setHours(0, 0, 0, 0);
+      return fechaCita.getTime() === hoy.getTime();
     });
+    this.estadisticas[1].valor = citasHoy.length;
+
+    // Estadística: Total de clientes
+    this.estadisticas[2].valor = data.clientes.length;
+
+    // Estadística: Usuarios del sistema (activos)
+    this.estadisticas[3].valor = data.usuarios.filter((u: any) => u.activo).length;
+
+    // Procesar próximas citas
+    const ahora = new Date();
+    this.citasProximas = citas
+      .filter((cita: any) => new Date(cita.fecha) >= ahora && cita.estado !== 'cancelada')
+      .sort((a: any, b: any) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+      .slice(0, 4)
+      .map((cita: any) => ({
+        id: cita.id,
+        titulo: cita.tipoCita?.nombre || 'Consulta',
+        cliente: cita.cliente?.nombreCompleto || 'Cliente no especificado',
+        fecha: new Date(cita.fecha),
+        hora: cita.hora || '00:00',
+        tipo: cita.tipoCita?.nombre || 'Consulta',
+        estado: cita.estado
+      }));
+
+    // Actividad reciente
+    this.actividadesRecientes = citas
+      .sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+      .slice(0, 5)
+      .map((cita: any) => ({
+        id: cita.id,
+        tipo: 'cita',
+        titulo: `Cita ${this.getEstadoTexto(cita.estado)}`,
+        descripcion: `${cita.cliente?.nombreCompleto || 'Cliente'} - ${cita.descripcion || 'Sin descripción'}`,
+        fecha: this.calcularTiempoTranscurrido(cita.createdAt),
+        icon: 'calendar',
+        color: this.getColorPorEstado(cita.estado)
+      }));
+
+    // Citas por mes
+    this.calcularCitasPorMes(citas);
+
+    // Citas por estado
+    this.calcularCitasPorEstado(citas);
+
+    // Resumen del equipo
+    this.totalAdmins = data.usuarios.filter((u: any) => u.rol === 'admin' && u.activo).length;
+    this.totalAsistentes = data.usuarios.filter((u: any) => u.rol === 'asistente_legal' && u.activo).length;
+    this.totalAbogados = data.abogados.filter((a: any) => a.activo).length;
+  }
+
+  // ⭐ Procesar datos limitados (ASISTENTE)
+  private procesarDatosAsistente(data: any): void {
+    const citas = data.citas;
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    // Solo estadísticas básicas
+    this.estadisticas[0].valor = citas.length;
+    
+    const citasHoy = citas.filter((cita: any) => {
+      const fechaCita = new Date(cita.fecha);
+      fechaCita.setHours(0, 0, 0, 0);
+      return fechaCita.getTime() === hoy.getTime();
+    });
+    this.estadisticas[1].valor = citasHoy.length;
+    this.estadisticas[2].valor = data.clientes.length;
+    this.estadisticas[3].valor = 0; // Ocultar usuarios
+
+    // Próximas citas
+    const ahora = new Date();
+    this.citasProximas = citas
+      .filter((cita: any) => new Date(cita.fecha) >= ahora && cita.estado !== 'cancelada')
+      .sort((a: any, b: any) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+      .slice(0, 4)
+      .map((cita: any) => ({
+        id: cita.id,
+        titulo: cita.tipoCita?.nombre || 'Consulta',
+        cliente: cita.cliente?.nombreCompleto || 'Cliente no especificado',
+        fecha: new Date(cita.fecha),
+        hora: cita.hora || '00:00',
+        tipo: cita.tipoCita?.nombre || 'Consulta',
+        estado: cita.estado
+      }));
+
+    // Actividad reciente
+    this.actividadesRecientes = citas
+      .sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+      .slice(0, 5)
+      .map((cita: any) => ({
+        id: cita.id,
+        tipo: 'cita',
+        titulo: `Cita ${this.getEstadoTexto(cita.estado)}`,
+        descripcion: `${cita.cliente?.nombreCompleto || 'Cliente'} - ${cita.descripcion || 'Sin descripción'}`,
+        fecha: this.calcularTiempoTranscurrido(cita.createdAt),
+        icon: 'calendar',
+        color: this.getColorPorEstado(cita.estado)
+      }));
+
+    // Gráficas
+    this.calcularCitasPorMes(citas);
+    this.calcularCitasPorEstado(citas);
+
+    // No cargar resumen del equipo para asistentes
+    this.totalAdmins = 0;
+    this.totalAsistentes = 0;
+    this.totalAbogados = 0;
   }
 
   calcularCitasPorMes(citas: any[]): void {
@@ -226,7 +311,7 @@ export class DashboardAdminComponent implements OnInit {
       tipo: this.getEstadoTexto(estado),
       cantidad: citas.filter(c => c.estado === estado).length,
       color: colores[index]
-    })).filter(item => item.cantidad > 0); // Solo mostrar estados con citas
+    })).filter(item => item.cantidad > 0);
   }
 
   getEstadoTexto(estado: string): string {

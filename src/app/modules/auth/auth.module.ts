@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AuthRoutingModule } from './auth-routing.module';
 
 // Importar Lucide Icons
@@ -8,7 +8,7 @@ import {
   LucideAngularModule, 
   Scale, Mail, AtSign, Lock, Key, Eye, EyeOff, 
   AlertCircle, CheckCircle, AlertTriangle, HelpCircle, 
-  ShieldCheck, Briefcase, CheckCircle2, LogIn, User,
+  ShieldCheck, Briefcase, CheckCircle2, LogIn,X, User,
 } from 'lucide-angular';
 
 // Componentes
@@ -22,9 +22,11 @@ import { LoginComponent } from './login/login.component';
     CommonModule,
     ReactiveFormsModule,
     AuthRoutingModule,
+    FormsModule,
     LucideAngularModule.pick({
       Scale,
       Mail,
+      X,
       AtSign,
       Lock,
       Key,

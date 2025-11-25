@@ -7,9 +7,8 @@
   <!-- Navegación Principal -->
   <nav class="sidebar-nav">
     <div class="nav-section">
-      <!-- ❌ ELIMINADO: <p class="nav-section-title" *ngIf="!isCollapsed">Principal</p> -->
       
-      <!-- Dashboard -->
+      <!-- Dashboard (Visible para todos) -->
       <a 
         routerLink="/dashboard" 
         routerLinkActive="active"
@@ -20,7 +19,7 @@
         <span class="nav-text" *ngIf="!isCollapsed">Dashboard</span>
       </a>
 
-      <!-- Citas -->
+      <!-- Citas (Visible para todos) -->
       <a 
         routerLink="/citas" 
         routerLinkActive="active"
@@ -31,7 +30,7 @@
         <span class="nav-text" *ngIf="!isCollapsed">Citas</span>
       </a>
 
-      <!-- Clientes-->
+      <!-- Clientes (Visible para todos) -->
       <a 
         routerLink="/clientes" 
         routerLinkActive="active"
@@ -42,8 +41,9 @@
         <span class="nav-text" *ngIf="!isCollapsed">Clientes</span>
       </a>
 
-      <!-- Reportes -->
+      <!-- ⭐ Reportes (SOLO ADMIN) ⭐ -->
       <a 
+        *ngIf="isAdmin"
         routerLink="/reportes" 
         routerLinkActive="active"
         class="nav-item"
@@ -53,8 +53,9 @@
         <span class="nav-text" *ngIf="!isCollapsed">Reportes</span>
       </a>
 
-      <!-- Usuarios (Solo Admin) -->
+      <!-- ⭐ Usuarios (SOLO ADMIN) ⭐ -->
       <a 
+        *ngIf="isAdmin"
         routerLink="/usuarios" 
         routerLinkActive="active"
         class="nav-item"
@@ -69,7 +70,7 @@
     <div class="nav-section nav-section-bottom">
       <div class="divider-dorado"></div>
 
-      <!-- Configuración -->
+      <!-- Configuración (Visible para todos) -->
       <a 
         routerLink="/configuracion" 
         routerLinkActive="active"
@@ -80,7 +81,7 @@
         <span class="nav-text" *ngIf="!isCollapsed">Configuración</span>
       </a>
 
-      <!-- Ayuda -->
+      <!-- Ayuda (Visible para todos) -->
       <a 
         routerLink="/ayuda" 
         routerLinkActive="active"

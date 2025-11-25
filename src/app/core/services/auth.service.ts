@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
@@ -22,7 +22,6 @@ export class AuthService {
   login(credentials: any): Observable<any> {
     console.log('Intentando login con:', credentials);
 
-    // ✅ LLAMADA REAL AL BACKEND
     return this.http.post(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap((response: any) => {
         console.log('Login exitoso:', response);
@@ -36,13 +35,45 @@ export class AuthService {
       catchError(error => {
         console.error('Error en login:', error);
         
-        // Mensaje más descriptivo
         if (error.status === 401) {
           console.error('Credenciales incorrectas');
         } else if (error.status === 0) {
           console.error('No se puede conectar al servidor');
         }
         
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * ⭐ RECUPERAR CONTRASEÑA - OPCIÓN B (Profesional)
+   */
+  recuperarContrasena(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/recuperar-contrasena`, { email }).pipe(
+      tap((response: any) => {
+        console.log('Email de recuperación enviado:', response);
+      }),
+      catchError(error => {
+        console.error('Error al recuperar contraseña:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * ⭐ RESTABLECER CONTRASEÑA CON TOKEN
+   */
+  restablecerContrasena(token: string, nuevaContrasena: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/restablecer-contrasena`, { 
+      token, 
+      nuevaContrasena 
+    }).pipe(
+      tap((response: any) => {
+        console.log('Contraseña restablecida:', response);
+      }),
+      catchError(error => {
+        console.error('Error al restablecer contraseña:', error);
         return throwError(() => error);
       })
     );
@@ -101,6 +132,13 @@ export class AuthService {
   }
 
   /**
+   * Alias adicional
+   */
+  getUsuarioActual(): any {
+    return this.getUser();
+  }
+
+  /**
    * Obtener rol del usuario
    */
   getUserRole(): string | null {
@@ -121,7 +159,7 @@ export class AuthService {
    */
   isAdmin(): boolean {
     const user = this.getUser();
-    return user?.rol === 'admin';
+    return user?.rol === 'admin' || user?.rol === 'administrador';
   }
 
   /**
@@ -129,7 +167,7 @@ export class AuthService {
    */
   isAsistente(): boolean {
     const user = this.getUser();
-    return user?.rol === 'asistente_legal';
+    return user?.rol === 'asistente_legal' || user?.rol === 'asistente';
   }
 
   /**

@@ -1,26 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardAdminComponent } from './admin-dashboard/admin-dashboard.component';
-import { AsistenteDashboardComponent } from './asistente-dashboard/asistente-dashboard.component';
-import { RoleGuard } from '../../core/guards/role.guard';
 
 const routes: Routes = [
   {
-    path: 'admin',
-    component: DashboardAdminComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['admin'] }
-  },
-  {
-    path: 'asistente',
-    component: AsistenteDashboardComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['asistente_legal'] }
-  },
-  {
     path: '',
-    redirectTo: 'admin',
-    pathMatch: 'full'
+    component: DashboardAdminComponent  // ⭐ Todos usan el mismo
   }
 ];
 

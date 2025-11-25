@@ -14,6 +14,13 @@ export class LoginComponent implements OnInit {
   showPassword = false;
   errorMessage = '';
   successMessage = '';
+  
+  // ⭐ Variables para recuperar contraseña
+  showRecuperarModal = false;
+  recuperarEmail = '';
+  recuperarLoading = false;
+  recuperarError = '';
+  recuperarSuccess = '';
 
   constructor(
     private fb: FormBuilder,
@@ -31,7 +38,7 @@ export class LoginComponent implements OnInit {
    */
   private initForm(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]], // ✅ Validación de email
+      email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       remember: [false]
     });
@@ -58,6 +65,67 @@ export class LoginComponent implements OnInit {
   }
 
   /**
+   * ⭐ ABRIR MODAL DE RECUPERAR CONTRASEÑA
+   */
+  abrirRecuperarModal(event: Event): void {
+    event.preventDefault();
+    this.showRecuperarModal = true;
+    this.recuperarEmail = '';
+    this.recuperarError = '';
+    this.recuperarSuccess = '';
+  }
+
+  /**
+   * ⭐ CERRAR MODAL DE RECUPERAR CONTRASEÑA
+   */
+  cerrarRecuperarModal(): void {
+    this.showRecuperarModal = false;
+    this.recuperarEmail = '';
+    this.recuperarError = '';
+    this.recuperarSuccess = '';
+  }
+
+  /**
+   * ⭐ ENVIAR EMAIL DE RECUPERACIÓN
+   */
+  enviarRecuperacion(): void {
+    this.recuperarError = '';
+    this.recuperarSuccess = '';
+
+    // Validar email
+    if (!this.recuperarEmail) {
+      this.recuperarError = 'Debes ingresar un correo electrónico';
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.recuperarEmail)) {
+      this.recuperarError = 'Ingresa un correo válido';
+      return;
+    }
+
+    this.recuperarLoading = true;
+
+    this.authService.recuperarContrasena(this.recuperarEmail).subscribe({
+      next: (response) => {
+        console.log('Email enviado:', response);
+        this.recuperarLoading = false;
+        this.recuperarSuccess = '¡Correo enviado! Revisa tu bandeja de entrada.';
+        
+        // Cerrar modal después de 3 segundos
+        setTimeout(() => {
+          this.cerrarRecuperarModal();
+        }, 3000);
+      },
+      error: (error) => {
+        console.error('Error al enviar email:', error);
+        this.recuperarLoading = false;
+        this.recuperarError = error.error?.message || 'No se pudo enviar el correo. Verifica el email ingresado.';
+      }
+    });
+  }
+
+  /**
    * Maneja el envío del formulario
    */
   onSubmit(): void {
@@ -72,7 +140,6 @@ export class LoginComponent implements OnInit {
 
     const { email, password, remember } = this.loginForm.value;
 
-    // ✅ CORRECTO: Enviar email directamente al backend
     const credentials = {
       email: email,
       password: password

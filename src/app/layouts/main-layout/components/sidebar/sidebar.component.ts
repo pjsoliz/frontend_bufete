@@ -20,6 +20,7 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarUsuarioActual();
+    this.loadCollapsedState();
   }
 
   /**
@@ -31,6 +32,16 @@ export class SidebarComponent implements OnInit {
     
     console.log('Usuario actual:', this.currentUser);
     console.log('Rol:', this.userRole);
+  }
+
+  /**
+   * Carga el estado colapsado del localStorage
+   */
+  private loadCollapsedState(): void {
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState !== null) {
+      this.isCollapsed = savedState === 'true';
+    }
   }
 
   /**
@@ -47,7 +58,9 @@ export class SidebarComponent implements OnInit {
   getUserIcon(): string {
     const icons: { [key: string]: string } = {
       'admin': 'shield',
-      'asistente_legal': 'clipboard-list'
+      'administrador': 'shield',
+      'asistente_legal': 'clipboard-list',
+      'asistente': 'clipboard-list'
     };
     return icons[this.userRole] || 'user';
   }
@@ -58,9 +71,25 @@ export class SidebarComponent implements OnInit {
   getRolTexto(): string {
     const textos: { [key: string]: string } = {
       'admin': 'Administrador',
-      'asistente_legal': 'Asistente Legal'
+      'administrador': 'Administrador',
+      'asistente_legal': 'Asistente Legal',
+      'asistente': 'Asistente Legal'
     };
     return textos[this.userRole] || 'Usuario';
+  }
+
+  /**
+   * ⭐ VERIFICA SI ES ADMIN
+   */
+  get isAdmin(): boolean {
+    return this.userRole === 'admin' || this.userRole === 'administrador';
+  }
+
+  /**
+   * ⭐ VERIFICA SI ES ASISTENTE
+   */
+  get isAsistente(): boolean {
+    return this.userRole === 'asistente_legal' || this.userRole === 'asistente';
   }
 
   /**

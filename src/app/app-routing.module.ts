@@ -29,16 +29,19 @@ const routes: Routes = [
         loadChildren: () => import('./modules/citas/citas.module').then(m => m.CitasModule),
         canActivate: [AuthGuard]
       },
+      // ⭐ REPORTES - SOLO ADMIN
       {
         path: 'reportes',
+        loadChildren: () => import('./modules/reportes/reportes.module').then(m => m.ReportesModule),
         canActivate: [RoleGuard],
-        data: { roles: ['admin', 'asistente_legal'] },
-        loadChildren: () => import('./modules/reportes/reportes.module').then(m => m.ReportesModule)
+        data: { roles: ['admin', 'administrador'] }
       },
+      // ⭐ USUARIOS - SOLO ADMIN
       {
         path: 'usuarios',
         loadChildren: () => import('./modules/usuarios/usuarios.module').then(m => m.UsuariosModule),
-        canActivate: [AuthGuard]
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'administrador'] }
       },
       {
         path: 'configuracion',
