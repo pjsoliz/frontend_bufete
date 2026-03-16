@@ -162,43 +162,55 @@ export class CitasListComponent implements OnInit {
     }
   }
 
-  // 🆕 MÉTODO CANCELAR ACTUALIZADO CON NOTIFICACIONES
-  cancelarCita(id: string, event: Event): void {
-    event.stopPropagation();
-    
-    const motivo = prompt('Ingrese el motivo de la cancelación:');
-    if (motivo && motivo.trim() !== '') {
-      // 1. Cambiar estado a cancelada
-      this.citasService.cancelarCita(id).subscribe({
-        next: () => {
-          console.log('✅ Cita cancelada en BD');
+  // 🆕 MÉTODO CANCELAR ACTUALIZADO CON NOTIFICACIONES Y MOTIVO
+cancelarCita(id: string, event: Event): void {
+  event.stopPropagation();
+  
+  // 1. Pedir motivo de cancelación
+  const motivo = prompt('Ingrese el motivo de la cancelación:');
+  
+  if (!motivo || motivo.trim() === '') {
+    alert('Debe proporcionar un motivo para cancelar la cita');
+    return;
+  }
+  
+  // 2. Obtener estado anterior de la cita antes de cancelar
+  const citaActual = this.citas.find(c => c.id === id);
+  const estadoAnterior = citaActual?.estado || 'pendiente';
+  
+  // 3. Cancelar cita CON motivo
+  this.citasService.cancelarCita(id, motivo.trim()).subscribe({
+    next: () => {
+      console.log('✅ Cita cancelada en BD con motivo:', motivo);
+      
+      // 4. Enviar notificaciones a cliente y abogado
+      this.citasService.notificarCambioEstado(
+        id,
+        estadoAnterior,
+        'Asistente Legal'
+      ).subscribe({
+        next: (response) => {
+          console.log('✅ Notificaciones de cancelación enviadas:', response);
+          alert('Cita cancelada y notificaciones enviadas correctamente');
           
-          // 2. Enviar notificaciones a cliente y abogado
-          this.citasService.notificarCambioEstado(
-            id,
-            'pendiente', // o 'confirmada' dependiendo del estado anterior
-            'Asistente Legal'
-          ).subscribe({
-            next: () => {
-              console.log('✅ Notificaciones de cancelación enviadas');
-              alert('Cita cancelada y notificaciones enviadas');
-            },
-            error: (err) => {
-              console.error('⚠️ Error al enviar notificaciones:', err);
-              alert('Cita cancelada pero hubo error al enviar notificaciones');
-            }
-          });
-          
-          // 3. Recargar lista
+          // 5. Recargar lista
           this.cargarCitas();
         },
-        error: (error) => {
-          console.error('Error al cancelar cita:', error);
-          alert('Error al cancelar la cita');
+        error: (err) => {
+          console.error('⚠️ Error al enviar notificaciones:', err);
+          alert('Cita cancelada pero hubo error al enviar notificaciones');
+          
+          // Recargar de todas formas
+          this.cargarCitas();
         }
       });
+    },
+    error: (error) => {
+      console.error('❌ Error al cancelar cita:', error);
+      alert('Error al cancelar la cita: ' + (error.error?.message || error.message));
     }
-  }
+  });
+}
 
   completarCita(id: string, event: Event): void {
     event.stopPropagation();

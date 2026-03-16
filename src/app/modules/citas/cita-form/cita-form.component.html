@@ -69,7 +69,7 @@
             [class.error]="citaForm.get('abogadoId')?.invalid && citaForm.get('abogadoId')?.touched">
             <option value="">Seleccione un abogado</option>
             <option *ngFor="let abogado of abogados" [value]="abogado.id">
-              {{ abogado.nombreCompleto }}
+              {{ abogado.nombre }}
             </option>
           </select>
           <div class="error-message" *ngIf="citaForm.get('abogadoId')?.invalid && citaForm.get('abogadoId')?.touched">
@@ -82,116 +82,61 @@
     </div>
 
     <!-- Sección: Tipo de Cita -->
-    <div class="form-section">
-      <h2>
-        <i-lucide name="folder" [size]="24"></i-lucide>
-        Tipo de Cita
-      </h2>
-      
-      <div class="form-grid">
+<div class="form-section">
+  <h2>
+    <i-lucide name="folder" [size]="24"></i-lucide>
+    Tipo de Cita
+  </h2>
+  
+  <div class="form-grid">
 
-        <!-- Área de Derecho -->
-        <div class="form-group">
-          <label for="areaDerechoId">
-            <i-lucide name="book" [size]="16"></i-lucide>
-            Área de Derecho *
-          </label>
-          <select 
-            id="areaDerechoId" 
-            formControlName="areaDerechoId"
-            [class.error]="citaForm.get('areaDerechoId')?.invalid && citaForm.get('areaDerechoId')?.touched">
-            <option value="">Seleccione un área</option>
-            <option *ngFor="let area of areasderecho" [value]="area.id">
-              {{ area.nombre }}
-            </option>
-          </select>
-          <div class="error-message" *ngIf="citaForm.get('areaDerechoId')?.invalid && citaForm.get('areaDerechoId')?.touched">
-            <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            El área de derecho es requerida
-          </div>
-        </div>
-
-        <!-- Tipo de Cita -->
-        <div class="form-group">
-          <label for="tipoCitaId">
-            <i-lucide name="file" [size]="16"></i-lucide>
-            Tipo de Cita *
-          </label>
-          <select 
-            id="tipoCitaId" 
-            formControlName="tipoCitaId"
-            [class.error]="citaForm.get('tipoCitaId')?.invalid && citaForm.get('tipoCitaId')?.touched">
-            <option value="">Seleccione un tipo</option>
-            <option *ngFor="let tipo of tiposCita" [value]="tipo.id">
-              {{ tipo.nombre }}
-            </option>
-          </select>
-          <div class="error-message" *ngIf="citaForm.get('tipoCitaId')?.invalid && citaForm.get('tipoCitaId')?.touched">
-            <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            El tipo de cita es requerido
-          </div>
-        </div>
-
-        <!-- Tipo de Caso - ⭐ AHORA OBLIGATORIO -->
-        <div class="form-group">
-          <label for="tipoCasoId">
-            <i-lucide name="folder" [size]="16"></i-lucide>
-            Tipo de Caso *
-          </label>
-          <select 
-            id="tipoCasoId" 
-            formControlName="tipoCasoId"
-            [class.error]="citaForm.get('tipoCasoId')?.invalid && citaForm.get('tipoCasoId')?.touched">
-            <option value="">Seleccione un tipo</option>
-            <option *ngFor="let tipoCaso of tiposCaso" [value]="tipoCaso.id">
-              {{ tipoCaso.nombre }}
-            </option>
-          </select>
-          <div class="error-message" *ngIf="citaForm.get('tipoCasoId')?.invalid && citaForm.get('tipoCasoId')?.touched">
-            <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            El tipo de caso es requerido
-          </div>
-        </div>
-
-        <!-- ⭐ NUEVO: Oficina (OBLIGATORIO) -->
-        <div class="form-group">
-          <label for="oficinaId">
-            <i-lucide name="building2" [size]="16"></i-lucide>
-            Oficina *
-          </label>
-          <select 
-            id="oficinaId" 
-            formControlName="oficinaId"
-            [class.error]="citaForm.get('oficinaId')?.invalid && citaForm.get('oficinaId')?.touched">
-            <option value="">Seleccione una oficina</option>
-            <option *ngFor="let oficina of oficinas" [value]="oficina.id">
-              {{ oficina.nombre }}
-            </option>
-          </select>
-          <div class="error-message" *ngIf="citaForm.get('oficinaId')?.invalid && citaForm.get('oficinaId')?.touched">
-            <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            La oficina es requerida
-          </div>
-        </div>
-
-        <!-- Urgencia -->
-        <div class="form-group">
-          <label for="urgencia">
-            <i-lucide name="alert-triangle" [size]="16"></i-lucide>
-            Urgencia *
-          </label>
-          <select 
-            id="urgencia" 
-            formControlName="urgencia"
-            [class.error]="citaForm.get('urgencia')?.invalid && citaForm.get('urgencia')?.touched">
-            <option *ngFor="let urg of urgencias" [value]="urg.value">
-              {{ urg.label }}
-            </option>
-          </select>
-        </div>
-
+    <!-- Área de Derecho -->
+    <div class="form-group">
+      <label for="areaDerechoId">
+        <i-lucide name="book" [size]="16"></i-lucide>
+        Área de Derecho *
+      </label>
+      <select id="areaDerechoId" formControlName="areaDerechoId"
+        [class.error]="citaForm.get('areaDerechoId')?.invalid && citaForm.get('areaDerechoId')?.touched">
+        <option value="">Seleccione un área</option>
+        <option *ngFor="let area of areasderecho" [value]="area.id">{{ area.nombre }}</option>
+      </select>
+      <div class="error-message" *ngIf="citaForm.get('areaDerechoId')?.invalid && citaForm.get('areaDerechoId')?.touched">
+        <i-lucide name="alert-circle" [size]="14"></i-lucide>
+        El área de derecho es requerida
       </div>
     </div>
+
+    <!-- Tipo de Caso -->
+    <div class="form-group">
+      <label for="tipoCasoId">
+        <i-lucide name="folder" [size]="16"></i-lucide>
+        Tipo de Caso *
+      </label>
+      <select id="tipoCasoId" formControlName="tipoCasoId"
+        [class.error]="citaForm.get('tipoCasoId')?.invalid && citaForm.get('tipoCasoId')?.touched">
+        <option value="">Seleccione un tipo</option>
+        <option *ngFor="let tipoCaso of tiposCaso" [value]="tipoCaso.id">{{ tipoCaso.nombre }}</option>
+      </select>
+      <div class="error-message" *ngIf="citaForm.get('tipoCasoId')?.invalid && citaForm.get('tipoCasoId')?.touched">
+        <i-lucide name="alert-circle" [size]="14"></i-lucide>
+        El tipo de caso es requerido
+      </div>
+    </div>
+
+    <!-- Urgencia -->
+    <div class="form-group">
+      <label for="urgencia">
+        <i-lucide name="alert-triangle" [size]="16"></i-lucide>
+        Urgencia *
+      </label>
+      <select id="urgencia" formControlName="urgencia">
+        <option *ngFor="let urg of urgencias" [value]="urg.value">{{ urg.label }}</option>
+      </select>
+    </div>
+
+  </div>
+</div>
 
     <!-- Sección: Fecha y Hora -->
     <div class="form-section">
@@ -203,133 +148,104 @@
       <div class="form-grid">
 
         <!-- Fecha -->
-        <div class="form-group">
-          <label for="fecha">
-            <i-lucide name="calendar" [size]="16"></i-lucide>
-            Fecha *
-          </label>
-          <input 
-            type="date" 
-            id="fecha" 
-            formControlName="fecha"
-            [min]="getFechaMinima()"
-            [class.error]="citaForm.get('fecha')?.invalid && citaForm.get('fecha')?.touched">
-          <div class="campo-ayuda">
-            <i-lucide name="help-circle" [size]="12"></i-lucide>
-            No se pueden agendar citas en fechas pasadas
-          </div>
-          <div class="error-message" *ngIf="citaForm.get('fecha')?.invalid && citaForm.get('fecha')?.touched">
-            <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            La fecha es requerida
-          </div>
-        </div>
+<div class="form-group">
+  <label for="fecha">
+    <i-lucide name="calendar" [size]="16"></i-lucide>
+    Fecha *
+  </label>
+  <input 
+    type="date" 
+    id="fecha" 
+    formControlName="fecha"
+    [min]="getFechaMinima()"
+    [class.error]="citaForm.get('fecha')?.invalid && citaForm.get('fecha')?.touched">
+  <div class="campo-ayuda">
+    <i-lucide name="help-circle" [size]="12"></i-lucide>
+    Solo días hábiles: lunes a viernes
+  </div>
+  <div class="error-message" *ngIf="citaForm.get('fecha')?.errors?.['required'] && citaForm.get('fecha')?.touched">
+    <i-lucide name="alert-circle" [size]="14"></i-lucide>
+    La fecha es requerida
+  </div>
+  <div class="error-message" *ngIf="citaForm.get('fecha')?.errors?.['finDeSemana'] && citaForm.get('fecha')?.touched">
+    <i-lucide name="alert-circle" [size]="14"></i-lucide>
+    No se atiende sábados ni domingos. Seleccione un día hábil.
+  </div>
+</div>
 
         <!-- Hora -->
         <div class="form-group">
-          <label for="hora">
-            <i-lucide name="clock" [size]="16"></i-lucide>
-            Hora *
-          </label>
-          <input 
-            type="time" 
-            id="hora" 
-            formControlName="hora"
-            [class.error]="citaForm.get('hora')?.invalid && citaForm.get('hora')?.touched">
-          <div class="campo-ayuda">
-            <i-lucide name="help-circle" [size]="12"></i-lucide>
-            Formato 24 horas (ej: 14:30)
-          </div>
-          <div class="error-message" *ngIf="citaForm.get('hora')?.invalid && citaForm.get('hora')?.touched">
-            <i-lucide name="alert-circle" [size]="14"></i-lucide>
-            La hora es requerida
-          </div>
-        </div>
-
-        <!-- Origen -->
-        <div class="form-group">
-          <label for="origen">
-            <i-lucide name="globe" [size]="16"></i-lucide>
-            Origen *
-          </label>
-          <select 
-            id="origen" 
-            formControlName="origen">
-            <option *ngFor="let orig of origenes" [value]="orig.value">
-              {{ orig.label }}
-            </option>
-          </select>
-          <div class="campo-ayuda">
-            <i-lucide name="help-circle" [size]="12"></i-lucide>
-            ¿Cómo se agendó esta cita?
-          </div>
-        </div>
+  <label for="hora">
+    <i-lucide name="clock" [size]="16"></i-lucide>
+    Hora *
+  </label>
+  <select
+    id="hora"
+    formControlName="hora"
+    [class.error]="citaForm.get('hora')?.invalid && citaForm.get('hora')?.touched">
+    <option value="">Seleccione una hora</option>
+    <optgroup label="Mañana">
+      <option value="08:00">08:00 AM</option>
+      <option value="09:00">09:00 AM</option>
+      <option value="10:00">10:00 AM</option>
+      <option value="11:00">11:00 AM</option>
+    </optgroup>
+    <optgroup label="Tarde">
+      <option value="14:00">02:00 PM</option>
+      <option value="15:00">03:00 PM</option>
+      <option value="16:00">04:00 PM</option>
+    </optgroup>
+  </select>
+  <div class="campo-ayuda">
+    <i-lucide name="help-circle" [size]="12"></i-lucide>
+    Mañana: 8:00–11:00 | Tarde: 14:00–16:00
+  </div>
+  <div class="error-message" *ngIf="citaForm.get('hora')?.invalid && citaForm.get('hora')?.touched">
+    <i-lucide name="alert-circle" [size]="14"></i-lucide>
+    Seleccione una hora válida
+  </div>
+</div>
 
       </div>
     </div>
 
     <!-- Sección: Detalles -->
-    <div class="form-section">
-      <h2>
-        <i-lucide name="file-text" [size]="24"></i-lucide>
-        Detalles
-      </h2>
-      
-      <div class="form-grid">
+<div class="form-section">
+  <h2>
+    <i-lucide name="file-text" [size]="24"></i-lucide>
+    Detalles
+  </h2>
+  
+  <div class="form-grid">
 
-        <!-- ⭐ CAMBIO: Motivo → Descripción (AHORA OPCIONAL) -->
-        <div class="form-group full-width">
-          <label for="descripcion">
-            <i-lucide name="file-text" [size]="16"></i-lucide>
-            Descripción de la Cita
-          </label>
-          <textarea 
-            id="descripcion" 
-            formControlName="descripcion"
-            rows="3"
-            placeholder="Describe el motivo o detalles de la cita..."></textarea>
-          <div class="campo-ayuda">
-            <i-lucide name="help-circle" [size]="12"></i-lucide>
-            Opcional: información sobre la cita
-          </div>
-        </div>
-
-        <!-- Notas Adicionales -->
-        <div class="form-group full-width">
-          <label for="notasAdicionales">
-            <i-lucide name="file-text" [size]="16"></i-lucide>
-            Notas Adicionales
-          </label>
-          <textarea 
-            id="notasAdicionales" 
-            formControlName="notasAdicionales"
-            rows="3"
-            placeholder="Notas adicionales (opcional)..."></textarea>
-          <div class="campo-ayuda">
-            <i-lucide name="help-circle" [size]="12"></i-lucide>
-            Opcional: información adicional relevante
-          </div>
-        </div>
-
-        <!-- ⭐ NUEVO: Teléfono de Contacto (OPCIONAL) -->
-        <div class="form-group">
-          <label for="telefonoContacto">
-            <i-lucide name="phone" [size]="16"></i-lucide>
-            Teléfono de Contacto
-          </label>
-          <input 
-            type="tel" 
-            id="telefonoContacto" 
-            formControlName="telefonoContacto"
-            placeholder="Ej: +591 12345678">
-          <div class="campo-ayuda">
-            <i-lucide name="help-circle" [size]="12"></i-lucide>
-            Opcional: teléfono alternativo de contacto
-          </div>
-        </div>
-
+    <div class="form-group full-width">
+      <label for="descripcion">
+        <i-lucide name="file-text" [size]="16"></i-lucide>
+        Descripción de la Cita
+      </label>
+      <textarea id="descripcion" formControlName="descripcion" rows="3"
+        placeholder="Describe el motivo o detalles de la cita..."></textarea>
+      <div class="campo-ayuda">
+        <i-lucide name="help-circle" [size]="12"></i-lucide>
+        Opcional: información sobre la cita
       </div>
     </div>
 
+    <div class="form-group">
+      <label for="telefonoContacto">
+        <i-lucide name="phone" [size]="16"></i-lucide>
+        Teléfono de Contacto
+      </label>
+      <input type="tel" id="telefonoContacto" formControlName="telefonoContacto"
+        placeholder="Ej: +591 12345678">
+      <div class="campo-ayuda">
+        <i-lucide name="help-circle" [size]="12"></i-lucide>
+        Opcional: teléfono alternativo de contacto
+      </div>
+    </div>
+
+  </div>
+</div>
     <!-- Botones -->
     <div class="form-actions">
       <button type="button" class="btn-secondary" (click)="cancelar()" [disabled]="loading">

@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <!-- Estadísticas -->
+  <!-- Estadísticas 
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon">
@@ -57,7 +57,7 @@
         <div class="stat-label">Completadas</div>
       </div>
     </div>
-  </div>
+  </div>-->
 
   <!-- Filtros -->
   <div class="filtros-section">
@@ -149,7 +149,7 @@
             <th>Fecha y Hora</th>
             <th>Cliente</th>
             <th>Abogado</th>
-            <th>Tipo de Cita</th>
+            <th>Tipo de Caso</th>
             <th>Área de Derecho</th>
             <th>Urgencia</th>
             <th>Estado</th>
@@ -189,9 +189,9 @@
               </div>
             </td>
 
-            <!-- Tipo de Cita -->
+            <!-- Tipo de Caso -->
             <td>
-              <span class="tipo-badge">{{ cita.tipoCita.nombre }}</span>
+              <span class="tipo-badge">{{ cita.tipoCaso?.nombre  }}</span>
             </td>
 
             <!-- Área de Derecho -->

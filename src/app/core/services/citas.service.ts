@@ -44,18 +44,19 @@ export interface Cita {
   cliente: Cliente;
   abogado: Abogado;
   areaDerecho: AreaDerecho;
-  tipoCita: TipoCita;
+  tipoCita?: TipoCita;
   tipoCaso: TipoCaso;
-  oficina: Oficina;
+  oficina?: Oficina;
   descripcion?: string;
   notasAdicionales?: string;
   estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada' | 'no_asistio';
   urgencia: 'alta' | 'media' | 'baja';
-  origen: 'chatbot' | 'panel_web' | 'presencial';
+  origen?: 'chatbot' | 'panel_web' | 'presencial';
   telefonoContacto?: string;
   recordatorioEnviado: boolean;
   createdAt: Date;
   updatedAt: Date;
+  motivoCancelacion?: string; // 🆕 Agregado
 }
 
 // Interface para crear/actualizar citas
@@ -173,8 +174,20 @@ export class CitasService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  cambiarEstado(id: string, estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada' | 'no_asistio'): Observable<Cita> {
-    return this.http.patch<any>(`${this.apiUrl}/${id}/estado`, { estado }).pipe(
+  // 🔄 MODIFICADO: Ahora acepta motivoCancelacion opcional
+  cambiarEstado(
+    id: string, 
+    estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada' | 'no_asistio',
+    motivoCancelacion?: string
+  ): Observable<Cita> {
+    const body: any = { estado };
+    
+    // Solo agregar motivo si el estado es cancelada y se proporcionó
+    if (estado === 'cancelada' && motivoCancelacion) {
+      body.motivoCancelacion = motivoCancelacion;
+    }
+    
+    return this.http.patch<any>(`${this.apiUrl}/${id}/estado`, body).pipe(
       map(cita => this.transformarCita(cita))
     );
   }
@@ -183,8 +196,9 @@ export class CitasService {
     return this.cambiarEstado(id, 'confirmada');
   }
 
-  cancelarCita(id: string): Observable<Cita> {
-    return this.cambiarEstado(id, 'cancelada');
+  // 🔄 MODIFICADO: Ahora acepta motivoCancelacion
+  cancelarCita(id: string, motivoCancelacion?: string): Observable<Cita> {
+    return this.cambiarEstado(id, 'cancelada', motivoCancelacion);
   }
 
   completarCita(id: string): Observable<Cita> {

@@ -16,8 +16,7 @@ export class UsuarioFormComponent implements OnInit {
   errorMessage = '';
 
   roles = [
-    { value: 'admin', label: 'Administrador', icon: '👑' },
-    { value: 'asistente_legal', label: 'Asistente Legal', icon: '📋' }
+    { value: 'asistente_legal', label: 'Asistente Legal' }
   ];
 
   constructor(

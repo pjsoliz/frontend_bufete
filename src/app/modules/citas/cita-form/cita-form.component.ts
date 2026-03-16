@@ -9,31 +9,11 @@ import { forkJoin } from 'rxjs';
 import { AbogadosService } from '../../../core/services/abogados.service';
 import { OficinasService } from '../../../core/services/oficinas.service';
 
-// Interfaces para las listas desplegables
-interface Abogado {
-  id: string;
-  nombreCompleto: string;
-}
-
-interface AreaDerecho {
-  id: string;
-  nombre: string;
-}
-
-interface TipoCita {
-  id: string;
-  nombre: string;
-}
-
-interface TipoCaso {
-  id: string;
-  nombre: string;
-}
-
-interface Oficina {
-  id: string;
-  nombre: string;
-}
+interface Abogado { id: string; nombre: string; }
+interface AreaDerecho { id: string; nombre: string; }
+interface TipoCita { id: string; nombre: string; }
+interface TipoCaso { id: string; nombre: string; }
+interface Oficina { id: string; nombre: string; }
 
 @Component({
   selector: 'app-cita-form',
@@ -47,59 +27,44 @@ export class CitaFormComponent implements OnInit {
   citaId: string | null = null;
   errorMessage = '';
 
-  // Listas cargadas desde el backend
   clientes: Cliente[] = [];
   abogados: Abogado[] = [];
   areasderecho: AreaDerecho[] = [];
   tiposCita: TipoCita[] = [];
   tiposCaso: TipoCaso[] = [];
-  oficinas: Oficina[] = [];  // ⭐ NUEVO
+  oficinas: Oficina[] = [];
 
-  // Opciones de urgencia y origen
   urgencias = [
     { value: 'baja', label: 'Baja' },
     { value: 'media', label: 'Media' },
     { value: 'alta', label: 'Alta' }
   ];
 
-  origenes = [
-    { value: 'panel_web', label: 'Panel Web' },
-    { value: 'chatbot', label: 'Chatbot' },
-    { value: 'presencial', label: 'Presencial' }
-  ];
-
   constructor(
     private fb: FormBuilder,
     private citasService: CitasService,
     private clientesService: ClientesService,
-    private abogadosService: AbogadosService,  // ⭐ NUEVO
-    private oficinasService: OficinasService,  // ⭐ NUEVO
+    private abogadosService: AbogadosService,
+    private oficinasService: OficinasService,
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute
   ) {
     this.citaForm = this.fb.group({
-      fecha: ['', Validators.required],
-      hora: ['', Validators.required],
+      fecha: ['', [Validators.required, this.validarDiaLaboral()]],
+      hora: ['', [Validators.required, this.validarHorarioPermitido()]],
       clienteId: ['', Validators.required],
       abogadoId: ['', Validators.required],
       areaDerechoId: ['', Validators.required],
-      tipoCitaId: ['', Validators.required],
-      tipoCasoId: ['', Validators.required],  // ⭐ AHORA ES OBLIGATORIO
-      oficinaId: ['', Validators.required],   // ⭐ NUEVO Y OBLIGATORIO
-      descripcion: [''],  // ⭐ CAMBIO: motivo → descripcion (opcional)
+      tipoCasoId: ['', Validators.required],
+      descripcion: [''],
       urgencia: ['media', Validators.required],
-      origen: ['panel_web', Validators.required],
-      notasAdicionales: [''],
-      telefonoContacto: ['']  // ⭐ NUEVO (opcional)
+      telefonoContacto: ['']
     });
   }
 
   ngOnInit(): void {
-    // Cargar todas las listas necesarias
     this.cargarDatos();
-
-    // Verificar si estamos en modo edición
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
@@ -110,25 +75,18 @@ export class CitaFormComponent implements OnInit {
 
   cargarDatos(): void {
     this.loading = true;
-
-    // Cargar todas las listas en paralelo
     forkJoin({
       clientes: this.clientesService.getClientes(),
-      abogados: this.abogadosService.getAbogados(),  // ⭐ USANDO SERVICIO
-      oficinas: this.oficinasService.getOficinas(),  // ⭐ NUEVO
+      abogados: this.abogadosService.getAbogados(),
       areas: this.http.get<AreaDerecho[]>(`${environment.apiUrl}/areas-derecho`),
-      tiposCita: this.http.get<TipoCita[]>(`${environment.apiUrl}/tipos-cita`),
       tiposCaso: this.http.get<TipoCaso[]>(`${environment.apiUrl}/tipos-caso`)
     }).subscribe({
       next: (data) => {
         this.clientes = data.clientes;
         this.abogados = data.abogados;
-        this.oficinas = data.oficinas;  // ⭐ NUEVO
         this.areasderecho = data.areas;
-        this.tiposCita = data.tiposCita;
         this.tiposCaso = data.tiposCaso;
         this.loading = false;
-        console.log('Datos cargados:', data);
       },
       error: (error) => {
         console.error('Error al cargar datos:', error);
@@ -149,14 +107,10 @@ export class CitaFormComponent implements OnInit {
             clienteId: cita.cliente.id,
             abogadoId: cita.abogado.id,
             areaDerechoId: cita.areaDerecho.id,
-            tipoCitaId: cita.tipoCita.id,
             tipoCasoId: cita.tipoCaso?.id || '',
-            oficinaId: cita.oficina?.id || '',  // ⭐ NUEVO
-            descripcion: cita.descripcion || '',  // ⭐ CAMBIO: motivo → descripcion
+            descripcion: cita.descripcion || '',
             urgencia: cita.urgencia,
-            origen: cita.origen,
-            notasAdicionales: cita.notasAdicionales || '',
-            telefonoContacto: cita.telefonoContacto || ''  // ⭐ NUEVO
+            telefonoContacto: cita.telefonoContacto || ''
           });
         }
         this.loading = false;
@@ -173,41 +127,27 @@ export class CitaFormComponent implements OnInit {
     if (this.citaForm.valid) {
       this.loading = true;
       this.errorMessage = '';
-
       const formValue = this.citaForm.value;
 
-      // Preparar datos para enviar (coincide 100% con el backend)
-      const citaData: CitaCreate = {
-        fecha: formValue.fecha,
-        hora: formValue.hora,
-        clienteId: formValue.clienteId,
-        abogadoId: formValue.abogadoId,
-        areaDerechoId: formValue.areaDerechoId,
-        tipoCitaId: formValue.tipoCitaId,
-        tipoCasoId: formValue.tipoCasoId,  // ⭐ OBLIGATORIO
-        oficinaId: formValue.oficinaId,    // ⭐ OBLIGATORIO
-        urgencia: formValue.urgencia,
-        origen: formValue.origen
-      };
-
-      // Agregar campos opcionales solo si tienen valor
-      if (formValue.descripcion && formValue.descripcion.trim()) {
-        citaData.descripcion = formValue.descripcion.trim();  // ⭐ CAMBIO: motivo → descripcion
-      }
-
-      if (formValue.notasAdicionales && formValue.notasAdicionales.trim()) {
-        citaData.notasAdicionales = formValue.notasAdicionales.trim();
-      }
-
-      if (formValue.telefonoContacto && formValue.telefonoContacto.trim()) {
-        citaData.telefonoContacto = formValue.telefonoContacto.trim();
-      }
-
       if (this.isEditMode && this.citaId) {
-        // Actualizar cita existente
-        this.citasService.updateCita(this.citaId, citaData).subscribe({
-          next: (response) => {
-            console.log('Cita actualizada:', response);
+        // ✅ UPDATE: sin clienteId
+        const updateData: any = {
+          fecha: formValue.fecha,
+          hora: formValue.hora,
+          abogadoId: formValue.abogadoId,
+          areaDerechoId: formValue.areaDerechoId,
+          tipoCasoId: formValue.tipoCasoId,
+          urgencia: formValue.urgencia
+        };
+        if (formValue.descripcion?.trim()) {
+          updateData.descripcion = formValue.descripcion.trim();
+        }
+        if (formValue.telefonoContacto?.trim()) {
+          updateData.telefonoContacto = formValue.telefonoContacto.trim();
+        }
+
+        this.citasService.updateCita(this.citaId, updateData).subscribe({
+          next: () => {
             this.loading = false;
             alert('Cita actualizada exitosamente');
             this.router.navigate(['/citas']);
@@ -218,11 +158,27 @@ export class CitaFormComponent implements OnInit {
             this.loading = false;
           }
         });
+
       } else {
-        // Crear nueva cita
+        // ✅ CREATE: incluye clienteId
+        const citaData: any = {
+          fecha: formValue.fecha,
+          hora: formValue.hora,
+          clienteId: formValue.clienteId,
+          abogadoId: formValue.abogadoId,
+          areaDerechoId: formValue.areaDerechoId,
+          tipoCasoId: formValue.tipoCasoId,
+          urgencia: formValue.urgencia
+        };
+        if (formValue.descripcion?.trim()) {
+          citaData.descripcion = formValue.descripcion.trim();
+        }
+        if (formValue.telefonoContacto?.trim()) {
+          citaData.telefonoContacto = formValue.telefonoContacto.trim();
+        }
+
         this.citasService.createCita(citaData).subscribe({
-          next: (response) => {
-            console.log('Cita creada:', response);
+          next: () => {
             this.loading = false;
             alert('Cita creada exitosamente');
             this.router.navigate(['/citas']);
@@ -234,6 +190,7 @@ export class CitaFormComponent implements OnInit {
           }
         });
       }
+
     } else {
       this.errorMessage = 'Por favor complete todos los campos requeridos correctamente';
       this.marcarCamposComoTocados();
@@ -273,7 +230,6 @@ export class CitaFormComponent implements OnInit {
     }
   }
 
-  // Formatear fecha para input type="date"
   formatearFechaParaInput(fecha: Date): string {
     const fechaObj = new Date(fecha);
     const year = fechaObj.getFullYear();
@@ -282,8 +238,25 @@ export class CitaFormComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  // Obtener fecha mínima (hoy)
   getFechaMinima(): string {
     return new Date().toISOString().split('T')[0];
+  }
+
+  validarHorarioPermitido() {
+    return (control: any) => {
+      if (!control.value) return null;
+      const horasPermitidas = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00'];
+      return horasPermitidas.includes(control.value) ? null : { horaInvalida: true };
+    };
+  }
+
+  validarDiaLaboral() {
+    return (control: any) => {
+      if (!control.value) return null;
+      const [year, month, day] = control.value.split('-').map(Number);
+      const fecha = new Date(year, month - 1, day);
+      const dia = fecha.getDay();
+      return (dia === 0 || dia === 6) ? { finDeSemana: true } : null;
+    };
   }
 }

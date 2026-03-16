@@ -95,7 +95,7 @@
             id="rol"
             formControlName="rol">
             <option *ngFor="let rol of roles" [value]="rol.value">
-              {{ rol.icon }} {{ rol.label }}
+               {{ rol.label }}
             </option>
           </select>
         </div>
@@ -108,12 +108,6 @@
         <i-lucide name="info" [size]="18" class="icon-info"></i-lucide>
         Permisos por Rol:
       </h4>
-      <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'admin'">
-        <i-lucide name="shield" [size]="18" class="permiso-icon"></i-lucide>
-        <div class="permiso-texto">
-          <strong>Administrador:</strong> Acceso completo al sistema. Puede gestionar usuarios, citas, clientes y configurar el sistema.
-        </div>
-      </div>
       <div class="permiso-item" *ngIf="usuarioForm.get('rol')?.value === 'asistente_legal'">
         <i-lucide name="clipboard-list" [size]="18" class="permiso-icon"></i-lucide>
         <div class="permiso-texto">
