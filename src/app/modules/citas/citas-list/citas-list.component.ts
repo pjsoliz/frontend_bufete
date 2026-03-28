@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CitasService, Cita } from '../../../core/services/citas.service';
+import { SwalService } from '../../../core/services/swal.service';
 
 @Component({
   selector: 'app-citas-list',
@@ -29,8 +30,9 @@ export class CitasListComponent implements OnInit {
 
   constructor(
     private citasService: CitasService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private swal: SwalService
+  ) { }
 
   ngOnInit(): void {
     this.cargarCitas();
@@ -50,7 +52,7 @@ export class CitasListComponent implements OnInit {
       error: (error) => {
         console.error('Error al cargar citas:', error);
         this.loading = false;
-        alert('Error al cargar las citas. Verifica la conexión con el servidor.');
+        this.swal.error('Error de carga', 'Verifica la conexión con el servidor.');
       }
     });
   }
@@ -67,30 +69,34 @@ export class CitasListComponent implements OnInit {
     this.citasFiltradas = this.citas.filter(cita => {
       // Filtro por estado
       const cumpleEstado = this.filtroEstado === 'todos' || cita.estado === this.filtroEstado;
-      
+
       // Filtro por urgencia
       const cumpleUrgencia = this.filtroUrgencia === 'todos' || cita.urgencia === this.filtroUrgencia;
 
       // Filtro por fecha
       let cumpleFecha = true;
       if (this.filtroFecha) {
-        const fechaCita = new Date(cita.fecha).toISOString().split('T')[0];
-        cumpleFecha = fechaCita === this.filtroFecha;
+        // Convertimos el objeto Date a string (YYYY-MM-DD) para comparar con el input
+        const fechaCitaStr = typeof cita.fecha === 'string'
+          ? cita.fecha
+          : new Date(cita.fecha).toISOString().split('T')[0];
+
+        cumpleFecha = fechaCitaStr === this.filtroFecha;
       }
 
       // Filtro por búsqueda con protección contra undefined
       let cumpleBusqueda = true;
       if (this.filtroBusqueda) {
         const busquedaLower = this.filtroBusqueda.toLowerCase().trim();
-        
+
         // Proteger todos los accesos con optional chaining y valor por defecto
         const nombreCliente = cita.cliente?.nombreCompleto?.toLowerCase() || '';
         const nombreAbogado = cita.abogado?.nombreCompleto?.toLowerCase() || '';
         const descripcion = cita.descripcion?.toLowerCase() || '';
         const tipoCita = cita.tipoCita?.nombre?.toLowerCase() || '';
         const areaDerecho = cita.areaDerecho?.nombre?.toLowerCase() || '';
-        
-        cumpleBusqueda = 
+
+        cumpleBusqueda =
           nombreCliente.includes(busquedaLower) ||
           nombreAbogado.includes(busquedaLower) ||
           descripcion.includes(busquedaLower) ||
@@ -129,118 +135,149 @@ export class CitasListComponent implements OnInit {
   // 🆕 MÉTODO CONFIRMAR ACTUALIZADO CON NOTIFICACIONES
   confirmarCita(id: string, event: Event): void {
     event.stopPropagation();
-    if (confirm('¿Confirmar esta cita?')) {
-      // 1. Cambiar estado a confirmada
-      this.citasService.confirmarCita(id).subscribe({
-        next: () => {
-          console.log('✅ Cita confirmada en BD');
-          
-          // 2. Enviar notificaciones a cliente y abogado
-          this.citasService.notificarCambioEstado(
-            id,
-            'pendiente',
-            'Asistente Legal'
-          ).subscribe({
-            next: () => {
-              console.log('✅ Notificaciones enviadas correctamente');
-              alert('Cita confirmada y notificaciones enviadas');
-            },
-            error: (err) => {
-              console.error('⚠️ Error al enviar notificaciones:', err);
-              alert('Cita confirmada pero hubo error al enviar notificaciones');
-            }
-          });
-          
-          // 3. Recargar lista
-          this.cargarCitas();
-        },
-        error: (error) => {
-          console.error('Error al confirmar cita:', error);
-          alert('Error al confirmar la cita');
-        }
-      });
-    }
+    this.swal.confirm(
+      '¿Confirmar cita?',
+      'Se enviarán notificaciones al cliente y al abogado.',
+      'Sí, confirmar'
+    ).then((confirmado) => {
+      if (confirmado) {
+        // 1. Cambiar estado a confirmada
+        this.citasService.confirmarCita(id).subscribe({
+          next: () => {
+            console.log('✅ Cita confirmada en BD');
+
+            // 2. Enviar notificaciones a cliente y abogado
+            this.citasService.notificarCambioEstado(
+              id,
+              'pendiente',
+              'Asistente Legal'
+            ).subscribe({
+              next: () => {
+                console.log('✅ Notificaciones enviadas correctamente');
+                this.swal.success('Cita confirmada', 'Notificaciones enviadas correctamente');
+              },
+              error: (err) => {
+                console.error('⚠️ Error al enviar notificaciones:', err);
+                this.swal.warning('Cita confirmada', 'Hubo un error al enviar las notificaciones');
+              }
+            });
+
+            // 3. Recargar lista
+            this.cargarCitas();
+          },
+          error: (error) => {
+            console.error('Error al confirmar cita:', error);
+            this.swal.error('Error', 'No se pudo confirmar la cita');
+          }
+        });
+      }
+    });
   }
 
   // 🆕 MÉTODO CANCELAR ACTUALIZADO CON NOTIFICACIONES Y MOTIVO
-cancelarCita(id: string, event: Event): void {
-  event.stopPropagation();
-  
-  // 1. Pedir motivo de cancelación
-  const motivo = prompt('Ingrese el motivo de la cancelación:');
-  
-  if (!motivo || motivo.trim() === '') {
-    alert('Debe proporcionar un motivo para cancelar la cita');
-    return;
-  }
-  
-  // 2. Obtener estado anterior de la cita antes de cancelar
-  const citaActual = this.citas.find(c => c.id === id);
-  const estadoAnterior = citaActual?.estado || 'pendiente';
-  
-  // 3. Cancelar cita CON motivo
-  this.citasService.cancelarCita(id, motivo.trim()).subscribe({
-    next: () => {
-      console.log('✅ Cita cancelada en BD con motivo:', motivo);
-      
-      // 4. Enviar notificaciones a cliente y abogado
-      this.citasService.notificarCambioEstado(
-        id,
-        estadoAnterior,
-        'Asistente Legal'
-      ).subscribe({
-        next: (response) => {
-          console.log('✅ Notificaciones de cancelación enviadas:', response);
-          alert('Cita cancelada y notificaciones enviadas correctamente');
-          
-          // 5. Recargar lista
-          this.cargarCitas();
+  async cancelarCita(id: string, event: Event): Promise<void> {
+    event.stopPropagation();
+
+    // 1. Pedir motivo de cancelación con Swal
+    const { value: motivo } = await import('sweetalert2').then(swal => swal.default.fire({
+      title: 'Cancelar cita',
+      input: 'text',
+      inputLabel: 'Motivo de la cancelación',
+      inputPlaceholder: 'Ingrese el motivo...',
+      showCancelButton: true,
+      confirmButtonText: 'Cancelar cita',
+      cancelButtonText: 'Volver',
+      confirmButtonColor: '#d32f2f',
+      background: '#1a1a2e',
+      color: '#e8c97e',
+      inputValidator: (value) => {
+        if (!value || value.trim() === '') {
+          return 'Debe proporcionar un motivo para cancelar la cita';
+        }
+        return null;
+      }
+    }));
+
+    if (motivo) {
+      // 2. Obtener estado anterior de la cita antes de cancelar
+      const citaActual = this.citas.find(c => c.id === id);
+      const estadoAnterior = citaActual?.estado || 'pendiente';
+
+      // 3. Cancelar cita CON motivo
+      this.citasService.cancelarCita(id, motivo.trim()).subscribe({
+        next: () => {
+          console.log('✅ Cita cancelada en BD con motivo:', motivo);
+
+          // 4. Enviar notificaciones a cliente y abogado
+          this.citasService.notificarCambioEstado(
+            id,
+            estadoAnterior,
+            'Asistente Legal'
+          ).subscribe({
+            next: (response) => {
+              console.log('✅ Notificaciones de cancelación enviadas:', response);
+              this.swal.success('Cita cancelada', 'Notificaciones enviadas correctamente');
+
+              // 5. Recargar lista
+              this.cargarCitas();
+            },
+            error: (err) => {
+              console.error('⚠️ Error al enviar notificaciones:', err);
+              this.swal.warning('Cita cancelada', 'Hubo un error al enviar las notificaciones');
+
+              // Recargar de todas formas
+              this.cargarCitas();
+            }
+          });
         },
-        error: (err) => {
-          console.error('⚠️ Error al enviar notificaciones:', err);
-          alert('Cita cancelada pero hubo error al enviar notificaciones');
-          
-          // Recargar de todas formas
-          this.cargarCitas();
+        error: (error) => {
+          console.error('❌ Error al cancelar cita:', error);
+          this.swal.error('Error al cancelar', error.error?.message || error.message);
         }
       });
-    },
-    error: (error) => {
-      console.error('❌ Error al cancelar cita:', error);
-      alert('Error al cancelar la cita: ' + (error.error?.message || error.message));
     }
-  });
-}
+  }
 
   completarCita(id: string, event: Event): void {
     event.stopPropagation();
-    if (confirm('¿Marcar esta cita como completada?')) {
-      this.citasService.completarCita(id).subscribe({
-        next: () => {
-          this.cargarCitas();
-        },
-        error: (error) => {
-          console.error('Error al completar cita:', error);
-          alert('Error al completar la cita');
-        }
-      });
-    }
+    this.swal.confirm(
+      '¿Marcar como completada?',
+      'La cita se marcará como finalizada.'
+    ).then((confirmado) => {
+      if (confirmado) {
+        this.citasService.completarCita(id).subscribe({
+          next: () => {
+            this.swal.toast('Cita completada');
+            this.cargarCitas();
+          },
+          error: (error) => {
+            console.error('Error al completar cita:', error);
+            this.swal.error('Error', 'No se pudo completar la cita');
+          }
+        });
+      }
+    });
   }
 
   eliminarCita(id: string, event: Event): void {
     event.stopPropagation();
-    if (confirm('¿Está seguro de cancelar esta cita?')) {
-      this.citasService.deleteCita(id).subscribe({
-        next: () => {
-          alert('Cita cancelada exitosamente');
-          this.cargarCitas();
-        },
-        error: (error) => {
-          console.error('Error al cancelar cita:', error);
-          alert('Error al cancelar la cita');
-        }
-      });
-    }
+    this.swal.confirmDelete(
+      '¿Eliminar cita?',
+      'Esta acción no se puede deshacer.'
+    ).then((confirmado) => {
+      if (confirmado) {
+        this.citasService.deleteCita(id).subscribe({
+          next: () => {
+            this.swal.toast('Cita eliminada exitosamente');
+            this.cargarCitas();
+          },
+          error: (error) => {
+            console.error('Error al eliminar cita:', error);
+            this.swal.error('Error', 'No se pudo eliminar la cita');
+          }
+        });
+      }
+    });
   }
 
   // Métodos auxiliares para el template
@@ -293,25 +330,25 @@ cancelarCita(id: string, event: Event): void {
   }
 
   formatearFecha(fecha: Date | string): string {
-  // ✅ Si es string, convertir correctamente sin zona horaria
-  let fechaObj: Date;
-  
-  if (typeof fecha === 'string') {
-    // Separar la fecha en partes
-    const [year, month, day] = fecha.split('-').map(Number);
-    // Crear Date con valores locales (sin conversión UTC)
-    fechaObj = new Date(year, month - 1, day);
-  } else {
-    fechaObj = new Date(fecha);
+    // ✅ Si es string, convertir correctamente sin zona horaria
+    let fechaObj: Date;
+
+    if (typeof fecha === 'string') {
+      // Separar la fecha en partes
+      const [year, month, day] = fecha.split('-').map(Number);
+      // Crear Date con valores locales (sin conversión UTC)
+      fechaObj = new Date(year, month - 1, day);
+    } else {
+      fechaObj = new Date(fecha);
+    }
+
+    return fechaObj.toLocaleDateString('es-ES', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   }
-  
-  return fechaObj.toLocaleDateString('es-ES', {
-    weekday: 'short',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-}
 
   formatearHora(hora: string): string {
     // Formato 24h a 12h con AM/PM
@@ -322,10 +359,32 @@ cancelarCita(id: string, event: Event): void {
     return `${hour12}:${minutes} ${ampm}`;
   }
 
-  esCitaProxima(fecha: Date, hora: string): boolean {
-    const now = new Date();
-    const citaDateTime = new Date(fecha + 'T' + hora);
-    const diffHours = (citaDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+  private getHoyBolivia(): string {
+    const ahoraUTC = new Date();
+    const ahoraBolivia = new Date(ahoraUTC.getTime() - 4 * 60 * 60 * 1000);
+    return ahoraBolivia.toISOString().split('T')[0];
+  }
+
+  // Cambiamos el tipo a 'any' para evitar el error TS2345
+  esCitaDeHoy(fecha: any): boolean {
+    // Si fecha es un objeto Date, lo convertimos a string YYYY-MM-DD
+    const fechaStr = typeof fecha === 'string' ? fecha : new Date(fecha).toISOString().split('T')[0];
+    return fechaStr === this.getHoyBolivia();
+  }
+
+  esCitaProxima(fecha: any, hora: string): boolean {
+    // Aseguramos que fecha sea string para el split
+    const fechaStr = typeof fecha === 'string' ? fecha : new Date(fecha).toISOString().split('T')[0];
+
+    const [y, m, d] = fechaStr.split('-').map(Number);
+    const [h, min] = hora.split(':').map(Number);
+    const citaDateTime = new Date(y, m - 1, d, h, min, 0, 0);
+
+    const ahoraUTC = new Date();
+    const ahoraBolivia = new Date(ahoraUTC.getTime() - 4 * 60 * 60 * 1000);
+
+    const diffHours = (citaDateTime.getTime() - ahoraBolivia.getTime()) / (1000 * 60 * 60);
+    // Es próxima si es en las siguientes 24 horas y no ha pasado
     return diffHours > 0 && diffHours <= 24;
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuariosService, Usuario } from '../../../core/services/usuarios.service';
+import { SwalService } from '../../../core/services/swal.service';
 
 @Component({
   selector: 'app-usuarios-list',
@@ -25,7 +26,8 @@ export class UsuariosListComponent implements OnInit {
 
   constructor(
     private usuariosService: UsuariosService,
-    private router: Router
+    private router: Router,
+    private swal: SwalService
   ) {}
 
   ngOnInit(): void {
@@ -45,7 +47,7 @@ export class UsuariosListComponent implements OnInit {
       error: (error) => {
         console.error('Error al cargar usuarios:', error);
         this.loading = false;
-        alert('Error al cargar los usuarios. Verifica la conexión con el servidor.');
+        this.swal.error('Error de carga', 'Verifica la conexión con el servidor.');
       }
     });
   }
@@ -60,7 +62,7 @@ export class UsuariosListComponent implements OnInit {
   aplicarFiltros(): void {
     this.usuariosFiltrados = this.usuarios.filter(usuario => {
       const cumpleRol = this.filtroRol === 'todos' || usuario.rol === this.filtroRol;
-      
+
       let cumpleEstado = true;
       if (this.filtroEstado === 'activo') {
         cumpleEstado = usuario.activo === true;
@@ -93,38 +95,64 @@ export class UsuariosListComponent implements OnInit {
     this.router.navigate(['/usuarios/editar', id]);
   }
 
-  eliminarUsuario(id: string, event: Event): void {
+  eliminarUsuario(usuario: Usuario, event: Event): void {
     event.stopPropagation();
-    if (confirm('¿Está seguro de eliminar este usuario?')) {
-      this.usuariosService.deleteUsuario(id).subscribe({
-        next: () => {
-          alert('Usuario eliminado exitosamente');
-          this.cargarUsuarios();
-        },
-        error: (error) => {
-          console.error('Error al eliminar usuario:', error);
-          alert('Error al eliminar el usuario');
-        }
-      });
+
+    if (usuario.rol === 'admin') {
+      this.swal.warning('Acción no permitida', 'No se puede eliminar un usuario Administrador.');
+      return;
     }
+
+    this.swal.confirmDelete(
+      '¿Eliminar usuario?',
+      `Esta acción eliminará a "${usuario.nombreCompleto}" de forma permanente.`
+    ).then(confirmado => {
+      if (confirmado) {
+        this.usuariosService.deleteUsuario(usuario.id).subscribe({
+          next: () => {
+            this.swal.toast('Usuario eliminado exitosamente');
+            this.cargarUsuarios();
+          },
+          error: (error) => {
+            console.error('Error al eliminar usuario:', error);
+            this.swal.error('Error', 'No se pudo eliminar el usuario.');
+          }
+        });
+      }
+    });
   }
 
-  cambiarEstado(id: string, activar: boolean, event: Event): void {
+  cambiarEstado(usuario: Usuario, activar: boolean, event: Event): void {
     event.stopPropagation();
-    const accion = activar ? 'activar' : 'desactivar';
-    
-    if (confirm(`¿Está seguro de ${accion} este usuario?`)) {
-      this.usuariosService.cambiarEstadoUsuario(id, activar).subscribe({
-        next: () => {
-          this.cargarUsuarios();
-          alert(`Usuario ${accion}do exitosamente`);
-        },
-        error: (error) => {
-          console.error('Error al cambiar estado:', error);
-          alert('Error al cambiar el estado del usuario');
-        }
-      });
+
+    if (usuario.rol === 'admin') {
+      this.swal.warning('Acción no permitida', 'No se puede cambiar el estado de un Administrador.');
+      return;
     }
+
+    const accion = activar ? 'activar' : 'desactivar';
+    this.swal.confirm(
+      `¿${accion.charAt(0).toUpperCase() + accion.slice(1)} usuario?`,
+      `Se ${accion}á a "${usuario.nombreCompleto}".`,
+      `Sí, ${accion}`
+    ).then(confirmado => {
+      if (confirmado) {
+        this.usuariosService.cambiarEstadoUsuario(usuario.id, activar).subscribe({
+          next: () => {
+            this.swal.toast(`Usuario ${accion}do exitosamente`);
+            this.cargarUsuarios();
+          },
+          error: (error) => {
+            console.error('Error al cambiar estado:', error);
+            this.swal.error('Error', 'No se pudo cambiar el estado del usuario.');
+          }
+        });
+      }
+    });
+  }
+
+  esAdmin(usuario: Usuario): boolean {
+    return usuario.rol === 'admin';
   }
 
   getRolClass(rol: string): string {
@@ -149,7 +177,7 @@ export class UsuariosListComponent implements OnInit {
       'asistente_legal': 'clipboard-list'
     };
     return icons[rol] || 'user';
-  } 
+  }
 
   getEstadoClass(activo: boolean): string {
     return activo ? 'estado-activo' : 'estado-inactivo';

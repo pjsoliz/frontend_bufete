@@ -150,28 +150,31 @@
                   <i-lucide name="pencil" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
-                <button
-                  *ngIf="usuario.activo"
-                  class="btn-accion btn-desactivar"
-                  (click)="cambiarEstado(usuario.id, false, $event)"
-                  title="Desactivar">
-                  <i-lucide name="pause-circle" [size]="16" class="icon-accion"></i-lucide>
-                </button>
+                <!-- Botones ocultos para administradores -->
+                <ng-container *ngIf="!esAdmin(usuario)">
+                  <button
+                    *ngIf="usuario.activo"
+                    class="btn-accion btn-desactivar"
+                    (click)="cambiarEstado(usuario, false, $event)"
+                    title="Desactivar">
+                    <i-lucide name="pause-circle" [size]="16" class="icon-accion"></i-lucide>
+                  </button>
 
-                <button
-                  *ngIf="!usuario.activo"
-                  class="btn-accion btn-activar"
-                  (click)="cambiarEstado(usuario.id, true, $event)"
-                  title="Activar">
-                  <i-lucide name="play-circle" [size]="16" class="icon-accion"></i-lucide>
-                </button>
+                  <button
+                    *ngIf="!usuario.activo"
+                    class="btn-accion btn-activar"
+                    (click)="cambiarEstado(usuario, true, $event)"
+                    title="Activar">
+                    <i-lucide name="play-circle" [size]="16" class="icon-accion"></i-lucide>
+                  </button>
 
-                <button
-                  class="btn-accion btn-eliminar"
-                  (click)="eliminarUsuario(usuario.id, $event)"
-                  title="Eliminar">
-                  <i-lucide name="trash-2" [size]="16" class="icon-accion"></i-lucide>
-                </button>
+                  <button
+                    class="btn-accion btn-eliminar"
+                    (click)="eliminarUsuario(usuario, $event)"
+                    title="Eliminar">
+                    <i-lucide name="trash-2" [size]="16" class="icon-accion"></i-lucide>
+                  </button>
+                </ng-container>
               </div>
             </td>
           </tr>

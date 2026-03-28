@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientesService, Cliente } from '../../../core/services/clientes.service';
+import { SwalService } from '../../../core/services/swal.service';
 
 @Component({
   selector: 'app-cliente-detalle',
@@ -15,7 +16,8 @@ export class ClienteDetalleComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private swal: SwalService
   ) {}
 
   ngOnInit(): void {
@@ -60,26 +62,28 @@ export class ClienteDetalleComponent implements OnInit {
   }
 
   eliminarCliente(): void {
-    if (this.cliente) {
-      const mensaje = `¿Está seguro de eliminar al cliente "${this.cliente.nombreCompleto}"?\n\nEsta acción no se puede deshacer.`;
-      
-      if (confirm(mensaje)) {
-        this.clientesService.deleteCliente(this.cliente.id).subscribe({
+    if (!this.cliente) return;
+    this.swal.confirmDelete(
+      '¿Eliminar cliente?',
+      `Se eliminará a "${this.cliente.nombreCompleto}" permanentemente.`
+    ).then(confirmado => {
+      if (confirmado) {
+        this.clientesService.deleteCliente(this.cliente!.id).subscribe({
           next: () => {
-            alert('Cliente eliminado exitosamente');
+            this.swal.toast('Cliente eliminado exitosamente');
             this.router.navigate(['/clientes']);
           },
           error: (error) => {
             console.error('Error al eliminar cliente:', error);
             if (error.status === 400 && error.error?.message) {
-              alert(`No se puede eliminar el cliente: ${error.error.message}`);
+              this.swal.error('No se puede eliminar', error.error.message);
             } else {
-              alert('Error al eliminar el cliente. Puede que tenga citas asociadas.');
+              this.swal.error('Error', 'No se pudo eliminar. Puede que tenga citas asociadas.');
             }
           }
         });
       }
-    }
+    });
   }
 
   // Métodos auxiliares para el template
@@ -144,7 +148,7 @@ export class ClienteDetalleComponent implements OnInit {
 
   copiarAlPortapapeles(texto: string, campo: string): void {
     navigator.clipboard.writeText(texto).then(() => {
-      alert(`${campo} copiado al portapapeles`);
+      this.swal.toast(`${campo} copiado al portapapeles`, 'info');
     }).catch(err => {
       console.error('Error al copiar:', err);
     });

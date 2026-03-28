@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClientesService, Cliente } from '../../../core/services/clientes.service';
+import { SwalService } from '../../../core/services/swal.service';
 
 @Component({
   selector: 'app-clientes-list',
@@ -26,7 +27,8 @@ export class ClientesListComponent implements OnInit {
 
   constructor(
     private clientesService: ClientesService,
-    private router: Router
+    private router: Router,
+    private swal: SwalService
   ) {}
 
   ngOnInit(): void {
@@ -47,7 +49,7 @@ export class ClientesListComponent implements OnInit {
       error: (error) => {
         console.error('Error al cargar clientes:', error);
         this.loading = false;
-        alert('Error al cargar los clientes. Verifica la conexión con el servidor.');
+        this.swal.error('Error de carga', 'Verifica la conexión con el servidor.');
       }
     });
   }
@@ -94,22 +96,24 @@ export class ClientesListComponent implements OnInit {
 
   eliminarCliente(id: string, event: Event): void {
     event.stopPropagation();
-    
     const cliente = this.clientes.find(c => c.id === id);
-    const mensaje = `¿Está seguro de eliminar al cliente "${cliente?.nombreCompleto}"?\n\nEsta acción no se puede deshacer.`;
-    
-    if (confirm(mensaje)) {
-      this.clientesService.deleteCliente(id).subscribe({
-        next: () => {
-          console.log('Cliente eliminado exitosamente');
-          this.cargarClientes(); // Recargar la lista
-        },
-        error: (error) => {
-          console.error('Error al eliminar cliente:', error);
-          alert('Error al eliminar el cliente. Puede que tenga citas asociadas.');
-        }
-      });
-    }
+    this.swal.confirmDelete(
+      '¿Eliminar cliente?',
+      `Se eliminará a "${cliente?.nombreCompleto}" permanentemente.`
+    ).then(confirmado => {
+      if (confirmado) {
+        this.clientesService.deleteCliente(id).subscribe({
+          next: () => {
+            this.swal.toast('Cliente eliminado exitosamente');
+            this.cargarClientes();
+          },
+          error: (error) => {
+            console.error('Error al eliminar cliente:', error);
+            this.swal.error('Error', 'No se pudo eliminar. Puede que tenga citas asociadas.');
+          }
+        });
+      }
+    });
   }
 
   // Métodos auxiliares para el template

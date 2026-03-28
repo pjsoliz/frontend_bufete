@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CitasService, CitaCreate } from '../../../core/services/citas.service';
 import { ClientesService, Cliente } from '../../../core/services/clientes.service';
 import { HttpClient } from '@angular/common/http';
+import { SwalService } from '../../../core/services/swal.service';
 import { environment } from '../../../../environments/environment';
 import { forkJoin } from 'rxjs';
 import { AbogadosService } from '../../../core/services/abogados.service';
@@ -48,7 +49,8 @@ export class CitaFormComponent implements OnInit {
     private oficinasService: OficinasService,
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private swal: SwalService
   ) {
     this.citaForm = this.fb.group({
       fecha: ['', [Validators.required, this.validarDiaLaboral()]],
@@ -149,7 +151,7 @@ export class CitaFormComponent implements OnInit {
         this.citasService.updateCita(this.citaId, updateData).subscribe({
           next: () => {
             this.loading = false;
-            alert('Cita actualizada exitosamente');
+            this.swal.toast('Cita actualizada exitosamente');
             this.router.navigate(['/citas']);
           },
           error: (error) => {
@@ -180,7 +182,7 @@ export class CitaFormComponent implements OnInit {
         this.citasService.createCita(citaData).subscribe({
           next: () => {
             this.loading = false;
-            alert('Cita creada exitosamente');
+            this.swal.toast('Cita creada exitosamente');
             this.router.navigate(['/citas']);
           },
           error: (error) => {
@@ -222,9 +224,12 @@ export class CitaFormComponent implements OnInit {
 
   cancelar(): void {
     if (this.citaForm.dirty) {
-      if (confirm('¿Está seguro de cancelar? Se perderán los cambios no guardados.')) {
-        this.router.navigate(['/citas']);
-      }
+      this.swal.confirm(
+        '¿Cancelar cambios?',
+        'Se perderán los cambios no guardados.'
+      ).then(confirmado => {
+        if (confirmado) this.router.navigate(['/citas']);
+      });
     } else {
       this.router.navigate(['/citas']);
     }
@@ -240,6 +245,12 @@ export class CitaFormComponent implements OnInit {
 
   getFechaMinima(): string {
     return new Date().toISOString().split('T')[0];
+  }
+  // Añade esto debajo de getFechaMinima()
+  getFechaMaxima(): string {
+    const hoy = new Date();
+    const proximoAnio = new Date(hoy.getFullYear() + 1, hoy.getMonth(), hoy.getDate());
+    return proximoAnio.toISOString().split('T')[0];
   }
 
   validarHorarioPermitido() {

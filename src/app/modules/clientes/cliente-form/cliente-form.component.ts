@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ClientesService, ClienteCreate } from '../../../core/services/clientes.service';
+import { SwalService } from '../../../core/services/swal.service';
 
 @Component({
   selector: 'app-cliente-form',
@@ -26,7 +27,8 @@ export class ClienteFormComponent implements OnInit {
     private fb: FormBuilder,
     private clientesService: ClientesService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private swal: SwalService
   ) {
     this.clienteForm = this.fb.group({
       nombreCompleto: ['', [Validators.required, Validators.minLength(3)]],
@@ -98,7 +100,7 @@ export class ClienteFormComponent implements OnInit {
           next: (response) => {
             console.log('Cliente actualizado:', response);
             this.loading = false;
-            alert('Cliente actualizado exitosamente');
+            this.swal.toast('Cliente actualizado exitosamente');
             this.router.navigate(['/clientes']);
           },
           error: (error) => {
@@ -113,7 +115,7 @@ export class ClienteFormComponent implements OnInit {
           next: (response) => {
             console.log('Cliente creado:', response);
             this.loading = false;
-            alert('Cliente creado exitosamente');
+            this.swal.toast('Cliente creado exitosamente');
             this.router.navigate(['/clientes']);
           },
           error: (error) => {
@@ -154,9 +156,12 @@ export class ClienteFormComponent implements OnInit {
 
   cancelar(): void {
     if (this.clienteForm.dirty) {
-      if (confirm('¿Está seguro de cancelar? Se perderán los cambios no guardados.')) {
-        this.router.navigate(['/clientes']);
-      }
+      this.swal.confirm(
+        '¿Cancelar cambios?',
+        'Se perderán los cambios no guardados.'
+      ).then(confirmado => {
+        if (confirmado) this.router.navigate(['/clientes']);
+      });
     } else {
       this.router.navigate(['/clientes']);
     }

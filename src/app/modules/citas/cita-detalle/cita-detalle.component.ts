@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CitasService, Cita } from '../../../core/services/citas.service';
+import { SwalService } from '../../../core/services/swal.service';
 
 @Component({
   selector: 'app-cita-detalle',
@@ -16,7 +17,8 @@ export class CitaDetalleComponent implements OnInit {
     private route: ActivatedRoute,
     public router: Router,
     private citasService: CitasService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private swal: SwalService
   ) {}
 
   ngOnInit(): void {
@@ -69,75 +71,83 @@ export class CitaDetalleComponent implements OnInit {
   }
 
   eliminarCita(): void {
-  if (this.cita && confirm('¿Está seguro de cancelar esta cita?')) {  // Cambiar texto
-    this.citasService.deleteCita(this.cita.id).subscribe({
-      next: () => {
-        alert('Cita cancelada exitosamente');  // Cambiar texto
-        this.router.navigate(['/citas']);
-      },
-      error: (error) => {
-        console.error('Error al cancelar cita:', error);  // Cambiar texto
-        alert('Error al cancelar la cita');  // Cambiar texto
+    if (!this.cita) return;
+    this.swal.confirmDelete(
+      '¿Cancelar cita?',
+      'Esta acción no se puede deshacer.'
+    ).then(confirmado => {
+      if (confirmado) {
+        this.citasService.deleteCita(this.cita!.id).subscribe({
+          next: () => {
+            this.swal.toast('Cita cancelada exitosamente');
+            this.router.navigate(['/citas']);
+          },
+          error: (error) => {
+            console.error('Error al cancelar cita:', error);
+            this.swal.error('Error', 'No se pudo cancelar la cita');
+          }
+        });
       }
     });
   }
-}
 
   confirmarCita(): void {
-    if (this.cita) {
-      // Usar el método específico del service en lugar de updateCita
-      this.citasService.confirmarCita(this.cita.id).subscribe({
-        next: (citaActualizada) => {
-          this.cita = citaActualizada;
-          setTimeout(() => {
-            this.cdr.detectChanges();
-          }, 0);
-          alert('Cita confirmada exitosamente');
-        },
-        error: (error) => {
-          console.error('Error al confirmar cita:', error);
-          alert('Error al confirmar la cita');
-        }
-      });
-    }
+    if (!this.cita) return;
+    this.citasService.confirmarCita(this.cita.id).subscribe({
+      next: (citaActualizada) => {
+        this.cita = citaActualizada;
+        setTimeout(() => this.cdr.detectChanges(), 0);
+        this.swal.toast('Cita confirmada exitosamente');
+      },
+      error: (error) => {
+        console.error('Error al confirmar cita:', error);
+        this.swal.error('Error', 'No se pudo confirmar la cita');
+      }
+    });
   }
 
   cancelarCita(): void {
-    if (this.cita && confirm('¿Está seguro de cancelar esta cita?')) {
-      // Usar el método específico del service
-      this.citasService.cancelarCita(this.cita.id).subscribe({
-        next: (citaActualizada) => {
-          this.cita = citaActualizada;
-          setTimeout(() => {
-            this.cdr.detectChanges();
-          }, 0);
-          alert('Cita cancelada');
-        },
-        error: (error) => {
-          console.error('Error al cancelar cita:', error);
-          alert('Error al cancelar la cita');
-        }
-      });
-    }
+    if (!this.cita) return;
+    this.swal.confirm(
+      '¿Cancelar cita?',
+      '¿Está seguro de cancelar esta cita?'
+    ).then(confirmado => {
+      if (confirmado) {
+        this.citasService.cancelarCita(this.cita!.id).subscribe({
+          next: (citaActualizada) => {
+            this.cita = citaActualizada;
+            setTimeout(() => this.cdr.detectChanges(), 0);
+            this.swal.toast('Cita cancelada');
+          },
+          error: (error) => {
+            console.error('Error al cancelar cita:', error);
+            this.swal.error('Error', 'No se pudo cancelar la cita');
+          }
+        });
+      }
+    });
   }
 
   completarCita(): void {
-    if (this.cita && confirm('¿Marcar esta cita como completada?')) {
-      // Usar el método específico del service
-      this.citasService.completarCita(this.cita.id).subscribe({
-        next: (citaActualizada) => {
-          this.cita = citaActualizada;
-          setTimeout(() => {
-            this.cdr.detectChanges();
-          }, 0);
-          alert('Cita completada');
-        },
-        error: (error) => {
-          console.error('Error al completar cita:', error);
-          alert('Error al completar la cita');
-        }
-      });
-    }
+    if (!this.cita) return;
+    this.swal.confirm(
+      '¿Marcar como completada?',
+      'La cita se marcará como finalizada.'
+    ).then(confirmado => {
+      if (confirmado) {
+        this.citasService.completarCita(this.cita!.id).subscribe({
+          next: (citaActualizada) => {
+            this.cita = citaActualizada;
+            setTimeout(() => this.cdr.detectChanges(), 0);
+            this.swal.toast('Cita completada');
+          },
+          error: (error) => {
+            console.error('Error al completar cita:', error);
+            this.swal.error('Error', 'No se pudo completar la cita');
+          }
+        });
+      }
+    });
   }
 
   // ⭐ MÉTODOS HELPER - ADAPTADOS A TU BACKEND REAL

@@ -67,10 +67,7 @@
           <i-lucide name="search" [size]="17" class="icon-label"></i-lucide>
           Buscar
         </label>
-        <input
-          type="text"
-          placeholder="Buscar por cliente, abogado o motivo..."
-          [(ngModel)]="filtroBusqueda"
+        <input type="text" placeholder="Buscar por cliente, abogado o motivo..." [(ngModel)]="filtroBusqueda"
           (input)="onFiltroChange()">
       </div>
 
@@ -93,10 +90,7 @@
           <i-lucide name="calendar" [size]="17" class="icon-label"></i-lucide>
           Fecha
         </label>
-        <input
-          type="date"
-          [(ngModel)]="filtroFecha"
-          (change)="onFiltroChange()">
+        <input type="date" [(ngModel)]="filtroFecha" (change)="onFiltroChange()">
       </div>
 
       <div class="filtro-item">
@@ -157,10 +151,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let cita of citasFiltradas"
-              class="cita-row"
-              [class.cita-proxima]="esCitaProxima(cita.fecha, cita.hora)"
-              (click)="verDetalle(cita.id)">
+          <tr *ngFor="let cita of citasFiltradas" class="cita-row" [class.cita-hoy]="esCitaDeHoy(cita.fecha)"
+            [class.cita-proxima]="!esCitaDeHoy(cita.fecha) && esCitaProxima(cita.fecha, cita.hora)"
+            (click)="verDetalle(cita.id)">
 
             <!-- Fecha y Hora -->
             <td>
@@ -191,7 +184,7 @@
 
             <!-- Tipo de Caso -->
             <td>
-              <span class="tipo-badge">{{ cita.tipoCaso?.nombre  }}</span>
+              <span class="tipo-badge">{{ cita.tipoCaso.nombre }}</span>
             </td>
 
             <!-- Área de Derecho -->
@@ -218,46 +211,31 @@
               <div class="acciones-buttons">
 
                 <!-- Botón Ver -->
-                <button
-                  class="btn-accion btn-ver"
-                  (click)="verDetalle(cita.id)"
-                  title="Ver detalle">
+                <button class="btn-accion btn-ver" (click)="verDetalle(cita.id)" title="Ver detalle">
                   <i-lucide name="eye" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <!-- Botón Confirmar (solo si está pendiente) -->
-                <button
-                  *ngIf="cita.estado === 'pendiente'"
-                  class="btn-accion btn-confirmar"
-                  (click)="confirmarCita(cita.id, $event)"
-                  title="Confirmar">
+                <button *ngIf="cita.estado === 'pendiente'" class="btn-accion btn-confirmar"
+                  (click)="confirmarCita(cita.id, $event)" title="Confirmar">
                   <i-lucide name="check-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <!-- Botón Completar (solo si está confirmada) -->
-                <button
-                  *ngIf="cita.estado === 'confirmada'"
-                  class="btn-accion btn-completar"
-                  (click)="completarCita(cita.id, $event)"
-                  title="Completar">
+                <button *ngIf="cita.estado === 'confirmada'" class="btn-accion btn-completar"
+                  (click)="completarCita(cita.id, $event)" title="Completar">
                   <i-lucide name="check" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <!-- Botón Editar (solo si no está completada o cancelada) -->
-                <button
-                  *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
-                  class="btn-accion btn-editar"
-                  (click)="editarCita(cita.id, $event)"
-                  title="Editar">
+                <button *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
+                  class="btn-accion btn-editar" (click)="editarCita(cita.id, $event)" title="Editar">
                   <i-lucide name="edit-2" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 
                 <!-- Botón Cancelar (solo si no está completada o cancelada) -->
-                <button
-                  *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
-                  class="btn-accion btn-cancelar"
-                  (click)="cancelarCita(cita.id, $event)"
-                  title="Cancelar">
+                <button *ngIf="cita.estado !== 'completada' && cita.estado !== 'cancelada'"
+                  class="btn-accion btn-cancelar" (click)="cancelarCita(cita.id, $event)" title="Cancelar">
                   <i-lucide name="x-circle" [size]="16" class="icon-accion"></i-lucide>
                 </button>
 

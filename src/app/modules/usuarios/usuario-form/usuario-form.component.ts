@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UsuariosService } from '../../../core/services/usuarios.service';
+import { SwalService } from '../../../core/services/swal.service';
 
 @Component({
   selector: 'app-usuario-form',
@@ -23,7 +24,8 @@ export class UsuarioFormComponent implements OnInit {
     private fb: FormBuilder,
     private usuariosService: UsuariosService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private swal: SwalService
   ) {
     this.usuarioForm = this.fb.group({
       nombreCompleto: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
@@ -81,7 +83,7 @@ export class UsuarioFormComponent implements OnInit {
         this.usuariosService.updateUsuario(this.usuarioId, usuarioData).subscribe({
           next: () => {
             this.loading = false;
-            alert('Usuario actualizado exitosamente');
+            this.swal.toast('Usuario actualizado exitosamente');
             this.router.navigate(['/usuarios']);
           },
           error: (error) => {
@@ -94,7 +96,7 @@ export class UsuarioFormComponent implements OnInit {
         this.usuariosService.createUsuario(usuarioData).subscribe({
           next: () => {
             this.loading = false;
-            alert('Usuario creado exitosamente');
+            this.swal.toast('Usuario creado exitosamente');
             this.router.navigate(['/usuarios']);
           },
           error: (error) => {
@@ -135,9 +137,12 @@ export class UsuarioFormComponent implements OnInit {
 
   cancelar(): void {
     if (this.usuarioForm.dirty) {
-      if (confirm('¿Está seguro de cancelar? Se perderán los cambios no guardados.')) {
-        this.router.navigate(['/usuarios']);
-      }
+      this.swal.confirm(
+        '¿Cancelar cambios?',
+        'Se perderán los cambios no guardados.'
+      ).then(confirmado => {
+        if (confirmado) this.router.navigate(['/usuarios']);
+      });
     } else {
       this.router.navigate(['/usuarios']);
     }
