@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   
-  // ⭐ Variables para recuperar contraseña
+  // Variables para recuperar contraseña
   showRecuperarModal = false;
   recuperarEmail = '';
   recuperarLoading = false;
@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * ⭐ ABRIR MODAL DE RECUPERAR CONTRASEÑA
+   *  ABRIR MODAL DE RECUPERAR CONTRASEÑA
    */
   abrirRecuperarModal(event: Event): void {
     event.preventDefault();
@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * ⭐ CERRAR MODAL DE RECUPERAR CONTRASEÑA
+   *  CERRAR MODAL DE RECUPERAR CONTRASEÑA
    */
   cerrarRecuperarModal(): void {
     this.showRecuperarModal = false;
@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * ⭐ ENVIAR EMAIL DE RECUPERACIÓN
+   *  ENVIAR EMAIL DE RECUPERACIÓN
    */
   enviarRecuperacion(): void {
     this.recuperarError = '';

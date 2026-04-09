@@ -7,7 +7,7 @@ import { CitasListComponent } from './citas-list/citas-list.component';
 import { CitaFormComponent } from './cita-form/cita-form.component';
 import { CitaDetalleComponent } from './cita-detalle/cita-detalle.component';
 
-// ⭐ IMPORTAR LUCIDE ANGULAR - COMPLETO CON ICONOS FALTANTES
+// IMPORTAR LUCIDE ANGULAR - COMPLETO CON ICONOS FALTANTES
 import { 
   LucideAngularModule, 
   Calendar, 
@@ -52,12 +52,12 @@ import {
   MapPin,
   Edit2,
   Phone,
-  Timer,          // ⭐ FALTABA
-  Bell,           // ⭐ FALTABA
-  PauseCircle,    // ⭐ FALTABA
-  StickyNote,     // ⭐ FALTABA
-  Info,           // ⭐ FALTABA
-  Inbox,           // ⭐ FALTABA (por si usas historial)
+  Timer,          // FALTABA
+  Bell,           // FALTABA
+  PauseCircle,    // FALTABA
+  StickyNote,     // FALTABA
+  Info,           // FALTABA
+  Inbox,           // FALTABA (por si usas historial)
   Building2,
 } from 'lucide-angular';
 import { filter } from 'rxjs';
@@ -74,7 +74,7 @@ import { filter } from 'rxjs';
     ReactiveFormsModule,
     RouterModule,
     CitasRoutingModule,
-    // ⭐ LUCIDE MODULE CON TODOS LOS ICONOS - INCLUYENDO LOS QUE FALTABAN
+    // LUCIDE MODULE CON TODOS LOS ICONOS - INCLUYENDO LOS QUE FALTABAN
     LucideAngularModule.pick({
       // Iconos para citas-list
       Calendar,
@@ -122,12 +122,12 @@ import { filter } from 'rxjs';
       MapPin,
       Phone,
       Filter,
-      Timer,          // ⭐ AGREGADO
-      Bell,           // ⭐ AGREGADO
-      PauseCircle,    // ⭐ AGREGADO
-      StickyNote,     // ⭐ AGREGADO
-      Info,           // ⭐ AGREGADO
-      Inbox           // ⭐ AGREGADO
+      Timer,          // AGREGADO
+      Bell,           // AGREGADO
+      PauseCircle,    // AGREGADO
+      StickyNote,     // AGREGADO
+      Info,           // AGREGADO
+      Inbox           // AGREGADO
     })
   ]
 })

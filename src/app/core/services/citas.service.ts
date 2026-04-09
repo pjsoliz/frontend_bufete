@@ -56,7 +56,7 @@ export interface Cita {
   recordatorioEnviado: boolean;
   createdAt: Date;
   updatedAt: Date;
-  motivoCancelacion?: string; // 🆕 Agregado
+  motivoCancelacion?: string; //  Agregado
 }
 
 // Interface para crear/actualizar citas
@@ -84,7 +84,7 @@ export class CitasService {
 
   constructor(private http: HttpClient) {}
 
-  // ⭐ Helper para construir nombreCompleto
+  // Helper para construir nombreCompleto
   private construirNombreCompleto(obj: any): string {
     if (!obj) return 'Sin nombre';
     if (obj.nombreCompleto) return obj.nombreCompleto;
@@ -92,7 +92,7 @@ export class CitasService {
     return obj.nombre || obj.apellido || 'Sin nombre';
   }
 
-  // ⭐ Transformar cita para agregar nombreCompleto
+  // Transformar cita para agregar nombreCompleto
   private transformarCita(cita: any): Cita {
     return {
       ...cita,
@@ -107,7 +107,7 @@ export class CitasService {
     };
   }
 
-  // ✅ Helper para asegurar que fecha es string YYYY-MM-DD
+  // Helper para asegurar que fecha es string YYYY-MM-DD
   private normalizarFecha(fecha: string | Date): string {
     if (typeof fecha === 'string') {
       // Si ya es string, verificar formato
@@ -122,7 +122,7 @@ export class CitasService {
     return this.dateToString(fecha);
   }
 
-  // ✅ Convertir Date a string YYYY-MM-DD sin zona horaria
+  // Convertir Date a string YYYY-MM-DD sin zona horaria
   private dateToString(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -143,7 +143,7 @@ export class CitasService {
   }
 
   createCita(cita: CitaCreate): Observable<Cita> {
-    // ✅ ASEGURAR que fecha es string YYYY-MM-DD
+    // ASEGURAR que fecha es string YYYY-MM-DD
     const citaNormalizada = {
       ...cita,
       fecha: this.normalizarFecha(cita.fecha)
@@ -157,7 +157,7 @@ export class CitasService {
   }
 
   updateCita(id: string, cita: Partial<CitaCreate>): Observable<Cita> {
-    // ✅ ASEGURAR que fecha es string si existe
+    // ASEGURAR que fecha es string si existe
     const citaNormalizada = {
       ...cita,
       ...(cita.fecha && { fecha: this.normalizarFecha(cita.fecha) })
@@ -174,7 +174,6 @@ export class CitasService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  // 🔄 MODIFICADO: Ahora acepta motivoCancelacion opcional
   cambiarEstado(
     id: string, 
     estado: 'pendiente' | 'confirmada' | 'completada' | 'cancelada' | 'no_asistio',
@@ -196,7 +195,6 @@ export class CitasService {
     return this.cambiarEstado(id, 'confirmada');
   }
 
-  // 🔄 MODIFICADO: Ahora acepta motivoCancelacion
   cancelarCita(id: string, motivoCancelacion?: string): Observable<Cita> {
     return this.cambiarEstado(id, 'cancelada', motivoCancelacion);
   }
@@ -223,7 +221,7 @@ export class CitasService {
     );
   }
 
-  // 🆕 NUEVO: Notificar cambio de estado a n8n
+  //  NUEVO: Notificar cambio de estado a n8n
   notificarCambioEstado(citaId: string, estadoAnterior: string, usuarioNombre: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/notificar-cambio-estado`, {
       citaId: citaId,

@@ -100,7 +100,7 @@
         <span>{{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}</span>
       </button>
 
-      <!-- Link de recuperación ⭐ FUNCIONAL SIN SWEETALERT -->
+      <!-- Link de recuperación  FUNCIONAL SIN SWEETALERT -->
       <div class="forgot-password">
         <a href="#" class="link-dorado" (click)="abrirRecuperarModal($event)">
           <i-lucide name="help-circle" [size]="16"></i-lucide>
@@ -156,7 +156,7 @@
   </div>
 </div>
 
-<!-- ⭐ MODAL DE RECUPERAR CONTRASEÑA (SIN SWEETALERT) -->
+<!--  MODAL DE RECUPERAR CONTRASEÑA (SIN SWEETALERT) -->
 <div class="modal-overlay" *ngIf="showRecuperarModal" (click)="cerrarRecuperarModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">

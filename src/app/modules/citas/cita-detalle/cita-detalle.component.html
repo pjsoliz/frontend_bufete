@@ -30,17 +30,17 @@
             <i-lucide name="calendar" size="55" class="icon-calendar-large"></i-lucide>
           </div>
           <div class="cita-info-header">
-            <!-- ⭐ CAMBIADO: cita.titulo → cita.motivo (campo real del backend) -->
+            <!--  CAMBIADO: cita.titulo → cita.motivo (campo real del backend) -->
             <h1>{{ cita.descripcion || 'Sin descripción' }}</h1>
             <div class="badges-row">
-              <!-- ⭐ CAMBIADO: cita.tipo → cita.tipoCita.nombre (relación del backend) -->
+              <!--  CAMBIADO: cita.tipo → cita.tipoCita.nombre (relación del backend) -->
               <span class="badge-tipo">
                 {{ cita.tipoCita ? cita.tipoCita.nombre : 'Sin tipo' }}
               </span>
               <span class="badge-estado" [ngClass]="getEstadoClass(cita.estado)">
                 {{ getEstadoTexto(cita.estado) }}
               </span>
-              <!-- ⭐ NUEVO: Badge de urgencia (campo real del backend) -->
+              <!--  NUEVO: Badge de urgencia (campo real del backend) -->
               <span class="badge-urgente" *ngIf="cita.urgencia === 'alta'">
                 <i-lucide name="alert-triangle" class="icon-badge"></i-lucide>
                 URGENTE
@@ -123,7 +123,7 @@
               </div>
             </div>
 
-            <!-- ⭐ ELIMINADO: Campo "duracion" no existe en tu backend -->
+            <!--  ELIMINADO: Campo "duracion" no existe en tu backend -->
           </div>
 
           <div class="alerta-tiempo" *ngIf="esPasada() && cita.estado !== 'completada' && cita.estado !== 'cancelada'">
@@ -145,7 +145,7 @@
           </h2>
           
           <div class="info-grid">
-            <!-- ⭐ CAMBIADO: cita.cliente (string) → cita.cliente.nombreCompleto (objeto del backend) -->
+            <!--  CAMBIADO: cita.cliente (string) → cita.cliente.nombreCompleto (objeto del backend) -->
             <div class="info-item">
               <div class="info-label">Cliente</div>
               <div class="info-value">
@@ -154,7 +154,7 @@
               </div>
             </div>
 
-            <!-- ⭐ CAMBIADO: cita.abogado (string) → cita.abogado (objeto del backend) -->
+            <!--  CAMBIADO: cita.abogado (string) → cita.abogado (objeto del backend) -->
             <div class="info-item" *ngIf="cita.abogado">
               <div class="info-label">Abogado Asignado</div>
               <div class="info-value">
@@ -165,9 +165,9 @@
           </div>
         </div>
 
-        <!-- ⭐ ELIMINADO: Sección "Ubicación" - No existe en tu backend -->
+        <!--  ELIMINADO: Sección "Ubicación" - No existe en tu backend -->
 
-        <!-- ⭐ ELIMINADO: Sección "Descripción" - No existe en tu backend -->
+        <!--  ELIMINADO: Sección "Descripción" - No existe en tu backend -->
 
         <!-- Notas - CAMBIADO para usar notasAdicionales del backend -->
         <div class="info-card" *ngIf="tieneNotas()">
@@ -175,7 +175,7 @@
             <i-lucide name="file-text" class="icon-section"></i-lucide>
             Notas Adicionales
           </h2>
-          <!-- ⭐ CAMBIADO: cita.notas → cita.notasAdicionales -->
+          <!--  CAMBIADO: cita.notas → cita.notasAdicionales -->
           <p class="notas">{{ cita.notasAdicionales }}</p>
         </div>
 
@@ -231,7 +231,7 @@
             Información Adicional
           </h2>
           
-          <!-- ⭐ CAMBIADO: Mostrar tipoCita del backend -->
+          <!--  CAMBIADO: Mostrar tipoCita del backend -->
           <div class="info-item-simple">
             <div class="info-simple-label">Tipo de Cita</div>
             <div class="info-simple-value">
@@ -239,7 +239,7 @@
             </div>
           </div>
 
-          <!-- ⭐ NUEVO: Mostrar areaDerecho del backend -->
+          <!--  NUEVO: Mostrar areaDerecho del backend -->
           <div class="info-item-simple">
             <div class="info-simple-label">Área de Derecho</div>
             <div class="info-simple-value">
@@ -247,7 +247,7 @@
             </div>
           </div>
 
-          <!-- ⭐ NUEVO: Mostrar tipoCaso del backend si existe -->
+          <!--  NUEVO: Mostrar tipoCaso del backend si existe -->
           <div class="info-item-simple" *ngIf="cita.tipoCaso">
             <div class="info-simple-label">Tipo de Caso</div>
             <div class="info-simple-value">
@@ -255,7 +255,7 @@
             </div>
           </div>
 
-          <!-- ⭐ NUEVO: Mostrar urgencia del backend -->
+          <!--  NUEVO: Mostrar urgencia del backend -->
           <div class="info-item-simple">
             <div class="info-simple-label">Urgencia</div>
             <div class="info-simple-value">
@@ -269,7 +269,7 @@
             </div>
           </div>
 
-          <!-- ⭐ NUEVO: Mostrar origen del backend -->
+          <!--  NUEVO: Mostrar origen del backend -->
           <div class="info-item-simple">
             <div class="info-simple-label">Origen</div>
             <div class="info-simple-value">
@@ -277,7 +277,7 @@
             </div>
           </div>
 
-          <!-- ⭐ ELIMINADO: Campo "duracion" no existe en tu backend -->
+          <!--  ELIMINADO: Campo "duracion" no existe en tu backend -->
 
           <div class="info-item-simple" *ngIf="esPasada()">
             <div class="info-simple-label">Estado</div>

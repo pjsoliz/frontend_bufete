@@ -204,7 +204,7 @@ export class ReportesListComponent implements OnInit, OnDestroy {
     const labels = origenes.map((o: any) => this.capitalizar(o.origen));
     const valores = origenes.map((o: any) => parseInt(o.total));
 
-    // 🎨 COLORES VIVOS PARA CADA ORIGEN
+    // COLORES VIVOS PARA CADA ORIGEN
     const colores = [
       '#007BFF',  // Azul vibrante
       '#17a2b8',  // Cian
@@ -341,7 +341,7 @@ export class ReportesListComponent implements OnInit, OnDestroy {
     const labels = this.casosSolicitados.map(c => c.tipoCaso || 'Sin especificar');
     const valores = this.casosSolicitados.map(c => parseInt(c.total));
 
-    // 🎨 COLORES VIVOS Y DIVERSOS
+    // COLORES VIVOS Y DIVERSOS
     const colores = [
       '#007BFF',  // Azul vibrante
       '#17a2b8',  // Cian
@@ -415,7 +415,7 @@ export class ReportesListComponent implements OnInit, OnDestroy {
     const labels = this.areasDerecho.map(a => a.areaDerecho || 'Sin especificar');
     const valores = this.areasDerecho.map(a => parseInt(a.total));
 
-    // 🎨 COLORES VIVOS Y DIVERSOS
+    // COLORES VIVOS Y DIVERSOS
     const colores = [
       '#007BFF',  // Azul vibrante
       '#17a2b8',  // Cian
@@ -490,7 +490,7 @@ export class ReportesListComponent implements OnInit, OnDestroy {
     const labels = this.abogadosSolicitados.map(a => a.abogado || 'Sin asignar');
     const valores = this.abogadosSolicitados.map(a => parseInt(a.total));
 
-    // 🎨 COLORES VIVOS Y DIVERSOS
+    // COLORES VIVOS Y DIVERSOS
     const colores = [
       '#007BFF',  // Azul vibrante
       '#17a2b8',  // Cian

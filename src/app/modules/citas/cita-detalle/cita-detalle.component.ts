@@ -24,18 +24,17 @@ export class CitaDetalleComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.cargarCita(id); // ⭐ CAMBIADO: de parseInt(id) a solo id (es UUID string)
+      this.cargarCita(id); // CAMBIADO: de parseInt(id) a solo id (es UUID string)
     }
   }
 
-  cargarCita(id: string): void { // ⭐ CAMBIADO: de number a string
+  cargarCita(id: string): void { // CAMBIADO: de number a string
     this.loading = true;
     this.errorMessage = '';
     
     this.citasService.getCitaById(id).subscribe({
       next: (cita) => {
         if (cita) {
-          // ⭐ CAMBIADO: Eliminar asignación de valores por defecto ficticios
           // Solo asignar la cita tal como viene del backend
           this.cita = cita;
           console.log('Cita cargada:', this.cita);
@@ -150,19 +149,18 @@ export class CitaDetalleComponent implements OnInit {
     });
   }
 
-  // ⭐ MÉTODOS HELPER - ADAPTADOS A TU BACKEND REAL
+  // MÉTODOS HELPER - ADAPTADOS A TU BACKEND REAL
   tieneUbicacion(): boolean {
-    // ⭐ Tu backend NO tiene campo "ubicacion", siempre retornar false
+    // Tu backend NO tiene campo "ubicacion", siempre retornar false
     return false;
   }
 
   tieneDescripcion(): boolean {
-    // ⭐ Tu backend NO tiene campo "descripcion", siempre retornar false
+    // Tu backend NO tiene campo "descripcion", siempre retornar false
     return false;
   }
 
   tieneNotas(): boolean {
-    // ⭐ CAMBIADO: Tu backend usa "notasAdicionales" no "notas"
     return !!(this.cita?.notasAdicionales && this.cita.notasAdicionales.trim() !== '');
   }
 
@@ -209,7 +207,7 @@ export class CitaDetalleComponent implements OnInit {
   }
 
   formatearFecha(fecha: Date | string): string {
-  // ✅ Si es string, convertir correctamente sin zona horaria
+  // Si es string, convertir correctamente sin zona horaria
   let fechaObj: Date;
   
   if (typeof fecha === 'string') {

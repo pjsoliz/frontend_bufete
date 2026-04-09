@@ -5,7 +5,7 @@ import { DashboardAdminComponent } from './admin-dashboard/admin-dashboard.compo
 const routes: Routes = [
   {
     path: '',
-    component: DashboardAdminComponent  // ⭐ Todos usan el mismo
+    component: DashboardAdminComponent  // Todos usan el mismo
   }
 ];
 

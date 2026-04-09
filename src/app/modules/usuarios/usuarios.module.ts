@@ -7,7 +7,7 @@ import { UsuariosListComponent } from './usuarios-list/usuarios-list.component';
 import { UsuarioFormComponent } from './usuario-form/usuario-form.component';
 import { UsuarioDetalleComponent } from './usuario-detalle/usuario-detalle.component';
 
-// ⭐ IMPORTAR LUCIDE ANGULAR
+// IMPORTAR LUCIDE ANGULAR
 import { 
   LucideAngularModule, 
   Users,           // Título y stats
@@ -62,7 +62,7 @@ import {
     ReactiveFormsModule,
     RouterModule,
     UsuariosRoutingModule,
-    // ⭐ LUCIDE MODULE CON TODOS LOS ICONOS
+    // LUCIDE MODULE CON TODOS LOS ICONOS
     LucideAngularModule.pick({
       // Iconos para usuarios-list
       Users,

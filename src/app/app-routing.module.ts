@@ -29,14 +29,14 @@ const routes: Routes = [
         loadChildren: () => import('./modules/citas/citas.module').then(m => m.CitasModule),
         canActivate: [AuthGuard]
       },
-      // ⭐ REPORTES - SOLO ADMIN
+      // REPORTES - SOLO ADMIN
       {
         path: 'reportes',
         loadChildren: () => import('./modules/reportes/reportes.module').then(m => m.ReportesModule),
         canActivate: [RoleGuard],
         data: { roles: ['admin', 'administrador'] }
       },
-      // ⭐ USUARIOS - SOLO ADMIN
+      // USUARIOS - SOLO ADMIN
       {
         path: 'usuarios',
         loadChildren: () => import('./modules/usuarios/usuarios.module').then(m => m.UsuariosModule),

@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   /**
-   * ⭐ RECUPERAR CONTRASEÑA - OPCIÓN B (Profesional)
+   *  RECUPERAR CONTRASEÑA - OPCIÓN B (Profesional)
    */
   recuperarContrasena(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/recuperar-contrasena`, { email }).pipe(
@@ -62,7 +62,7 @@ export class AuthService {
   }
 
   /**
-   * ⭐ RESTABLECER CONTRASEÑA CON TOKEN
+   *  RESTABLECER CONTRASEÑA CON TOKEN
    */
   restablecerContrasena(token: string, nuevaContrasena: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/restablecer-contrasena`, { 

@@ -79,14 +79,14 @@ export class SidebarComponent implements OnInit {
   }
 
   /**
-   * ⭐ VERIFICA SI ES ADMIN
+   *  VERIFICA SI ES ADMIN
    */
   get isAdmin(): boolean {
     return this.userRole === 'admin' || this.userRole === 'administrador';
   }
 
   /**
-   * ⭐ VERIFICA SI ES ASISTENTE
+   *  VERIFICA SI ES ASISTENTE
    */
   get isAsistente(): boolean {
     return this.userRole === 'asistente_legal' || this.userRole === 'asistente';

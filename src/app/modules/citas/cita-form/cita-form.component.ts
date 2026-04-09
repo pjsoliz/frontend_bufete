@@ -132,7 +132,7 @@ export class CitaFormComponent implements OnInit {
       const formValue = this.citaForm.value;
 
       if (this.isEditMode && this.citaId) {
-        // ✅ UPDATE: sin clienteId
+        // UPDATE: sin clienteId
         const updateData: any = {
           fecha: formValue.fecha,
           hora: formValue.hora,
@@ -162,7 +162,7 @@ export class CitaFormComponent implements OnInit {
         });
 
       } else {
-        // ✅ CREATE: incluye clienteId
+        // CREATE: incluye clienteId
         const citaData: any = {
           fecha: formValue.fecha,
           hora: formValue.hora,
@@ -246,7 +246,6 @@ export class CitaFormComponent implements OnInit {
   getFechaMinima(): string {
     return new Date().toISOString().split('T')[0];
   }
-  // Añade esto debajo de getFechaMinima()
   getFechaMaxima(): string {
     const hoy = new Date();
     const proximoAnio = new Date(hoy.getFullYear() + 1, hoy.getMonth(), hoy.getDate());

@@ -132,7 +132,7 @@ export class CitasListComponent implements OnInit {
     this.router.navigate(['/citas', id]);
   }
 
-  // 🆕 MÉTODO CONFIRMAR ACTUALIZADO CON NOTIFICACIONES
+  //  MÉTODO CONFIRMAR ACTUALIZADO CON NOTIFICACIONES
   confirmarCita(id: string, event: Event): void {
     event.stopPropagation();
     this.swal.confirm(
@@ -174,7 +174,7 @@ export class CitasListComponent implements OnInit {
     });
   }
 
-  // 🆕 MÉTODO CANCELAR ACTUALIZADO CON NOTIFICACIONES Y MOTIVO
+  //  MÉTODO CANCELAR ACTUALIZADO CON NOTIFICACIONES Y MOTIVO
   async cancelarCita(id: string, event: Event): Promise<void> {
     event.stopPropagation();
 
@@ -330,7 +330,7 @@ export class CitasListComponent implements OnInit {
   }
 
   formatearFecha(fecha: Date | string): string {
-    // ✅ Si es string, convertir correctamente sin zona horaria
+    // Si es string, convertir correctamente sin zona horaria
     let fechaObj: Date;
 
     if (typeof fecha === 'string') {

@@ -10,7 +10,6 @@ import {
   Eye, Edit2, PauseCircle, PlayCircle, Trash2, Phone, MapPin,File,
   Calendar, User, Mail, FileText, MapPinned, ArrowLeft, AlertTriangle,Info,
   AlertCircle, CreditCard, Hash, Home, Map, ToggleRight, X, Check, Save,
-  // Nuevos iconos para cliente-detalle
   Edit, Smartphone, Activity, CheckCircle, XCircle, CalendarDays,
   Clock, Scale, Circle, Plus, Inbox, Tag, Heart, FolderOpen,
   Briefcase, AtSign,
@@ -67,7 +66,6 @@ import { ClienteFormComponent } from './cliente-form/cliente-form.component';
       X,
       Check,
       Save,
-      // Nuevos iconos para cliente-detalle
       Edit,
       Smartphone,
       Activity,

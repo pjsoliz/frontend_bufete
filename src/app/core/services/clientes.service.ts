@@ -33,14 +33,14 @@ export class ClientesService {
 
   constructor(private http: HttpClient) {}
 
-  // ⭐ Helper para construir nombreCompleto si viene separado
+  // Helper para construir nombreCompleto si viene separado
   private construirNombreCompleto(cliente: any): string {
     if (cliente.nombreCompleto) return cliente.nombreCompleto;
     if (cliente.nombre && cliente.apellido) return `${cliente.nombre} ${cliente.apellido}`;
     return cliente.nombre || cliente.apellido || 'Sin nombre';
   }
 
-  // ⭐ Transformar cliente
+  // Transformar cliente
   private transformarCliente(cliente: any): Cliente {
     return {
       ...cliente,

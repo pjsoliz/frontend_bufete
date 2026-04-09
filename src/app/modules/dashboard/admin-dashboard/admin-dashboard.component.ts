@@ -43,7 +43,7 @@ interface CitaProxima {
 export class DashboardAdminComponent implements OnInit {
 
   loading = true;
-  isAdmin = false; // ⭐ NUEVO
+  isAdmin = false; // NUEVO
   
   estadisticas: Estadistica[] = [
     {
@@ -103,7 +103,7 @@ export class DashboardAdminComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // ⭐ Detectar si es admin
+    // Detectar si es admin
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.isAdmin = user.rol === 'admin' || user.rol === 'administrador';
     
@@ -113,7 +113,7 @@ export class DashboardAdminComponent implements OnInit {
   cargarDatos(): void {
     this.loading = true;
 
-    // ⭐ Si es admin, cargar TODO
+    // Si es admin, cargar TODO
     if (this.isAdmin) {
       forkJoin({
         citas: this.citasService.getCitas(),
@@ -131,7 +131,7 @@ export class DashboardAdminComponent implements OnInit {
         }
       });
     } else {
-      // ⭐ Si es asistente, cargar SOLO citas y clientes
+      // Si es asistente, cargar SOLO citas y clientes
       forkJoin({
         citas: this.citasService.getCitas(),
         clientes: this.clientesService.getClientes()
@@ -148,7 +148,7 @@ export class DashboardAdminComponent implements OnInit {
     }
   }
 
-  // ⭐ Procesar datos completos (ADMIN)
+  // Procesar datos completos (ADMIN)
   private procesarDatosCompletos(data: any): void {
     // Procesar citas
     const citas = data.citas;
@@ -214,7 +214,7 @@ export class DashboardAdminComponent implements OnInit {
     this.totalAbogados = data.abogados.filter((a: any) => a.activo).length;
   }
 
-  // ⭐ Procesar datos limitados (ASISTENTE)
+  // Procesar datos limitados (ASISTENTE)
   private procesarDatosAsistente(data: any): void {
     const citas = data.citas;
     const hoy = new Date();
