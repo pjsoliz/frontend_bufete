@@ -43,12 +43,12 @@ export class RoleGuard implements CanActivate {
     const hasPermission = allowedRoles.includes(userRole);
 
     if (hasPermission) {
-      console.log('RoleGuard - Usuario tiene permiso ✅');
+      console.log('RoleGuard - Usuario tiene permiso');
       return true;
     }
 
     // Usuario no tiene permiso
-    console.log('RoleGuard - Usuario NO tiene permiso ❌');
+    console.log('RoleGuard - Usuario NO tiene permiso');
     console.log(`RoleGuard - Redirigiendo al dashboard (rol actual: ${userRole})`);
     
     // Redirigir al dashboard en lugar de mostrar alert

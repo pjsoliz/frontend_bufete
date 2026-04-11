@@ -393,18 +393,52 @@
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
-    left: -280px;
+    top: 70px;
+    left: 0;
+    height: calc(100vh - 70px);
     width: 280px;
     z-index: 999;
-    transition: left var(--transition-normal);
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
+    border-right: none;
   }
-  
-  .sidebar.open {
-    left: 0;
+
+  /* Mostrar textos y footer cuando el Drawer está abierto en mobile */
+  .sidebar:not(.collapsed) .nav-text,
+  .sidebar:not(.collapsed) .sidebar-footer {
+    opacity: 1 !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: initial !important;
+    margin: initial !important;
+    display: flex !important;
   }
-  
-  .sidebar.collapsed {
-    left: -280px;
+
+  /* Ajuste específico para el footer en mobile */
+  .sidebar:not(.collapsed) .sidebar-footer {
+    padding: var(--spacing-md) !important;
+    height: auto !important;
+  }
+
+  /* Cuando !isCollapsed (que en la lógica de main-layout significa abierto) */
+  .sidebar:not(.collapsed) {
+    transform: translateX(0);
+  }
+
+  /* El botón de colapsar interno no es necesario en mobile */
+  .collapse-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    top: 60px;
+    height: calc(100vh - 60px);
+    width: 100%;
+    max-width: 300px;
   }
 }
 

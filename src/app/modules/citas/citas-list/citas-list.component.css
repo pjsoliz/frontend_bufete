@@ -605,13 +605,12 @@
    RESPONSIVE
    ============================================ */
 @media (max-width: 1200px) {
-  .citas-table {
-    font-size: 0.9rem;
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .citas-table th,
-  .citas-table td {
-    padding: 0.75rem;
+  .citas-table {
+    font-size: 0.9rem;
   }
 }
 
@@ -622,10 +621,27 @@
 
   .citas-header {
     flex-direction: column;
+    align-items: stretch;
+    text-align: center;
   }
 
   .header-left h1 {
     font-size: 1.5rem;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
   }
 
   .filtros-grid {
@@ -633,15 +649,25 @@
   }
 
   .citas-table-container {
-    overflow-x: scroll;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+    width: calc(100% + 2rem);
   }
 
   .citas-table {
-    min-width: 800px;
+    min-width: 900px; /* Asegura scroll horizontal útil */
   }
 
   .acciones-buttons {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.25rem;
+    width: fit-content;
+  }
+
+  .btn-accion {
+    width: 36px;
+    height: 36px;
   }
 }
 

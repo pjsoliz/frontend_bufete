@@ -12,7 +12,9 @@
   <div *ngIf="!loading && stats" class="dashboard-content">
     <div class="stats-grid">
       <div class="stat-card blue">
-        <div class="stat-icon">📁</div>
+        <div class="stat-icon">
+          <i-lucide name="folder-open" [size]="32"></i-lucide>
+        </div>
         <div class="stat-info">
           <h3>{{ stats.total_casos || 0 }}</h3>
           <p>Casos Totales</p>
@@ -20,7 +22,9 @@
       </div>
 
       <div class="stat-card green">
-        <div class="stat-icon">📅</div>
+        <div class="stat-icon">
+          <i-lucide name="calendar" [size]="32"></i-lucide>
+        </div>
         <div class="stat-info">
           <h3>{{ stats.citas_hoy || 0 }}</h3>
           <p>Citas Hoy</p>
@@ -28,7 +32,9 @@
       </div>
 
       <div class="stat-card orange">
-        <div class="stat-icon">👥</div>
+        <div class="stat-icon">
+          <i-lucide name="users" [size]="32"></i-lucide>
+        </div>
         <div class="stat-info">
           <h3>{{ stats.total_clientes || 0 }}</h3>
           <p>Clientes</p>
@@ -40,15 +46,21 @@
       <h2>Acciones Rápidas</h2>
       <div class="actions-grid">
         <a routerLink="/casos" class="action-card">
-          <span class="action-icon">📁</span>
+          <span class="action-icon">
+            <i-lucide name="file-text" [size]="24"></i-lucide>
+          </span>
           <span class="action-text">Ver Casos</span>
         </a>
         <a routerLink="/citas" class="action-card">
-          <span class="action-icon">📅</span>
+          <span class="action-icon">
+            <i-lucide name="calendar" [size]="24"></i-lucide>
+          </span>
           <span class="action-text">Gestionar Citas</span>
         </a>
         <a routerLink="/clientes" class="action-card">
-          <span class="action-icon">👥</span>
+          <span class="action-icon">
+            <i-lucide name="users" [size]="24"></i-lucide>
+          </span>
           <span class="action-text">Ver Clientes</span>
         </a>
       </div>

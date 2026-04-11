@@ -4,6 +4,13 @@
   <div class="layout-container">
     <app-sidebar [isCollapsed]="sidebarCollapsed"></app-sidebar>
     
+    <!-- Overlay para móviles -->
+    <div 
+      class="sidebar-overlay" 
+      [class.active]="!sidebarCollapsed" 
+      (click)="toggleSidebar()">
+    </div>
+    
     <main class="content-area">
       <router-outlet></router-outlet>
     </main>

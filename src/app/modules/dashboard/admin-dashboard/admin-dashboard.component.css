@@ -667,6 +667,13 @@
 @media (max-width: 1200px) {
   .main-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .estadisticas-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -677,32 +684,85 @@
 
   .dashboard-header {
     flex-direction: column;
-    gap: 1rem;
+    text-align: center;
+    gap: 1.5rem;
     padding: 1.5rem;
+  }
+
+  .header-content h1 {
+    font-size: 1.8rem;
   }
 
   .header-date {
     width: 100%;
     justify-content: center;
+    padding: 0.75rem;
   }
 
   .estadisticas-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .alertas-section {
-    grid-template-columns: 1fr;
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .chart-card, .actividad-card, .citas-card, .acciones-card, .equipo-card {
+    padding: 1.25rem;
+  }
+
+  .card-header h2 {
+    font-size: 1.2rem;
   }
 
   .bar-chart {
     height: 150px;
+    gap: 0.25rem;
   }
 
-  .bar-column {
-    height: 100px;
+  .bar-label {
+    font-size: 0.75rem;
+  }
+
+  .tipo-nombre {
+    font-size: 0.85rem;
   }
 
   .acciones-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+  }
+
+  .cita-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cita-fecha {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+
+  .cita-estado {
+    align-self: flex-end;
   }
 }
